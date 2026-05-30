@@ -203,6 +203,12 @@ export default function DashboardPage() {
         </Link>
 
         <div className="flex items-center gap-3">
+          <Link
+            href="/ferramentas"
+            className="hidden items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-slate-400 transition-all hover:text-white sm:flex"
+          >
+            <span>🛠️</span> Ferramentas
+          </Link>
           {profile && (
             <div className="flex items-center gap-2">
               <span className="text-2xl">{profile.avatar_emoji}</span>
@@ -282,11 +288,22 @@ export default function DashboardPage() {
           {/* Score card */}
           {score && (
             <motion.section
-              className="glass-panel rounded-[32px] p-7"
+              className={`glass-panel rounded-[32px] p-7 transition-all duration-700 ${score.current_score >= 90 ? "border-red-500/60 shadow-[0_0_60px_rgba(255,83,112,0.35)]" : ""}`}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
+              {/* Modo Apocalipse */}
+              {score.current_score >= 90 && (
+                <motion.div
+                  animate={{ opacity: [1, 0.5, 1] }}
+                  transition={{ duration: 1.2, repeat: Infinity }}
+                  className="mb-5 flex items-center gap-2 rounded-2xl border border-red-500/40 bg-red-500/10 px-4 py-2"
+                >
+                  <span className="text-lg">🚨</span>
+                  <span className="text-xs font-bold uppercase tracking-widest text-red-400">COLAPSO IMINENTE — Seu burnout atingiu nível crítico</span>
+                </motion.div>
+              )}
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <p className="text-xs uppercase tracking-[0.3em] text-muted">Burny Score</p>
@@ -330,6 +347,19 @@ export default function DashboardPage() {
                   );
                 })}
               </div>
+
+              {/* Custo de reunião em R$ */}
+              {profile?.monthly_salary_cents && score.week_totals.useless_meetings > 0 && (() => {
+                const hourly = profile.monthly_salary_cents / (22 * 8 * 100);
+                const custo = (score.week_totals.useless_meetings * hourly).toFixed(2);
+                return (
+                  <div className="mt-3 rounded-[18px] border border-ember/20 bg-ember/5 px-4 py-3 text-center">
+                    <p className="text-xs text-ember-soft opacity-80">💸 Custo das suas reuniões inúteis esta semana</p>
+                    <p className="mt-1 font-mono text-2xl font-bold text-ember-soft">R$ {custo}</p>
+                    <p className="mt-0.5 text-xs text-slate-600">em salário desperdiçado em calls que poderiam ser e-mails</p>
+                  </div>
+                );
+              })()}
 
               {/* Gráfico de histórico */}
               {history.length > 1 && (

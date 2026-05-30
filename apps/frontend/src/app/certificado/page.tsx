@@ -91,7 +91,7 @@ export default function CertificadoPage() {
       </div>
 
       {/* Certificado */}
-      <div className="flex min-h-screen items-center justify-center px-4 py-8 print:min-h-screen print:p-0">
+      <div className="cert-wrapper flex min-h-screen items-center justify-center px-4 py-8">
         <div
           ref={certRef}
           className="cert-container relative w-full max-w-3xl overflow-hidden rounded-[32px] border border-white/12 bg-[#070a17] p-10 shadow-[0_0_120px_rgba(130,87,255,0.15)] sm:p-14 print:rounded-none print:shadow-none"
@@ -223,18 +223,29 @@ export default function CertificadoPage() {
       {/* Estilos de impressão */}
       <style>{`
         @media print {
+          @page {
+            size: A4 portrait;
+            margin: 6mm;
+          }
           body {
-            background: white !important;
-            color: black !important;
+            background: #070a17 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
           }
           .no-print {
             display: none !important;
           }
+          .cert-wrapper {
+            display: block !important;
+            min-height: auto !important;
+            padding: 0 !important;
+          }
           .cert-container {
-            border: 2px solid #333 !important;
-            background: white !important;
-            color: black !important;
+            zoom: 0.80;
+            max-width: 100% !important;
+            border-radius: 16px !important;
             box-shadow: none !important;
+            margin: 0 auto;
           }
         }
       `}</style>

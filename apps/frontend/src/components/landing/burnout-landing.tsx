@@ -84,12 +84,20 @@ export function BurnoutLanding() {
             <a href="#roadmap">Roadmap</a>
           </nav>
 
-          <Link
-            href="/onboarding"
-            className="burn-gradient rounded-full px-5 py-2 text-sm font-semibold text-black transition-transform hover:scale-[1.02]"
-          >
-            Entrar no colapso
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/entrar"
+              className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-slate-300 transition-all hover:bg-white/10 hover:text-white"
+            >
+              Já tenho conta
+            </Link>
+            <Link
+              href="/onboarding"
+              className="burn-gradient rounded-full px-5 py-2 text-sm font-semibold text-black transition-transform hover:scale-[1.02]"
+            >
+              Entrar no colapso
+            </Link>
+          </div>
         </motion.header>
 
         <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">

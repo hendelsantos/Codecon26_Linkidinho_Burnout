@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Flame, Loader2 } from "lucide-react";
+import { Check, Copy, Flame, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -13,6 +13,86 @@ const AREA_OPTIONS = [...AREAS];
 const REGION_OPTIONS = [...REGIONS];
 const AVATAR_OPTIONS = [...AVATARS];
 
+// ──── Step 2: Mostrar token ──────────────────────────────────────────────
+
+function TokenStep({ token, onContinue }: { token: string; onContinue: () => void }) {
+  const [copied, setCopied] = useState(false);
+
+  async function copy() {
+    await navigator.clipboard.writeText(token);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  }
+
+  return (
+    <motion.div
+      className="w-full max-w-lg"
+      initial={{ opacity: 0, y: 28 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="mb-8 flex items-center gap-3">
+        <div className="burn-gradient flex h-12 w-12 items-center justify-center rounded-2xl text-black shadow-[0_0_40px_rgba(130,87,255,0.45)]">
+          <Flame className="h-6 w-6" />
+        </div>
+        <div>
+          <p className="text-xs uppercase tracking-[0.35em] text-muted">Burny Out</p>
+          <p className="text-sm font-semibold text-white">Corporate Suffering Analytics Network</p>
+        </div>
+      </div>
+
+      <div className="glass-panel rounded-[32px] p-8">
+        <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/30">
+          <span className="text-2xl">🎉</span>
+        </div>
+
+        <p className="text-xs uppercase tracking-[0.3em] text-muted">Cadastro realizado</p>
+        <h1 className="mt-2 text-2xl font-bold text-white">Salve seu token de acesso!</h1>
+        <p className="mt-2 text-sm leading-7 text-slate-400">
+          Este é seu <strong className="text-white">passaporte de burnout</strong>. Sem e-mail e sem senha — guarde ele para entrar de outro dispositivo ou depois de limpar o cache.
+        </p>
+
+        <div className="mt-6 rounded-2xl border border-violet/30 bg-violet/8 p-4">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-violet">
+            Seu token único
+          </p>
+          <div className="flex items-center gap-3">
+            <code className="flex-1 break-all font-mono text-sm text-white">{token}</code>
+            <button
+              onClick={() => void copy()}
+              className="shrink-0 rounded-xl border border-white/10 bg-white/5 p-2.5 text-slate-300 transition-all hover:bg-white/10 hover:text-white"
+            >
+              {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-4 rounded-2xl border border-yellow-500/20 bg-yellow-500/8 px-4 py-3 text-xs text-yellow-300">
+          ⚠️ Guarde este token em lugar seguro. Sem ele, você não consegue recuperar a conta.
+          Você também pode entrar pelo menu <strong>"Já tenho conta"</strong> na landing page.
+        </div>
+
+        <button
+          onClick={onContinue}
+          className="burn-gradient mt-6 flex w-full items-center justify-center rounded-full py-4 text-base font-semibold text-black transition-all hover:scale-[1.01]"
+        >
+          {copied ? "Token copiado! Ir para o dashboard →" : "Continuar para o dashboard →"}
+        </button>
+      </div>
+
+      <p className="mt-6 text-center text-xs text-slate-600">
+        Para entrar depois:{" "}
+        <Link href="/entrar" className="text-violet hover:underline">
+          burnyout.app/entrar
+        </Link>{" "}
+        e cole seu token.
+      </p>
+    </motion.div>
+  );
+}
+
+// ──── Step 1: Form de cadastro ────────────────────────────────────────────
+
 export default function OnboardingPage() {
   const router = useRouter();
   const [nickname, setNickname] = useState("");
@@ -21,6 +101,7 @@ export default function OnboardingPage() {
   const [avatar, setAvatar] = useState("🔥");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [savedToken, setSavedToken] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -39,12 +120,25 @@ export default function OnboardingPage() {
       });
       auth.setToken(profile.access_token);
       auth.setProfile(profile);
-      router.push("/dashboard");
+      setSavedToken(profile.access_token); // mostra tela de token
     } catch {
       setError("Erro ao criar perfil. O backend está operacional?");
     } finally {
       setLoading(false);
     }
+  }
+
+  // Tela de token após cadastro
+  if (savedToken) {
+    return (
+      <main className="flex min-h-screen items-center justify-center px-5 py-16">
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute left-1/3 top-1/4 h-96 w-96 rounded-full bg-violet/20 blur-[120px]" />
+          <div className="absolute right-1/3 bottom-1/4 h-80 w-80 rounded-full bg-ember/15 blur-[100px]" />
+        </div>
+        <TokenStep token={savedToken} onContinue={() => router.push("/dashboard")} />
+      </main>
+    );
   }
 
   return (
@@ -184,8 +278,11 @@ export default function OnboardingPage() {
           </form>
         </div>
 
-        <p className="mt-6 text-center text-xs text-slate-600">
-          Sem e-mail. Sem senha. Só burnout anônimo e bem documentado.
+        <p className="mt-6 text-center text-sm text-slate-500">
+          Já tem conta?{" "}
+          <Link href="/entrar" className="text-violet hover:underline">
+            Entrar com meu token
+          </Link>
         </p>
       </motion.div>
     </main>

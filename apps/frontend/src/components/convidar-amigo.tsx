@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Copy, Loader2, RefreshCw, Share2, X } from "lucide-react";
+import { Check, Copy, Loader2, RefreshCw, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { ConviteAmigo, api } from "@/lib/api";
@@ -66,9 +66,8 @@ function getBaseUrl() {
 
 // ──── Componente principal ────────────────────────────────────────────────────
 
-export function ConvidarAmigo() {
+export function ConviteModal({ aberto, onClose }: { aberto: boolean; onClose: () => void }) {
   const [token, setToken] = useState<string | null>(null);
-  const [aberto, setAberto] = useState(false);
   const [convites, setConvites] = useState<Record<string, ConviteAmigo>>({});
   const [carregando, setCarregando] = useState<string | null>(null);
   const [copiado, setCopiado] = useState<string | null>(null);
@@ -81,26 +80,26 @@ export function ConvidarAmigo() {
     setToken(auth.getToken());
   }, []);
 
-  // Fecha com ESC
+  // Carrega convites ao abrir
   useEffect(() => {
     if (!aberto) return;
-    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") setAberto(false); };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [aberto]);
-
-  async function abrirModal() {
-    setAberto(true);
     setErro(null);
     const tk = auth.getToken();
     if (!tk) return;
-    try {
-      const lista = await api.getConvites(tk);
+    api.getConvites(tk).then((lista) => {
       const mapa: Record<string, ConviteAmigo> = {};
       lista.forEach((c) => { mapa[c.tipo_relacao] = c; });
       setConvites(mapa);
-    } catch { /* sem convites ainda — normal */ }
-  }
+    }).catch(() => null);
+  }, [aberto]);
+
+  // Fecha com ESC
+  useEffect(() => {
+    if (!aberto) return;
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [aberto, onClose]);
 
   function toggleExpandir(key: string) {
     setExpandido((prev) => (prev === key ? null : key));
@@ -147,27 +146,15 @@ export function ConvidarAmigo() {
   }
 
   // Não renderiza nada até confirmar que tem token (após montagem no cliente)
-  if (!token) return null;
+  if (!token || !aberto) return null;
 
   return (
     <>
-      {/* Botão de trigger */}
-      <button
-        onClick={abrirModal}
-        title="Convidar pessoas"
-        className="fixed bottom-[5.5rem] right-4 z-[9997] flex h-12 w-12 items-center justify-center rounded-full shadow-[0_0_24px_rgba(130,87,255,0.5)] transition-all hover:scale-110 sm:right-6"
-        style={{ background: "linear-gradient(135deg,#8257ff,#ff6b2c)" }}
-        aria-label="Convidar pessoas"
-      >
-        <Share2 className="h-5 w-5 text-black" />
-      </button>
-
       {/* Modal */}
-      {aberto && (
-        <div
-          className="fixed inset-0 z-[10000] flex items-end justify-center bg-black/60 backdrop-blur-sm sm:items-center"
-          onClick={(e) => { if (e.target === e.currentTarget) setAberto(false); }}
-        >
+      <div
+        className="fixed inset-0 z-[10000] flex items-end justify-center bg-black/60 backdrop-blur-sm sm:items-center"
+        onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      >
           <div className="glass-panel w-full max-w-lg rounded-t-[28px] sm:rounded-[28px] flex flex-col max-h-[90vh]">
             {/* Header fixo */}
             <div className="flex items-start justify-between p-6 pb-4 sm:p-8 sm:pb-4 shrink-0">
@@ -179,7 +166,7 @@ export function ConvidarAmigo() {
                 </p>
               </div>
               <button
-                onClick={() => setAberto(false)}
+                onClick={onClose}
                 className="rounded-full border border-white/10 bg-white/5 p-2 text-slate-400 hover:text-white"
               >
                 <X className="h-4 w-4" />
@@ -306,7 +293,6 @@ export function ConvidarAmigo() {
             </p>
           </div>
         </div>
-      )}
     </>
   );
 }

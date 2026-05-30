@@ -9,6 +9,7 @@ import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 
 import { Badge, CheckIn, CheckInPayload, HistoryEntry, Profile, ScoreResponse, api, timeAgo } from "@/lib/api";
 import { auth } from "@/lib/auth";
+import { ConviteModal } from "@/components/convidar-amigo";
 
 const METRIC_LABELS: Record<string, string> = {
   coffees: "Cafés",
@@ -53,6 +54,7 @@ export default function DashboardPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [todayDone, setTodayDone] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [conviteAberto, setConviteAberto] = useState(false);
 
   const load = useCallback(async () => {
     const token = auth.getToken();
@@ -247,13 +249,22 @@ export default function DashboardPage() {
               )}
 
               {/* Share card */}
-              <button
-                onClick={handleShare}
-                className="mt-5 flex w-full items-center justify-center gap-2 rounded-full border border-ember/30 bg-ember/10 py-3 text-sm font-semibold text-ember-soft transition-all hover:bg-ember/20"
-              >
-                <Share2 className="h-4 w-4" />
-                {copied ? "Copiado! 🔥" : "Compartilhar meu burnout"}
-              </button>
+              <div className="mt-5 flex gap-3">
+                <button
+                  onClick={handleShare}
+                  className="flex flex-1 items-center justify-center gap-2 rounded-full border border-ember/30 bg-ember/10 py-3 text-sm font-semibold text-ember-soft transition-all hover:bg-ember/20"
+                >
+                  <Share2 className="h-4 w-4" />
+                  {copied ? "Copiado! 🔥" : "Compartilhar burnout"}
+                </button>
+                <button
+                  onClick={() => setConviteAberto(true)}
+                  className="flex flex-1 items-center justify-center gap-2 rounded-full border border-violet/30 bg-violet/10 py-3 text-sm font-semibold text-violet transition-all hover:bg-violet/20"
+                >
+                  <span>👥</span>
+                  Convidar amigos
+                </button>
+              </div>
             </motion.section>
           )}
 
@@ -447,5 +458,7 @@ export default function DashboardPage() {
         </div>
       </div>
     </main>
+
+    <ConviteModal aberto={conviteAberto} onClose={() => setConviteAberto(false)} />
   );
 }

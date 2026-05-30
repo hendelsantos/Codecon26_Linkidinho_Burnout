@@ -86,9 +86,8 @@ def _gpt_insight(profile, checkin) -> str | None:
 
 
 def feed_line(profile, checkin) -> str:
-    gpt = _gpt_insight(profile, checkin)
-    if gpt:
-        return gpt
+    # Usa template local para evitar N chamadas GPT em série no feed (latência inaceitável).
+    # O burny_insight (gerado por GPT na criação do check-in) já fica no campo "insight".
     template = random.choice(FEED_TEMPLATES)
     return template.format(
         nickname=profile.nickname,

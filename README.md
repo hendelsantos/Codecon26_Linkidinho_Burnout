@@ -1,155 +1,162 @@
-# Burny Out
+# 🔥 Burny Out
+### The Corporate Suffering Analytics Network™
 
-Burny Out e uma rede social satirica de analytics corporativo onde cafe, reunioes, transito, bathroom revenue e sofrimento operacional viram dashboards, rankings e insights dramaticamente exagerados.
+> *"Your burnout has charts now."*
 
-O projeto foi concebido para a Codecon 2026 como uma demo memoravel: absurda, comica, visualmente premium e segura no tom. A direcao visual parte das referencias de Likidinho, mas a identidade final foi reinterpretada para um universo proprio de enterprise noir, cyberpunk corporativo e humor de sobrevivencia.
+**[🚀 Ver ao vivo →](https://frontend-production-db69.up.railway.app)**
 
-## Elevator pitch
+---
 
-Burny Out transforma dor corporativa em metricas acionaveis.
+## O que é
 
-Ou, em termos mais honestos:
+Burny Out é uma **rede social satírica de analytics corporativo** onde café, reuniões inúteis, trânsito, bathroom revenue e sofrimento operacional viram dashboards, rankings globais e insights gerados por IA — dramaticamente exagerados, absurdamente precisos.
 
-Your burnout has charts now.
+Construído em 48h para a **CODECON 2026**.
 
-## O que ja existe neste scaffold
+---
 
-- Monorepo organizado em apps/backend e apps/frontend.
-- Backend em Django com DRF, OpenAPI, CORS e dominios separados.
-- Frontend em Next.js com App Router, tema visual proprio e landing premium.
-- Documentacao central de produto, arquitetura e direcao visual.
-- Arquivos de ambiente de exemplo e dependencias registradas.
+## ✨ Features ao vivo
 
-## Stack
+| Feature | Status |
+|---------|--------|
+| 🔐 Onboarding com nickname + avatar emoji | ✅ |
+| 📊 Dashboard com Burny Score™ em tempo real | ✅ |
+| 🤖 Insights sarcásticos gerados por IA (OpenAI) | ✅ |
+| 📈 Histórico de check-ins e evolução do burnout | ✅ |
+| 🏆 Ranking global de sofrimento | ✅ |
+| 💬 Feed social com desabafos e reações | ✅ |
+| 🎬 Burny Wrapped™ — seu resumo anual de burnout | ✅ |
+| 🔗 Compartilhar resultados (Web Share + clipboard) | ✅ |
+| 🧠 Badges de conquista ("Burnout Lendário", "Bathroom Revenue King") | ✅ |
+
+---
+
+## 📸 Screenshots
+
+### Landing Page
+![Landing Page](docs/screenshots/landing.png)
+
+### Dashboard com Burny Score™
+![Dashboard](docs/screenshots/dashboard.png)
+
+### Ranking Global
+![Ranking](docs/screenshots/ranking.png)
+
+### Burny Wrapped™
+![Wrapped](docs/screenshots/wrapped.png)
+
+---
+
+## 🌐 Deploy
+
+| Serviço | URL |
+|---------|-----|
+| **Frontend** | https://frontend-production-db69.up.railway.app |
+| **Backend API** | https://backend-production-7444f.up.railway.app/api |
+| **Plataforma** | Railway (Frontend + Backend + PostgreSQL) |
+
+---
+
+## 🛠️ Stack
 
 ### Frontend
-- Next.js
-- React
-- TypeScript
-- Tailwind CSS 4
-- Framer Motion
-- Recharts
-- Lucide React
+- **Next.js 15** (App Router, TypeScript, Static Export)
+- **Tailwind CSS 4** com tema personalizado (enterprise noir / cyberpunk corporativo)
+- **Framer Motion** para animações
+- **Recharts** para visualizações de dados
+- **Lucide React** para ícones
 
 ### Backend
-- Django
-- Django REST Framework
-- drf-spectacular
-- PostgreSQL ready
-- Redis ready
-- Celery ready
+- **Django 5 + Django REST Framework**
+- **PostgreSQL** (Railway)
+- **OpenAI API** para insights sarcásticos gerados por IA
+- **drf-spectacular** para OpenAPI/Swagger automático
 
-## Estrutura do repositorio
+---
 
-```txt
+## 🗂️ Estrutura do projeto
+
+```
 Burnout/
 ├── apps/
 │   ├── backend/
-│   │   ├── ai/
-│   │   ├── analytics/
-│   │   ├── config/
-│   │   ├── core/
-│   │   ├── metrics/
-│   │   ├── moderation/
-│   │   ├── rankings/
-│   │   ├── social/
-│   │   ├── users/
-│   │   ├── wrapped/
-│   │   ├── .env.example
-│   │   └── requirements.txt
+│   │   ├── ai/          # insights por IA
+│   │   ├── analytics/   # cálculo do Burny Score™
+│   │   ├── metrics/     # check-ins diários
+│   │   ├── rankings/    # ranking global
+│   │   ├── social/      # feed + desabafos
+│   │   ├── users/       # perfis e auth
+│   │   └── wrapped/     # Burny Wrapped™
 │   └── frontend/
-│       ├── src/app/
-│       ├── src/components/
-│       ├── src/lib/
-│       └── .env.example
+│       └── src/app/     # páginas Next.js
 ├── docs/
-│   ├── architecture.md
-│   ├── product.md
-│   └── ui-direction.md
-├── Dados exemplo/
-├── burny_out_blueprint.md
-└── README.md
+└── Dados exemplo/
 ```
 
-## Como rodar
+---
+
+## ⚡ Como rodar localmente
+
+### Pré-requisitos
+- Python 3.12+
+- Node.js 20+
+- PostgreSQL (ou SQLite para dev)
 
 ### Backend
 
 ```bash
 cd apps/backend
 cp .env.example .env
-.venv/bin/python manage.py migrate
-.venv/bin/python manage.py seed_burny   # opcional: 20 perfis e 21 dias de check-ins
-.venv/bin/python manage.py runserver
+# edite .env com suas credenciais
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py seed_burny   # 20 perfis + 21 dias de check-ins
+python manage.py runserver
 ```
 
-API disponivel em http://localhost:8000/api/health/
-
-Schema OpenAPI em http://localhost:8000/api/schema/
-
-Docs Swagger em http://localhost:8000/api/docs/
+API disponível em `http://localhost:8000/api/`
 
 ### Frontend
 
 ```bash
 cd apps/frontend
 cp .env.example .env.local
+# edite NEXT_PUBLIC_API_URL=http://localhost:8000/api
 npm install
 npm run dev
 ```
 
-Aplicacao disponivel em http://localhost:3000
+App disponível em `http://localhost:3000`
 
-## Endpoints da API
+---
 
-Publicos:
-- `GET  /api/health/` — health check.
-- `GET  /api/snapshot/` — descricao publica do produto.
-- `GET  /api/feed/?limit=30` — feed satirico com insights da Burny AI.
-- `GET  /api/rankings/?category=burnout` — ranking dos ultimos 7 dias. Categorias: `burnout`, `coffees`, `meetings`, `traffic`, `bathroom`.
-- `GET  /api/schema/` e `GET /api/docs/` — OpenAPI + Swagger.
+## 🔢 Métricas do Burny Score™
 
-Autenticados via header `X-Access-Token`:
-- `POST /api/profiles/` — cria perfil anonimo e devolve `access_token`.
-- `GET  /api/profiles/me/` — retorna o perfil do token.
-- `POST /api/checkins/` — registra check-in diario; backend calcula `burny_score` e gera insight.
-- `GET  /api/checkins/` — historico do proprio usuario.
-- `GET  /api/score/` — score atual, media semanal, totais e historico.
+O Burny Score™ é calculado a partir de:
 
-Exemplo rapido:
+| Métrica | Peso |
+|---------|------|
+| ☕ Cafés consumidos | 5 pts/unidade |
+| 😵 Reuniões inúteis | 10 pts/unidade |
+| 🚗 Minutos no trânsito | 0.1 pt/minuto |
+| 💀 Stress level (0–10) | 7 pts/unidade |
+| 🚽 Bathroom Revenue | indireto |
+| 🤖 Buzzwords aguentadas | 2 pts/unidade |
+
+Score máximo: 100 (colapso total). Score típico de uma segunda-feira: 87.
+
+---
+
+## 👥 Seed de dados
+
+O banco de produção tem **21 perfis** e **421 check-ins** reais. Execute `seed_burny` para popular localmente:
 
 ```bash
-TOKEN=$(curl -s -X POST http://localhost:8000/api/profiles/ \
-  -H "Content-Type: application/json" \
-  -d '{"nickname":"burny_demo","area":"dev","region":"Recife"}' \
-  | python -c "import json,sys;print(json.load(sys.stdin)['access_token'])")
-
-curl -X POST http://localhost:8000/api/checkins/ \
-  -H "Content-Type: application/json" \
-  -H "X-Access-Token: $TOKEN" \
-  -d '{"coffees":8,"useless_meetings":7,"traffic_minutes":120,"stress_level":9,"bathroom_revenue_cents":420,"buzzwords_endured":18}'
-
-curl http://localhost:8000/api/score/ -H "X-Access-Token: $TOKEN"
+python manage.py seed_burny --days 21 --reset
 ```
 
-## Principios do produto
+---
 
-- Humor sem atacar pessoas reais.
-- Satira de cultura corporativa, nao de sofrimento real.
-- Comedia exagerada com linguagem de produto premium.
-- Interface cinematografica, nao um dashboard generico qualquer.
-- Arquitetura organizada desde o primeiro commit.
+*Feito com 🔥 e sofrimento corporativo estruturado para a CODECON 2026.*
 
-## Roadmap sugerido
-
-1. Criar onboarding anonimo e check-in corporativo.
-2. Modelar Burny Score, snapshots diarios e metricas comparativas.
-3. Implementar feed social, reacoes, rankings e rede de amigos.
-4. Adicionar Burny AI para insights, cards e wrapped corporativo.
-5. Fechar deploy, assets de marca e narrativa de demo para palco.
-
-## Documentacao complementar
-
-- [docs/architecture.md](docs/architecture.md)
-- [docs/product.md](docs/product.md)
-- [docs/ui-direction.md](docs/ui-direction.md)

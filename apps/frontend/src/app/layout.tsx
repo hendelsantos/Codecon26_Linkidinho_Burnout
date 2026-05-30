@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
+import { ConvidarAmigo } from "@/components/convidar-amigo";
 import { FingirTrabalho } from "@/components/fingir-trabalho";
 import { GerarDesculpa } from "@/components/gerar-desculpa";
 import "./globals.css";
@@ -33,6 +34,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         {children}
+        <ConvidarAmigo />
         <GerarDesculpa />
         <FingirTrabalho />
       </body>

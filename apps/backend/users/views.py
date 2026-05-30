@@ -2,8 +2,10 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from django.db import models as django_models
+
 from .badges import compute_badges
-from .models import BURNY_SKILLS, Follow, Profile, SkillEndorsement
+from .models import BURNY_SKILLS, ConviteAmigo, Follow, Profile, SkillEndorsement
 from .serializers import ProfileCreateSerializer, ProfileDetailSerializer, ProfilePublicSerializer
 
 
@@ -137,3 +139,84 @@ class BadgesView(APIView):
             }
             for b in badges
         ])
+
+
+# ──── Convites ────────────────────────────────────────────────────────────────
+
+TIPOS_RELACAO = {t[0]: t[1] for t in ConviteAmigo.TIPOS}
+
+
+class ConviteListCreateView(APIView):
+    """Lista os convites do usuário ou cria um novo por tipo de relação."""
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        convites = ConviteAmigo.objects.filter(remetente=request.user)
+        data = [
+            {
+                "codigo": c.codigo,
+                "tipo_relacao": c.tipo_relacao,
+                "tipo_label": c.get_tipo_relacao_display(),
+                "usos": c.usos,
+            }
+            for c in convites
+        ]
+        return Response(data)
+
+    def post(self, request):
+        tipo = request.data.get("tipo_relacao", "")
+        if tipo not in TIPOS_RELACAO:
+            return Response(
+                {"detail": f"Tipo inválido. Use: {list(TIPOS_RELACAO.keys())}"},
+                status=400,
+            )
+        convite, _ = ConviteAmigo.objects.get_or_create(
+            remetente=request.user, tipo_relacao=tipo
+        )
+        return Response(
+            {
+                "codigo": convite.codigo,
+                "tipo_relacao": convite.tipo_relacao,
+                "tipo_label": convite.get_tipo_relacao_display(),
+                "usos": convite.usos,
+            },
+            status=201,
+        )
+
+
+class ConviteInfoView(APIView):
+    """Info pública de um convite pelo código — exibida no onboarding."""
+
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, codigo):
+        try:
+            convite = ConviteAmigo.objects.select_related("remetente").get(codigo=codigo)
+        except ConviteAmigo.DoesNotExist:
+            return Response({"detail": "Convite não encontrado."}, status=404)
+        return Response(
+            {
+                "codigo": convite.codigo,
+                "tipo_relacao": convite.tipo_relacao,
+                "tipo_label": convite.get_tipo_relacao_display(),
+                "remetente_nickname": convite.remetente.nickname,
+                "remetente_avatar": convite.remetente.avatar_emoji,
+                "usos": convite.usos,
+            }
+        )
+
+
+class ConviteUsarView(APIView):
+    """Registra o uso de um convite (chamado após cadastro bem-sucedido)."""
+
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, codigo):
+        updated = ConviteAmigo.objects.filter(codigo=codigo).update(
+            usos=django_models.F("usos") + 1
+        )
+        if not updated:
+            return Response({"detail": "Convite não encontrado."}, status=404)
+        return Response({"ok": True})
+

@@ -3,10 +3,10 @@
 import { motion } from "framer-motion";
 import { Check, Copy, Eye, EyeOff, Flame, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 
-import { AREAS, AVATARS, REGIONS, api } from "@/lib/api";
+import { AREAS, AVATARS, ConviteInfo, REGIONS, api } from "@/lib/api";
 import { auth } from "@/lib/auth";
 
 const AREA_OPTIONS = [...AREAS];
@@ -103,7 +103,19 @@ function TokenStep({ token, nickname, onContinue }: { token: string; nickname: s
 // ──── Step 1: Form de cadastro ────────────────────────────────────────────
 
 export default function OnboardingPage() {
+  return (
+    <Suspense>
+      <OnboardingForm />
+    </Suspense>
+  );
+}
+
+function OnboardingForm() {
   const router = useRouter();
+  const params = useSearchParams();
+  const conviteCodigo = params.get("convite");
+
+  const [conviteInfo, setConviteInfo] = useState<ConviteInfo | null>(null);
   const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -114,6 +126,12 @@ export default function OnboardingPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [savedToken, setSavedToken] = useState<string | null>(null);
+
+  // Busca info do convite se vier com ?convite= na URL
+  useEffect(() => {
+    if (!conviteCodigo) return;
+    api.infoConvite(conviteCodigo).then(setConviteInfo).catch(() => null);
+  }, [conviteCodigo]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -141,6 +159,10 @@ export default function OnboardingPage() {
       });
       auth.setToken(profile.access_token);
       auth.setProfile(profile);
+      // Registra uso do convite se veio com link de convite
+      if (conviteCodigo) {
+        api.usarConvite(conviteCodigo).catch(() => null);
+      }
       setSavedToken(profile.access_token); // mostra tela de token
     } catch {
       setError("Erro ao criar perfil. O backend está operacional?");
@@ -195,6 +217,21 @@ export default function OnboardingPage() {
         </div>
 
         <div className="glass-panel rounded-[32px] p-6 sm:p-8">
+          {/* Banner de convite */}
+          {conviteInfo && (
+            <div className="mb-6 flex items-center gap-3 rounded-2xl border border-violet/30 bg-violet/10 px-4 py-3">
+              <span className="text-2xl">{conviteInfo.remetente_avatar}</span>
+              <div>
+                <p className="text-sm font-semibold text-white">
+                  {conviteInfo.remetente_nickname} te convidou
+                </p>
+                <p className="text-xs text-slate-400">
+                  Como: <span className="text-violet">{conviteInfo.tipo_label}</span>
+                </p>
+              </div>
+            </div>
+          )}
+
           <p className="text-xs uppercase tracking-[0.3em] text-muted">Onboarding</p>
           <h1 className="mt-3 text-3xl font-bold text-white">
             Registre seu colapso profissional.

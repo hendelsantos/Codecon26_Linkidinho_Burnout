@@ -112,3 +112,38 @@ class SkillEndorsement(models.Model):
     def __str__(self) -> str:
         return f"{self.endorser.nickname} endossou {self.skill} de {self.profile.nickname}"
 
+
+class ConviteAmigo(models.Model):
+    """Link de convite tipado por tipo de relação."""
+
+    TIPOS = [
+        ("amigo", "🫂 Amigo"),
+        ("colega_trabalho", "💼 Colega de trabalho"),
+        ("conhecido_almoco", "🍽️ Conhecido do almoço"),
+        ("colega_profissao", "🤝 Colega de profissão"),
+        ("conhecido", "👋 Conhecido"),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    remetente = models.ForeignKey(
+        Profile,
+        related_name="convites_enviados",
+        on_delete=models.CASCADE,
+    )
+    codigo = models.CharField(max_length=12, unique=True, editable=False)
+    tipo_relacao = models.CharField(max_length=20, choices=TIPOS)
+    usos = models.PositiveIntegerField(default=0)
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = [["remetente", "tipo_relacao"]]
+        ordering = ["-criado_em"]
+
+    def save(self, *args, **kwargs):
+        if not self.codigo:
+            self.codigo = uuid.uuid4().hex[:10]
+        super().save(*args, **kwargs)
+
+    def __str__(self) -> str:
+        return f"{self.remetente.nickname} convida como {self.get_tipo_relacao_display()} (usos: {self.usos})"
+

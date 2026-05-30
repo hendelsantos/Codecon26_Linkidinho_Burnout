@@ -142,6 +142,18 @@ export interface CheckInPayload {
   note?: string;
 }
 
+export interface ConviteAmigo {
+  codigo: string;
+  tipo_relacao: string;
+  tipo_label: string;
+  usos: number;
+}
+
+export interface ConviteInfo extends ConviteAmigo {
+  remetente_nickname: string;
+  remetente_avatar: string;
+}
+
 export interface ScoreResponse {
   current_score: number;
   current_insight: string;
@@ -254,6 +266,24 @@ export const api = {
 
   getWrapped: (token: string) =>
     apiFetch<Wrapped>("/wrapped/", { token }),
+
+  // ──── Convites ────────────────────────────────────────────────────────────
+
+  getConvites: (token: string) =>
+    apiFetch<ConviteAmigo[]>("/convites/", { token }),
+
+  gerarConvite: (token: string, tipo_relacao: string) =>
+    apiFetch<ConviteAmigo>("/convites/", {
+      method: "POST",
+      token,
+      body: JSON.stringify({ tipo_relacao }),
+    }),
+
+  infoConvite: (codigo: string) =>
+    apiFetch<ConviteInfo>(`/convites/${codigo}/`),
+
+  usarConvite: (codigo: string) =>
+    apiFetch<{ ok: boolean }>(`/convites/${codigo}/usar/`, { method: "POST" }),
 };
 
 // ──── Helpers ─────────────────────────────────────────────────────────────────

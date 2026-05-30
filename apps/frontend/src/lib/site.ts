@@ -44,22 +44,22 @@ export const statCards: MetricCard[] = [
   {
     label: "Burnout Risk",
     value: "92%",
-    caption: "+8 pontos desde a última daily estendida",
+    caption: "clinicamente impressionante, tecnicamente preocupante",
   },
   {
     label: "Café consumido",
     value: "7",
-    caption: "xícaras necessárias para manter humanidade operacional",
+    caption: "xícaras antes das 10h — e isso é segunda-feira",
   },
   {
     label: "Reuniões inúteis",
     value: "12",
-    caption: "esta semana, com zero plot twist",
+    caption: "esta semana, zero com decisão real tomada",
   },
   {
     label: "Bathroom Revenue",
     value: "R$ 381",
-    caption: "melhor trimestre do banheiro corporativo",
+    caption: "melhor ROI por metro quadrado da empresa",
   },
 ];
 

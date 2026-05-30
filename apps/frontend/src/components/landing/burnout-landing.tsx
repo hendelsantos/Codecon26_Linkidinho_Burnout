@@ -80,7 +80,7 @@ export function BurnoutLanding() {
           <nav className="hidden items-center gap-6 text-sm text-slate-300 lg:flex">
             <Link href="/dashboard">Dashboard</Link>
             <Link href="/feed">Feed</Link>
-            <a href="#stack">Stack</a>
+            <Link href="/sobre">Sobre</Link>
             <a href="#roadmap">Roadmap</a>
           </nav>
 
@@ -119,10 +119,10 @@ export function BurnoutLanding() {
 
             <div className="max-w-3xl">
               <h1 className="text-glow max-w-3xl text-[2rem] font-bold leading-[1.05] text-white sm:text-6xl sm:leading-[0.95] xl:text-7xl">
-                Seu burnout agora vem com dashboard, ranking e selo premium de sobrevivência.
+                Transforme seu colapso corporativo em conteúdo premium.
               </h1>
               <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-300 sm:mt-6 sm:text-lg sm:leading-8">
-                BurnyOut transforma café, reuniões infinitas, trânsito, buzzwords e bathroom revenue em uma rede social cinematográfica. O tom é exagerado, cômico e enterprise; a experiência é premium, organizada e pronta para virar demo memorável.
+                BurnyOut é a única rede social honesta sobre trabalho. Aqui, café excessivo vira métrica, reunião inútil vira dado e sofrimento corporativo vira ranking. Tudo medido, graficado e compartilhável. Porque se você vai entrar em colapso, que seja com dashboard bonito.
               </p>
             </div>
 
@@ -131,14 +131,14 @@ export function BurnoutLanding() {
                 href="/onboarding"
                 className="burn-gradient rounded-full px-6 py-3.5 text-center font-semibold text-black transition-transform hover:scale-[1.02]"
               >
-                Criar minha conta
+                🔥 Entrar em colapso com estilo
               </Link>
-              <a
-                href="#stack"
+              <Link
+                href="/sobre"
                 className="rounded-full border border-white/10 bg-white/5 px-6 py-3.5 text-center font-semibold text-white transition-colors hover:bg-white/10"
               >
-                Ler o manifesto operacional
-              </a>
+                Mas o que diabos é isso?
+              </Link>
             </div>
 
             <div className="mt-10 grid gap-4 md:grid-cols-4">
@@ -439,7 +439,7 @@ export function BurnoutLanding() {
               <p className="text-xs uppercase tracking-[0.3em] text-muted">Arquitetura pronta para demo</p>
               <h2 className="mt-2 text-3xl font-semibold text-white">Monorepo com cara de produto sério e senso de humor perigoso.</h2>
               <p className="mt-4 max-w-2xl text-base leading-8 text-slate-300">
-                Frontend em Next.js com App Router e design system temático. Backend em Django REST Framework com domínios separados para usuários, métricas, analytics, social, rankings e wrapped. A piada é grande; a organização, também.
+                Construído em 72 horas de Codecon com cafeína excessiva, commits às 3h da manhã e a firme convicção de que sofrimento corporativo merecia representação digna. O código é real, o deploy é real, o burnout dos criadores também.
               </p>
             </div>
 

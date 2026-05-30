@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import { BurnoutChart } from "@/components/landing/burnout-chart";
 import { BrasilCorporativo } from "@/components/brasil-corporativo";
 import { BathroomRevenueLanding } from "@/components/bathroom-revenue-landing";
+import { DicasTicker } from "@/components/dicas-corporativas";
 import { FeedItem, RankingEntry, api, timeAgo } from "@/lib/api";
 import {
   burnyHighlights,
@@ -101,6 +102,8 @@ export function BurnoutLanding() {
             </Link>
           </div>
         </motion.header>
+
+        <DicasTicker />
 
         <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
           <motion.section

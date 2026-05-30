@@ -10,6 +10,7 @@ import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 import { Badge, CheckIn, CheckInPayload, Desabafo, HistoryEntry, MeuComparativo, Profile, ScoreResponse, api, timeAgo } from "@/lib/api";
 import { auth } from "@/lib/auth";
 import { ConviteModal } from "@/components/convidar-amigo";
+import { DicasCard } from "@/components/dicas-corporativas";
 
 const METRIC_LABELS: Record<string, string> = {
   coffees: "Cafés",
@@ -739,6 +740,9 @@ export default function DashboardPage() {
               </div>
             </motion.div>
           )}
+
+          {/* Dica corporativa rotativa */}
+          <DicasCard />
         </div>
       </div>
     </main>

@@ -41,7 +41,7 @@ function TokenStep({ token, onContinue }: { token: string; onContinue: () => voi
         </div>
       </div>
 
-      <div className="glass-panel rounded-[32px] p-8">
+      <div className="glass-panel rounded-[32px] p-6 sm:p-8">
         <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/10 border border-emerald-500/30">
           <span className="text-2xl">🎉</span>
         </div>
@@ -76,7 +76,7 @@ function TokenStep({ token, onContinue }: { token: string; onContinue: () => voi
           onClick={onContinue}
           className="burn-gradient mt-6 flex w-full items-center justify-center rounded-full py-4 text-base font-semibold text-black transition-all hover:scale-[1.01]"
         >
-          {copied ? "Token copiado! Ir para o dashboard →" : "Continuar para o dashboard →"}
+          {copied ? "Token copiado! Ir para minha conta →" : "Ir para minha conta →"}
         </button>
       </div>
 
@@ -185,7 +185,7 @@ export default function OnboardingPage() {
           </Link>
         </div>
 
-        <div className="glass-panel rounded-[32px] p-8">
+        <div className="glass-panel rounded-[32px] p-6 sm:p-8">
           <p className="text-xs uppercase tracking-[0.3em] text-muted">Onboarding</p>
           <h1 className="mt-3 text-3xl font-bold text-white">
             Registre seu colapso profissional.
@@ -327,7 +327,7 @@ export default function OnboardingPage() {
               className="burn-gradient flex w-full items-center justify-center gap-2 rounded-full py-4 text-base font-semibold text-black transition-all hover:scale-[1.01] disabled:opacity-60"
             >
               {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-              {loading ? "Registrando colapso…" : "Entrar no colapso"}
+              {loading ? "Registrando colapso…" : "Criar minha conta"}
             </button>
           </form>
         </div>

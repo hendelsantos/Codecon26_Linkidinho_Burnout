@@ -38,6 +38,12 @@ html {
   scroll-behavior: smooth;
 }
 
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -83,4 +89,13 @@ button {
 
 .text-glow {
   text-shadow: 0 0 32px rgba(255, 107, 44, 0.28);
+}
+
+/* Evita o zoom automático do iOS ao focar campos com fonte < 16px em telas pequenas */
+@media (max-width: 640px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
 }

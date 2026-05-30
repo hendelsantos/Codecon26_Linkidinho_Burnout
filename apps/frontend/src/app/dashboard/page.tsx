@@ -181,7 +181,7 @@ export default function DashboardPage() {
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <p className="text-xs uppercase tracking-[0.3em] text-muted">Burny Score</p>
-                  <p className="mt-2 text-7xl font-bold text-white">{score.current_score}</p>
+                  <p className="mt-2 text-6xl font-bold text-white sm:text-7xl">{score.current_score}</p>
                   <p className="mt-1 text-sm text-slate-400">
                     Média semanal: <span className="text-white">{score.week_average}</span>
                   </p>

@@ -83,13 +83,13 @@ function DesabafoComposer({
         rows={3}
         className="w-full resize-none rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-white placeholder-slate-500 focus:border-violet/50 focus:outline-none"
       />
-      <div className="mt-3 flex items-center justify-between gap-3">
+      <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap gap-2">
           {NIVEL_OPTIONS.map((n) => (
             <button
               key={n.value}
               onClick={() => setNivel(n.value)}
-              className={`rounded-full border px-3 py-1 text-xs font-medium transition-all ${
+              className={`rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${
                 nivel === n.value
                   ? n.color + " ring-1 ring-violet/50"
                   : "border-white/10 bg-white/5 text-slate-400 hover:border-white/20"
@@ -99,7 +99,7 @@ function DesabafoComposer({
             </button>
           ))}
         </div>
-        <div className="flex shrink-0 items-center gap-3">
+        <div className="flex shrink-0 items-center justify-between gap-3 sm:justify-end">
           <span className="text-xs text-slate-500">{content.length}/500</span>
           <button
             onClick={() => void submit()}

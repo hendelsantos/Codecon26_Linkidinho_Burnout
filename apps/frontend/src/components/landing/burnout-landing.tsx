@@ -62,18 +62,18 @@ export function BurnoutLanding() {
     <main className="relative overflow-hidden">
       <section className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-5 pb-16 pt-6 sm:px-8 lg:px-10">
         <motion.header
-          className="glass-panel sticky top-4 z-20 mb-8 flex items-center justify-between rounded-full px-4 py-3"
+          className="glass-panel sticky top-3 z-20 mb-8 flex items-center justify-between gap-2 rounded-full px-3 py-2.5 sm:top-4 sm:px-4 sm:py-3"
           initial={{ opacity: 0, y: -16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45 }}
         >
-          <div className="flex items-center gap-3">
-            <div className="burn-gradient flex h-10 w-10 items-center justify-center rounded-2xl text-black shadow-[0_0_40px_rgba(130,87,255,0.45)]">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="burn-gradient flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-black shadow-[0_0_40px_rgba(130,87,255,0.45)]">
               <Flame className="h-5 w-5" />
             </div>
-            <div>
+            <div className="hidden min-w-0 sm:block">
               <p className="text-xs uppercase tracking-[0.35em] text-muted">Likidinho Burnout</p>
-              <p className="text-sm font-semibold text-white">Corporate Suffering Analytics Network</p>
+              <p className="truncate text-sm font-semibold text-white">Corporate Suffering Analytics Network</p>
             </div>
           </div>
 
@@ -84,18 +84,18 @@ export function BurnoutLanding() {
             <a href="#roadmap">Roadmap</a>
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             <Link
               href="/entrar"
-              className="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-slate-300 transition-all hover:bg-white/10 hover:text-white"
+              className="rounded-full border border-white/15 bg-white/5 px-3 py-2 text-sm font-medium text-slate-300 transition-all hover:bg-white/10 hover:text-white sm:px-4"
             >
-              Já tenho conta
+              Entrar
             </Link>
             <Link
               href="/onboarding"
-              className="burn-gradient rounded-full px-5 py-2 text-sm font-semibold text-black transition-transform hover:scale-[1.02]"
+              className="burn-gradient rounded-full px-4 py-2 text-sm font-semibold text-black transition-transform hover:scale-[1.02] sm:px-5"
             >
-              Entrar no colapso
+              Registre-se
             </Link>
           </div>
         </motion.header>
@@ -118,24 +118,24 @@ export function BurnoutLanding() {
             </div>
 
             <div className="max-w-3xl">
-              <h1 className="text-glow max-w-3xl text-5xl font-bold leading-[0.95] text-white sm:text-6xl xl:text-7xl">
+              <h1 className="text-glow max-w-3xl text-[2rem] font-bold leading-[1.05] text-white sm:text-6xl sm:leading-[0.95] xl:text-7xl">
                 Seu burnout agora vem com dashboard, ranking e selo premium de sobrevivência.
               </h1>
-              <p className="mt-6 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
+              <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-300 sm:mt-6 sm:text-lg sm:leading-8">
                 Burny Out transforma café, reuniões infinitas, trânsito, buzzwords e bathroom revenue em uma rede social cinematográfica. O tom é exagerado, cômico e enterprise; a experiência é premium, organizada e pronta para virar demo memorável.
               </p>
             </div>
 
-            <div className="mt-8 flex flex-wrap gap-4">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-4">
               <Link
                 href="/onboarding"
-                className="burn-gradient rounded-full px-6 py-3 font-semibold text-black transition-transform hover:scale-[1.02]"
+                className="burn-gradient rounded-full px-6 py-3.5 text-center font-semibold text-black transition-transform hover:scale-[1.02]"
               >
-                Ver o Dashboard do Caos
+                Criar minha conta
               </Link>
               <a
                 href="#stack"
-                className="rounded-full border border-white/10 bg-white/5 px-6 py-3 font-semibold text-white transition-colors hover:bg-white/10"
+                className="rounded-full border border-white/10 bg-white/5 px-6 py-3.5 text-center font-semibold text-white transition-colors hover:bg-white/10"
               >
                 Ler o manifesto operacional
               </a>
@@ -218,7 +218,7 @@ export function BurnoutLanding() {
           <motion.section
             {...fadeInUp}
             transition={{ duration: 0.55 }}
-            className="glass-panel rounded-[30px] p-5"
+            className="glass-panel hidden rounded-[30px] p-5 xl:block"
           >
             <div className="mb-5 flex items-center gap-3">
               <div className="rounded-2xl bg-white/8 p-2 text-violet">

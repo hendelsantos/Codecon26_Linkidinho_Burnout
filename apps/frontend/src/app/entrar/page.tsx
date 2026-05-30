@@ -105,7 +105,7 @@ export default function EntrarPage() {
         </div>
 
         {/* Login com senha */}
-        <div className="glass-panel rounded-[32px] p-8">
+        <div className="glass-panel rounded-[32px] p-6 sm:p-8">
           <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl border border-violet/30 bg-violet/10">
             <KeyRound className="h-6 w-6 text-violet" />
           </div>
@@ -225,12 +225,15 @@ export default function EntrarPage() {
           )}
         </div>
 
-        <p className="mt-6 text-center text-sm text-slate-500">
-          Não tem conta ainda?{" "}
-          <Link href="/onboarding" className="text-violet hover:underline">
-            Registrar novo colapso
+        <div className="mt-6 rounded-[24px] border border-white/8 bg-white/3 p-5 text-center">
+          <p className="text-sm text-slate-400">Ainda não tem conta?</p>
+          <Link
+            href="/onboarding"
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border border-violet/40 bg-violet/10 py-3.5 text-sm font-semibold text-violet transition-all hover:bg-violet/20"
+          >
+            Criar conta nova →
           </Link>
-        </p>
+        </div>
       </motion.div>
     </main>
   );

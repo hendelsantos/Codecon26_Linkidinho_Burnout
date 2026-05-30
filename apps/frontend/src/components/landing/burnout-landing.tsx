@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 
 import { BurnoutChart } from "@/components/landing/burnout-chart";
 import { BrasilCorporativo } from "@/components/brasil-corporativo";
+import { BathroomRevenueLanding } from "@/components/bathroom-revenue-landing";
 import { BotaoCompartilharWhatsApp } from "@/components/compartilhar-whatsapp";
 import { FeedItem, RankingEntry, api, timeAgo } from "@/lib/api";
 import {
@@ -463,6 +464,8 @@ export function BurnoutLanding() {
         </motion.section>
 
         <BrasilCorporativo />
+
+        <BathroomRevenueLanding />
 
         <motion.section
           id="roadmap"

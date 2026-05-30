@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { toast } from "sonner";
 import { ProfileDetail, SkillItem, BathroomRanking, api, timeAgo } from "@/lib/api";
 import { auth } from "@/lib/auth";
 
@@ -131,6 +132,9 @@ export default function PerfilPage() {
     try {
       const updated = await api.updateProfile(token, { monthly_salary_cents: cents });
       setProfile((p) => p ? { ...p, monthly_salary_cents: updated.monthly_salary_cents } : p);
+      toast.success("Salário salvo com sucesso!");
+    } catch {
+      toast.error("Erro ao salvar salário. Tente novamente.");
     } finally {
       setSavingSalary(false);
     }

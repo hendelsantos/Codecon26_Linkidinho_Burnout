@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
+import { Toaster } from "sonner";
 import { FingirTrabalho } from "@/components/fingir-trabalho";
 import { GerarDesculpa } from "@/components/gerar-desculpa";
 import "./globals.css";
@@ -35,6 +36,7 @@ export default function RootLayout({
         {children}
         <GerarDesculpa />
         <FingirTrabalho />
+        <Toaster position="bottom-right" richColors />
       </body>
     </html>
   );

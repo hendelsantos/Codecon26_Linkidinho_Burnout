@@ -54,8 +54,8 @@ export function BurnoutLanding() {
   const composerActions: Array<{ label: string; icon: LucideIcon }> = [
     { label: "Foto", icon: Coffee },
     { label: "Trauma", icon: Flame },
-    { label: "Trabalho inutil", icon: Rocket },
-    { label: "Cafe", icon: Sparkles },
+    { label: "Trabalho inútil", icon: Rocket },
+    { label: "Café", icon: Sparkles },
   ];
 
   return (
@@ -113,16 +113,16 @@ export function BurnoutLanding() {
             <div className="mb-7 flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.3em] text-muted">
               <span className="rounded-full border border-white/10 px-3 py-1">Codecon 2026</span>
               <span className="rounded-full border border-ember/30 bg-ember/10 px-3 py-1 text-ember-soft">
-                Satira nao toxica
+                Sátira não tóxica
               </span>
             </div>
 
             <div className="max-w-3xl">
               <h1 className="text-glow max-w-3xl text-5xl font-bold leading-[0.95] text-white sm:text-6xl xl:text-7xl">
-                Seu burnout agora vem com dashboard, ranking e selo premium de sobrevivencia.
+                Seu burnout agora vem com dashboard, ranking e selo premium de sobrevivência.
               </h1>
               <p className="mt-6 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
-                Burny Out transforma cafe, reunioes infinitas, transito, buzzwords e bathroom revenue em uma rede social cinematografica. O tom e exagerado, comico e enterprise; a experiencia e premium, organizada e pronta para virar demo memoravel.
+                Burny Out transforma café, reuniões infinitas, trânsito, buzzwords e bathroom revenue em uma rede social cinematográfica. O tom é exagerado, cômico e enterprise; a experiência é premium, organizada e pronta para virar demo memorável.
               </p>
             </div>
 
@@ -170,7 +170,7 @@ export function BurnoutLanding() {
                 <h2 className="mt-3 text-2xl font-semibold text-white">Burny, mascote operacional</h2>
               </div>
               <div className="rounded-full border border-ember/30 bg-ember/10 px-3 py-1 text-xs font-medium text-ember-soft">
-                Nivel critico
+                Nível crítico
               </div>
             </div>
 
@@ -181,7 +181,7 @@ export function BurnoutLanding() {
                 </div>
                 <div>
                   <p className="text-xl font-semibold text-white">Burny Out Prime</p>
-                  <p className="mt-1 text-sm text-slate-300">Dependente de cafe, funcional por obrigacao e gloriosamente monitorado.</p>
+                  <p className="mt-1 text-sm text-slate-300">Dependente de café, funcional por obrigação e gloriosamente monitorado.</p>
                 </div>
               </div>
 
@@ -226,17 +226,17 @@ export function BurnoutLanding() {
               </div>
               <div>
                 <p className="text-sm font-semibold text-white">Likidinho Burnout</p>
-                <p className="text-xs text-slate-400">Rede de sobrevivencia coletiva</p>
+                <p className="text-xs text-slate-400">Rede de sobrevivência coletiva</p>
               </div>
             </div>
 
             <div className="space-y-2 text-sm text-slate-300">
               {[
-                "Inicio",
+                "Início",
                 "Minha rede de sofrimento",
                 "Mensagens",
-                "Trabalhos inuteis",
-                "Cafe recebido",
+                "Trabalhos inúteis",
+                "Café recebido",
                 "Meu burnout",
                 "Saved for crying",
               ].map((item, index) => (
@@ -253,7 +253,7 @@ export function BurnoutLanding() {
               <p className="text-xs uppercase tracking-[0.3em] text-ember-soft">Alerta corporativo</p>
               <p className="mt-3 text-xl font-semibold text-white">Unauthorized optimism detected.</p>
               <p className="mt-2 text-sm leading-6 text-slate-300">
-                Ajuste de narrativa recomendado para manter a coerencia dramatica da plataforma.
+                Ajuste de narrativa recomendado para manter a coerência dramática da plataforma.
               </p>
             </div>
           </motion.section>
@@ -268,7 +268,7 @@ export function BurnoutLanding() {
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-xs uppercase tracking-[0.3em] text-muted">Feed principal</p>
-                  <h2 className="mt-2 text-2xl font-semibold text-white">No que voce esta sobrevivendo hoje?</h2>
+                  <h2 className="mt-2 text-2xl font-semibold text-white">No que você está sobrevivendo hoje?</h2>
                 </div>
                 <div className="flex items-center gap-2 text-slate-400">
                   <Bell className="h-4 w-4" />
@@ -348,7 +348,7 @@ export function BurnoutLanding() {
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-xs uppercase tracking-[0.3em] text-muted">Dashboard Burny Score</p>
-                  <h2 className="mt-2 text-2xl font-semibold text-white">Seu caos esta em tendencia de alta</h2>
+                  <h2 className="mt-2 text-2xl font-semibold text-white">Seu caos está em tendência de alta</h2>
                 </div>
                 <div className="rounded-full border border-danger/30 bg-danger/10 px-3 py-1 text-xs font-semibold text-red-300">
                   Risco 94%
@@ -367,13 +367,13 @@ export function BurnoutLanding() {
                   <div className="rounded-[24px] border border-white/8 bg-black/25 p-4">
                     <p className="text-sm text-slate-400">Insight Burny AI</p>
                     <p className="mt-3 text-xl font-semibold text-white">
-                      Voce participa de 43% mais reunioes que outros profissionais da sua regiao. Isso nao e networking. Isso e cardio corporativo.
+                      Você participa de 43% mais reuniões que outros profissionais da sua região. Isso não é networking. Isso é cardio corporativo.
                     </p>
                   </div>
                   <div className="rounded-[24px] border border-white/8 bg-black/25 p-4">
                     <p className="text-sm text-slate-400">Bathroom Revenue</p>
                     <p className="mt-3 text-4xl font-bold text-ember-soft">R$ 381</p>
-                    <p className="mt-2 text-sm text-slate-400">Projecao semanal acima da meta dramatica.</p>
+                    <p className="mt-2 text-sm text-slate-400">Projeção semanal acima da meta dramática.</p>
                   </div>
                 </div>
               </div>
@@ -437,9 +437,9 @@ export function BurnoutLanding() {
           <div className="grid gap-6 lg:grid-cols-2">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-muted">Arquitetura pronta para demo</p>
-              <h2 className="mt-2 text-3xl font-semibold text-white">Monorepo com cara de produto serio e senso de humor perigoso.</h2>
+              <h2 className="mt-2 text-3xl font-semibold text-white">Monorepo com cara de produto sério e senso de humor perigoso.</h2>
               <p className="mt-4 max-w-2xl text-base leading-8 text-slate-300">
-                Frontend em Next.js com App Router e design system tematico. Backend em Django REST Framework com dominios separados para usuarios, metricas, analytics, social, rankings e wrapped. A piada e grande; a organizacao, tambem.
+                Frontend em Next.js com App Router e design system temático. Backend em Django REST Framework com domínios separados para usuários, métricas, analytics, social, rankings e wrapped. A piada é grande; a organização, também.
               </p>
             </div>
 
@@ -447,7 +447,7 @@ export function BurnoutLanding() {
               {[
                 ["Frontend", "Next.js, TypeScript, Tailwind 4, Framer Motion, Recharts"],
                 ["Backend", "Django, DRF, OpenAPI, CORS, PostgreSQL-ready"],
-                ["Dominios", "users, metrics, analytics, social, ai, rankings, wrapped"],
+                ["Domínios", "users, metrics, analytics, social, ai, rankings, wrapped"],
                 ["Deploy", "Railway-friendly, docs centrais e env examples"],
               ].map(([title, description]) => (
                 <div key={String(title)} className="rounded-[24px] border border-white/8 bg-black/20 p-4">
@@ -466,7 +466,7 @@ export function BurnoutLanding() {
           className="mt-6 grid gap-6 lg:grid-cols-3"
         >
           {[
-            ["MVP", "Onboarding anonimo, Burny Score, feed satirico, ranking global e cards de compartilhamento."],
+            ["MVP", "Onboarding anônimo, Burny Score, feed satírico, ranking global e cards de compartilhamento."],
             ["AI Layer", "Burny AI com insights passivo-agressivos, comparativos regionais e wrapped narrado."],
             ["Showtime", "Deploy na Railway, docs polish, assets da marca e storytelling de palco para a Codecon."],
           ].map(([title, copy]) => (

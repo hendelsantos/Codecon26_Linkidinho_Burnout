@@ -44,15 +44,15 @@ export const statCards: MetricCard[] = [
   {
     label: "Burnout Risk",
     value: "92%",
-    caption: "+8 pontos desde a ultima daily extendida",
+    caption: "+8 pontos desde a última daily estendida",
   },
   {
-    label: "Cafe consumido",
+    label: "Café consumido",
     value: "7",
-    caption: "xicras necessarias para manter humanidade operacional",
+    caption: "xícaras necessárias para manter humanidade operacional",
   },
   {
-    label: "Reunioes inuteis",
+    label: "Reuniões inúteis",
     value: "12",
     caption: "esta semana, com zero plot twist",
   },
@@ -64,35 +64,35 @@ export const statCards: MetricCard[] = [
 ];
 
 export const burnyHighlights: Highlight[] = [
-  { label: "Conexoes cansadas", value: "666" },
-  { label: "Cafes recebidos", value: "432" },
+  { label: "Conexões cansadas", value: "666" },
+  { label: "Cafés recebidos", value: "432" },
   { label: "Burny score", value: "98%" },
 ];
 
 export const featureCards: FeatureCard[] = [
   {
     title: "Burny AI",
-    description: "Comenta sua rotina com a elegancia de um consultor que dormiu no PowerPoint.",
+    description: "Comenta sua rotina com a elegância de um consultor que dormiu no PowerPoint.",
     icon: BrainCircuit,
   },
   {
     title: "Coffee Support",
-    description: "Envie cafe premium, espresso de emergencia ou latte de ultima esperanca.",
+    description: "Envie café premium, espresso de emergência ou latte de última esperança.",
     icon: Coffee,
   },
   {
     title: "Burnout Dashboard",
-    description: "Graficos exagerados, alertas industriais e estetica enterprise noir.",
+    description: "Gráficos exagerados, alertas industriais e estética enterprise noir.",
     icon: Gauge,
   },
   {
     title: "Ranking Global",
-    description: "Compare sua resiliencia dramatica sem abrir espaco para ataque pessoal.",
+    description: "Compare sua resiliência dramática sem abrir espaço para ataque pessoal.",
     icon: Crown,
   },
   {
     title: "Wrapped Corporativo",
-    description: "Seu ano em reunioes, cafes, transito e milagres operacionais.",
+    description: "Seu ano em reuniões, cafés, trânsito e milagres operacionais.",
     icon: Radar,
   },
 ];
@@ -103,8 +103,8 @@ export const feedMoments: FeedMoment[] = [
     role: "Especialista em apagar incendios com planilhas",
     time: "2h",
     message:
-      "Participei de 6 reunioes hoje e produzi exatamente 7 minutos de trabalho. Produtividade: excelente para fins de storytelling executivo.",
-    tags: ["Sobreviveu", "Reuniao inutil", "Burnando"],
+      "Participei de 6 reuniões hoje e produzi exatamente 7 minutos de trabalho. Produtividade: excelente para fins de storytelling executivo.",
+    tags: ["Sobreviveu", "Reunião inútil", "Burnando"],
     reactions: "147",
     comments: "36",
   },
@@ -113,17 +113,17 @@ export const feedMoments: FeedMoment[] = [
     role: "Arquiteto de APIs e desculpas elegantes",
     time: "3h",
     message:
-      "Deploy na sexta-feira as 18h. Porque a vida e feita de escolhas ruins, observabilidade emocional e logs com cheiro de cafe requentado.",
-    tags: ["Sem cafe", "Daily extendida", "Clima de guerra"],
+      "Deploy na sexta-feira às 18h. Porque a vida é feita de escolhas ruins, observabilidade emocional e logs com cheiro de café requentado.",
+    tags: ["Sem café", "Daily estendida", "Clima de guerra"],
     reactions: "98",
     comments: "21",
   },
   {
     author: "PM em Crise",
-    role: "Guardiao das prioridades que nunca param quietas",
+    role: "Guardião das prioridades que nunca param quietas",
     time: "5h",
     message:
-      "Recebi 'vamos alinhar rapidinho' as 22:47. O app registrou automaticamente como incidente de moral abaixo do threshold operacional.",
+      "Recebi 'vamos alinhar rapidinho' às 22:47. O app registrou automaticamente como incidente de moral abaixo do threshold operacional.",
     tags: ["Buzzword overload", "Sem contexto", "Cafe IV"],
     reactions: "212",
     comments: "48",
@@ -138,7 +138,7 @@ export const rankingEntries: RankingEntry[] = [
   },
   {
     name: "Dev Backend",
-    role: "Tolerancia alta a deploy tardio",
+    role: "Tolerância alta a deploy tardio",
     score: "89%",
   },
   {

@@ -56,8 +56,9 @@ export function FingirTrabalho() {
     <>
       <button
         onClick={() => setAtivo(true)}
-        title="Ctrl+Shift+W"
-        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full border border-white/10 bg-black/80 px-4 py-2.5 text-sm font-medium text-white shadow-xl backdrop-blur transition-all hover:scale-105 hover:bg-white/10"
+        title="Ctrl+Shift+W — Gerador de desculpas corporativas"
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-600 to-orange-500 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_4px_24px_rgba(130,87,255,0.45)] transition-all hover:scale-105 hover:shadow-[0_4px_32px_rgba(255,107,44,0.5)] active:scale-95"
+        style={{ background: "linear-gradient(135deg,#8257ff,#ff6b2c)" }}
       >
         👔 <span>Boss chegou</span>
       </button>

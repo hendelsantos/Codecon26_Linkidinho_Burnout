@@ -1,13 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { BrainCircuit, Flame, Loader2, LogOut, Share2, Sparkles } from "lucide-react";
+import { BrainCircuit, Flame, Loader2, LogOut, MessageSquare, Share2, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 
-import { Badge, CheckIn, CheckInPayload, HistoryEntry, MeuComparativo, Profile, ScoreResponse, api, timeAgo } from "@/lib/api";
+import { Badge, CheckIn, CheckInPayload, Desabafo, HistoryEntry, MeuComparativo, Profile, ScoreResponse, api, timeAgo } from "@/lib/api";
 import { auth } from "@/lib/auth";
 import { ConviteModal } from "@/components/convidar-amigo";
 
@@ -56,6 +56,13 @@ export default function DashboardPage() {
   const [todayDone, setTodayDone] = useState(false);
   const [copied, setCopied] = useState(false);
   const [conviteAberto, setConviteAberto] = useState(false);
+  const [streak, setStreak] = useState(0);
+  const [checklistDismissed, setChecklistDismissed] = useState(false);
+  const [desabafoTexto, setDesabafoTexto] = useState("");
+  const [desabafoNivel, setDesabafoNivel] = useState("funcional");
+  const [desabafoEnviando, setDesabafoEnviando] = useState(false);
+  const [desabafoEnviado, setDesabafoEnviado] = useState(false);
+  const [hasDesabafo, setHasDesabafo] = useState(false);
 
   const load = useCallback(async () => {
     const token = auth.getToken();
@@ -87,6 +94,26 @@ export default function DashboardPage() {
       }
       const today = new Date().toISOString().slice(0, 10);
       setTodayDone(ciArr.some((c) => c.date === today));
+
+      // Calcular streak de check-ins consecutivos
+      const sortedDates = ciArr.map((c) => c.date).sort().reverse();
+      let s = 0;
+      const cur = new Date();
+      for (const d of sortedDates) {
+        const expected = new Date(cur);
+        expected.setDate(cur.getDate() - s);
+        if (d === expected.toISOString().slice(0, 10)) {
+          s++;
+        } else break;
+      }
+      setStreak(s);
+
+      // Verificar se já fez desabafo
+      api.getDesabafos(1, token).then((r) => {
+        const myNick = p.nickname;
+        setHasDesabafo(r.results.some((d: Desabafo) => d.author.nickname === myNick));
+      }).catch(() => {});
+
     } catch {
       auth.clear();
       router.replace("/onboarding");
@@ -120,8 +147,22 @@ export default function DashboardPage() {
     router.push("/");
   }
 
-  async function handleShare() {
-    const text = `Meu Burny Score é ${score?.current_score ?? "??"} — ${scoreLabel(score?.current_score ?? 0)}. ${score?.current_insight ?? ""} #BurnyOut`;
+  async function handleDesabafo() {
+    const token = auth.getToken();
+    if (!token || !desabafoTexto.trim()) return;
+    setDesabafoEnviando(true);
+    try {
+      await api.createDesabafo(token, { content: desabafoTexto.trim(), nivel: desabafoNivel });
+      setDesabafoTexto("");
+      setDesabafoEnviado(true);
+      setHasDesabafo(true);
+      setTimeout(() => setDesabafoEnviado(false), 3000);
+    } finally {
+      setDesabafoEnviando(false);
+    }
+  }
+
+  async function handleShare() {    const text = `Meu Burny Score é ${score?.current_score ?? "??"} — ${scoreLabel(score?.current_score ?? 0)}. ${score?.current_insight ?? ""} #BurnyOut`;
     try {
       if (navigator.share) {
         await navigator.share({ title: "BurnyOut", text });
@@ -182,6 +223,61 @@ export default function DashboardPage() {
       <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
         {/* Left: score + form */}
         <div className="space-y-6">
+
+          {/* Checklist de onboarding — aparece enquanto houver tarefas pendentes */}
+          {!checklistDismissed && (
+            (() => {
+              const tasks = [
+                { done: todayDone,                           emoji: "📊", label: "Fazer o check-in de hoje" },
+                { done: !!profile?.monthly_salary_cents,     emoji: "💰", label: "Cadastrar seu salário (Receita no Banheiro)", href: profile ? `/perfil/${profile.id}` : undefined },
+                { done: hasDesabafo,                         emoji: "💬", label: "Escrever um desabafo no feed" },
+                { done: (profile?.following_count ?? 0) > 0, emoji: "👥", label: "Seguir alguém no BurnyOut", href: "/ranking" },
+              ];
+              const allDone = tasks.every((t) => t.done);
+              if (allDone) return null;
+              const done = tasks.filter((t) => t.done).length;
+              return (
+                <motion.div
+                  className="glass-panel rounded-[32px] p-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.3em] text-muted">Primeiros passos</p>
+                      <h2 className="mt-1 text-lg font-semibold text-white">
+                        {done}/{tasks.length} concluídos
+                      </h2>
+                    </div>
+                    <button onClick={() => setChecklistDismissed(true)} className="text-xs text-slate-600 hover:text-slate-400">
+                      dispensar
+                    </button>
+                  </div>
+                  <div className="mt-4 space-y-2">
+                    {tasks.map((t) => (
+                      <div key={t.label} className={`flex items-center gap-3 rounded-[14px] border px-4 py-3 transition-colors ${t.done ? "border-emerald-500/20 bg-emerald-500/5" : "border-white/8 bg-black/20"}`}>
+                        <span className="text-base">{t.done ? "✅" : t.emoji}</span>
+                        {t.href && !t.done ? (
+                          <Link href={t.href} className="flex-1 text-sm text-slate-300 hover:text-white hover:underline">{t.label}</Link>
+                        ) : (
+                          <span className={`flex-1 text-sm ${t.done ? "text-slate-500 line-through" : "text-slate-300"}`}>{t.label}</span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                  {/* Barra de progresso */}
+                  <div className="mt-4 h-1.5 w-full overflow-hidden rounded-full bg-white/8">
+                    <div
+                      className="h-full rounded-full bg-emerald-500 transition-all duration-700"
+                      style={{ width: `${(done / tasks.length) * 100}%` }}
+                    />
+                  </div>
+                </motion.div>
+              );
+            })()
+          )}
+
           {/* Score card */}
           {score && (
             <motion.section
@@ -345,6 +441,92 @@ export default function DashboardPage() {
 
         {/* Right: history */}
         <div className="space-y-6">
+
+          {/* Streak + Desabafo rápido */}
+          <motion.div
+            className="glass-panel rounded-[32px] p-6"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            {/* Streak */}
+            <div className="flex items-center gap-3 mb-5">
+              <div className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-2xl font-bold ${streak >= 7 ? "bg-ember/20 text-ember-soft" : streak >= 3 ? "bg-yellow-500/15 text-yellow-400" : "bg-white/8 text-white"}`}>
+                {streak >= 1 ? "🔥" : "💤"}
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-white">
+                  {streak} {streak === 1 ? "dia" : "dias"}
+                  {streak >= 7 && <span className="ml-2 text-sm font-normal text-ember-soft">em chamas</span>}
+                  {streak >= 3 && streak < 7 && <span className="ml-2 text-sm font-normal text-yellow-400">aquecendo</span>}
+                </p>
+                <p className="text-xs text-slate-400">
+                  {streak === 0
+                    ? "Faça um check-in para começar sua streak"
+                    : streak >= 30
+                    ? "30+ dias. Você precisa de férias ou de um psicólogo."
+                    : "de check-ins consecutivos"}
+                </p>
+              </div>
+            </div>
+
+            {/* Desabafo rápido */}
+            <div className="border-t border-white/8 pt-4">
+              <div className="flex items-center gap-2 mb-3">
+                <MessageSquare className="h-3.5 w-3.5 text-slate-400" />
+                <p className="text-xs uppercase tracking-[0.3em] text-muted">Desabafo rápido</p>
+              </div>
+              {desabafoEnviado ? (
+                <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-center text-sm text-emerald-400">
+                  Desabafo enviado. A comunidade te ouve. 🤝
+                </div>
+              ) : (
+                <>
+                  <div className="mb-2 flex gap-1 flex-wrap">
+                    {[
+                      { v: "funcional", label: "😬 Funcional" },
+                      { v: "alerta", label: "⚠️ Alerta" },
+                      { v: "critico", label: "🤯 Crítico" },
+                      { v: "colapso", label: "💀 Colapso" },
+                    ].map((n) => (
+                      <button
+                        key={n.v}
+                        onClick={() => setDesabafoNivel(n.v)}
+                        className={`rounded-full border px-3 py-1 text-xs transition-colors ${desabafoNivel === n.v ? "border-violet/60 bg-violet/20 text-violet" : "border-white/10 bg-white/5 text-slate-400"}`}
+                      >
+                        {n.label}
+                      </button>
+                    ))}
+                  </div>
+                  <textarea
+                    value={desabafoTexto}
+                    onChange={(e) => setDesabafoTexto(e.target.value)}
+                    maxLength={500}
+                    rows={3}
+                    placeholder="O que aconteceu hoje no trabalho? (sem filtro)"
+                    className="w-full resize-none rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white placeholder-slate-600 outline-none focus:border-violet/40"
+                  />
+                  <div className="mt-2 flex items-center justify-between">
+                    <span className="text-xs text-slate-600">{desabafoTexto.length}/500</span>
+                    <div className="flex gap-2">
+                      <Link href="/feed" className="rounded-full border border-white/10 px-3 py-1.5 text-xs text-slate-400 hover:text-white">
+                        Ver feed
+                      </Link>
+                      <button
+                        onClick={() => void handleDesabafo()}
+                        disabled={!desabafoTexto.trim() || desabafoEnviando}
+                        className="flex items-center gap-1.5 rounded-full bg-violet px-4 py-1.5 text-xs font-semibold text-white disabled:opacity-50 hover:bg-violet/80 transition-colors"
+                      >
+                        {desabafoEnviando ? <Loader2 className="h-3 w-3 animate-spin" /> : null}
+                        Publicar
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </motion.div>
+
           <motion.section
             className="glass-panel rounded-[32px] p-6"
             initial={{ opacity: 0, x: 20 }}

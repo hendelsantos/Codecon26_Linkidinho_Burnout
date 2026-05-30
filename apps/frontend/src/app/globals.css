@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+:root {
+  --background: #050816;
+  --foreground: #f6ecdf;
+  --muted: #9f96a9;
+  --panel: rgba(9, 13, 28, 0.82);
+  --panel-strong: rgba(12, 17, 35, 0.96);
+  --border: rgba(255, 255, 255, 0.08);
+  --violet: #8257ff;
+  --ember: #ff6b2c;
+  --ember-soft: #ffb14a;
+  --danger: #ff5370;
+  --success: #85ffb0;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-panel: var(--panel);
+  --color-panel-strong: var(--panel-strong);
+  --color-border: var(--border);
+  --color-violet: var(--violet);
+  --color-ember: var(--ember);
+  --color-ember-soft: var(--ember-soft);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --font-sans: var(--font-space-grotesk);
+  --font-mono: var(--font-ibm-plex-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-space-grotesk), sans-serif;
+  background-image:
+    radial-gradient(circle at top left, rgba(130, 87, 255, 0.22), transparent 28%),
+    radial-gradient(circle at top right, rgba(255, 107, 44, 0.16), transparent 26%),
+    linear-gradient(180deg, #070a17 0%, #050816 48%, #070a12 100%);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(circle at center, black 45%, transparent 100%);
+  opacity: 0.18;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+}
+
+.glass-panel {
+  backdrop-filter: blur(18px);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.35);
+}
+
+.burn-gradient {
+  background: linear-gradient(135deg, var(--violet), var(--ember));
+}
+
+.text-glow {
+  text-shadow: 0 0 32px rgba(255, 107, 44, 0.28);
+}

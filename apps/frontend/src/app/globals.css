@@ -103,7 +103,7 @@ button {
 }
 
 .ticker-track {
-  animation: ticker-scroll 120s linear infinite;
+  animation: ticker-scroll 240s linear infinite;
   width: max-content;
 }
 

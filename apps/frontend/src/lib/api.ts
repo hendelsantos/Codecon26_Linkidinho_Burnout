@@ -350,7 +350,7 @@ export const api = {
     apiFetch<BathroomRanking>("/analytics/bathroom/"),
 
   updateProfile: (token: string, data: { monthly_salary_cents?: number | null }) =>
-    apiFetch<Profile>("/me/", {
+    apiFetch<Profile>("/profiles/me/", {
       method: "PATCH",
       token,
       body: JSON.stringify(data),

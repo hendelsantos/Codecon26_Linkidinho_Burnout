@@ -238,7 +238,7 @@ export default function DashboardPage() {
                       <Tooltip
                         contentStyle={{ background: "#0f1018", border: "1px solid #ffffff18", borderRadius: 12, fontSize: 12 }}
                         labelFormatter={(v) => `📅 ${v}`}
-                        formatter={(v: number) => [`${v}`, "Burny Score"]}
+                        formatter={(v) => [`${v ?? ""}`, "Burny Score"]}
                       />
                       <Area type="monotone" dataKey="burny_score" stroke="#8257ff" strokeWidth={2} fill="url(#burnGrad)" dot={false} />
                     </AreaChart>

@@ -15,7 +15,7 @@ const AVATAR_OPTIONS = [...AVATARS];
 
 // ──── Step 2: Mostrar token ──────────────────────────────────────────────
 
-function TokenStep({ token, onContinue }: { token: string; onContinue: () => void }) {
+function TokenStep({ token, nickname, onContinue }: { token: string; nickname: string; onContinue: () => void }) {
   const [copied, setCopied] = useState(false);
 
   async function copy() {
@@ -49,35 +49,44 @@ function TokenStep({ token, onContinue }: { token: string; onContinue: () => voi
         <p className="text-xs uppercase tracking-[0.3em] text-muted">Cadastro realizado</p>
         <h1 className="mt-2 text-2xl font-bold text-white">Conta criada com sucesso!</h1>
         <p className="mt-2 text-sm leading-7 text-slate-400">
-          Seu cadastro está <strong className="text-white">salvo permanentemente</strong>. Se limpar o cache ou trocar de dispositivo, basta entrar com seu <strong className="text-white">apelido e senha</strong>. O token abaixo é seu <strong className="text-white">código de emergência</strong> caso esqueça a senha.
+          Tudo pronto, <strong className="text-white">{nickname}</strong>. Sua conta está salva. É só entrar.
         </p>
 
-        <div className="mt-6 rounded-2xl border border-violet/30 bg-violet/8 p-4">
-          <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-violet">
-            Seu token único
-          </p>
-          <div className="flex items-center gap-3">
-            <code className="flex-1 break-all font-mono text-sm text-white">{token}</code>
-            <button
-              onClick={() => void copy()}
-              className="shrink-0 rounded-xl border border-white/10 bg-white/5 p-2.5 text-slate-300 transition-all hover:bg-white/10 hover:text-white"
-            >
-              {copied ? <Check className="h-4 w-4 text-emerald-400" /> : <Copy className="h-4 w-4" />}
-            </button>
-          </div>
-        </div>
-
-        <div className="mt-4 rounded-2xl border border-yellow-500/20 bg-yellow-500/8 px-4 py-3 text-xs text-yellow-300">
-          🔑 Guarde este token como backup. Se esquecer a senha, use-o em{" "}
-          <strong>/entrar → "Esqueci minha senha"</strong>.
-        </div>
-
+        {/* Ação principal — sem dúvidas */}
         <button
           onClick={onContinue}
-          className="burn-gradient mt-6 flex w-full items-center justify-center rounded-full py-4 text-base font-semibold text-black transition-all hover:scale-[1.01]"
+          className="burn-gradient mt-6 flex w-full items-center justify-center gap-2 rounded-full py-4 text-base font-semibold text-black transition-all hover:scale-[1.01]"
         >
-          {copied ? "Token copiado! Ir para minha conta →" : "Ir para minha conta →"}
+          Ir para minha conta →
         </button>
+
+        {/* Backup secundário — código de emergência */}
+        <div className="mt-7 border-t border-white/8 pt-6">
+          <p className="text-sm font-semibold text-white">🔑 Código de emergência (opcional)</p>
+          <p className="mt-1 text-xs leading-6 text-slate-400">
+            Guarde para recuperar o acesso caso esqueça a senha. Você não precisa dele agora.
+          </p>
+
+          <div className="mt-3 rounded-2xl border border-white/10 bg-black/30 p-4">
+            <div className="flex items-center gap-3">
+              <code className="flex-1 break-all font-mono text-sm text-white">{token}</code>
+              <button
+                onClick={() => void copy()}
+                className="shrink-0 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-slate-300 transition-all hover:bg-white/10 hover:text-white"
+              >
+                {copied ? (
+                  <span className="flex items-center gap-1 text-emerald-400">
+                    <Check className="h-3.5 w-3.5" /> Copiado
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1">
+                    <Copy className="h-3.5 w-3.5" /> Copiar
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <p className="mt-6 text-center text-xs text-slate-600">
@@ -148,7 +157,7 @@ export default function OnboardingPage() {
           <div className="absolute left-1/3 top-1/4 h-96 w-96 rounded-full bg-violet/20 blur-[120px]" />
           <div className="absolute right-1/3 bottom-1/4 h-80 w-80 rounded-full bg-ember/15 blur-[100px]" />
         </div>
-        <TokenStep token={savedToken} onContinue={() => router.push("/dashboard")} />
+        <TokenStep token={savedToken} nickname={nickname.trim()} onContinue={() => router.push("/dashboard")} />
       </main>
     );
   }

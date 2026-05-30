@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 
-import { Badge, CheckIn, CheckInPayload, HistoryEntry, Profile, ScoreResponse, api, timeAgo } from "@/lib/api";
+import { Badge, CheckIn, CheckInPayload, HistoryEntry, MeuComparativo, Profile, ScoreResponse, api, timeAgo } from "@/lib/api";
 import { auth } from "@/lib/auth";
 import { ConviteModal } from "@/components/convidar-amigo";
 
@@ -48,6 +48,7 @@ export default function DashboardPage() {
   const [checkins, setCheckins] = useState<CheckIn[]>([]);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [badges, setBadges] = useState<Badge[]>([]);
+  const [comparativo, setComparativo] = useState<MeuComparativo | null>(null);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState<CheckInPayload>(DEFAULT_FORM);
   const [submitting, setSubmitting] = useState(false);
@@ -63,12 +64,13 @@ export default function DashboardPage() {
       return;
     }
     try {
-      const [p, s, ci, hist, bdg] = await Promise.all([
+      const [p, s, ci, hist, bdg, comp] = await Promise.all([
         api.getMe(token),
         api.getScore(token),
         api.getCheckIns(token),
         api.getHistory(token).catch(() => []),
         api.getBadges(token).catch(() => []),
+        api.getMeuComparativo(token).catch(() => null),
       ]);
       setProfile(p);
       setScore(s);
@@ -76,6 +78,7 @@ export default function DashboardPage() {
       setCheckins(ciArr);
       setHistory(Array.isArray(hist) ? hist : []);
       setBadges(Array.isArray(bdg) ? bdg : []);
+      setComparativo(comp ?? null);
       const today = new Date().toISOString().slice(0, 10);
       setTodayDone(ciArr.some((c) => c.date === today));
     } catch {
@@ -453,6 +456,98 @@ export default function DashboardPage() {
                     </p>
                   </div>
                 ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Comparativo nacional */}
+          {comparativo && (
+            <motion.div
+              className="glass-panel rounded-[32px] p-6"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.35 }}
+            >
+              <p className="text-xs uppercase tracking-[0.3em] text-muted">Você vs Brasil</p>
+              <p className="mt-1 text-sm text-slate-400">
+                Média dos últimos 7 dias vs. média nacional
+              </p>
+
+              {/* Score comparativo */}
+              <div className="mt-4 grid grid-cols-3 gap-2 text-center">
+                <div className="rounded-2xl border border-white/8 bg-black/20 p-3">
+                  <p className="text-2xl font-bold text-white">{comparativo.usuario.avg_score}</p>
+                  <p className="mt-1 text-[10px] text-slate-400">Você</p>
+                </div>
+                <div className="rounded-2xl border border-violet/20 bg-violet/8 p-3">
+                  <p className={`text-2xl font-bold ${comparativo.vs_nacional > 0 ? "text-ember-soft" : comparativo.vs_nacional < 0 ? "text-emerald-400" : "text-white"}`}>
+                    {comparativo.vs_nacional > 0 ? "+" : ""}{comparativo.vs_nacional}
+                  </p>
+                  <p className="mt-1 text-[10px] text-violet">vs nacional</p>
+                </div>
+                <div className="rounded-2xl border border-white/8 bg-black/20 p-3">
+                  <p className="text-2xl font-bold text-slate-300">{comparativo.media_nacional.avg_score}</p>
+                  <p className="mt-1 text-[10px] text-slate-400">Média BR</p>
+                </div>
+              </div>
+
+              {/* Comentário cômico */}
+              <div className="mt-3 rounded-[16px] border border-white/8 bg-white/3 px-4 py-3">
+                <p className="text-xs leading-5 text-slate-400 italic">
+                  {comparativo.vs_nacional > 15
+                    ? `Você está ${comparativo.vs_nacional} pontos acima da média nacional. Isso não é uma conquista que se comemora normalmente.`
+                    : comparativo.vs_nacional > 5
+                    ? `Levemente acima da média. Você e o Brasil corporativo estão em sintonia — o que diz muito sobre o Brasil corporativo.`
+                    : comparativo.vs_nacional < -15
+                    ? `${Math.abs(comparativo.vs_nacional)} pontos abaixo da média. Você está bem. Ou está em negação. Difícil dizer.`
+                    : comparativo.vs_nacional < -5
+                    ? `Levemente abaixo da média. Continue assim. Ou procure terapia. Ou ambos.`
+                    : `Na média nacional de sofrimento. Você representa o Brasil corporativo com precisão.`
+                  }
+                </p>
+              </div>
+
+              {/* Métricas detalhadas */}
+              <div className="mt-3 space-y-2">
+                {[
+                  {
+                    emoji: "☕",
+                    label: "Cafés/dia",
+                    voce: comparativo.usuario.avg_cafes,
+                    media: comparativo.media_nacional.avg_cafes,
+                  },
+                  {
+                    emoji: "📅",
+                    label: "Reuniões/dia",
+                    voce: comparativo.usuario.avg_reunioes,
+                    media: comparativo.media_nacional.avg_reunioes,
+                  },
+                ].map((m) => {
+                  const diff = Number((m.voce - m.media).toFixed(1));
+                  return (
+                    <div key={m.label} className="flex items-center gap-2 text-xs">
+                      <span>{m.emoji}</span>
+                      <span className="flex-1 text-slate-400">{m.label}</span>
+                      <span className="font-semibold text-white">{m.voce}</span>
+                      <span className={`font-mono ${diff > 0 ? "text-ember-soft" : diff < 0 ? "text-emerald-400" : "text-slate-500"}`}>
+                        {diff > 0 ? `+${diff}` : diff < 0 ? diff : "="}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Comparativo com área */}
+              <div className="mt-3 rounded-[14px] border border-white/6 bg-white/2 px-3 py-2 text-xs text-slate-500">
+                Vs. {comparativo.usuario.area_label}: {" "}
+                <span className={comparativo.vs_area > 0 ? "text-ember-soft" : comparativo.vs_area < 0 ? "text-emerald-400" : "text-slate-400"}>
+                  {comparativo.vs_area > 0 ? "+" : ""}{comparativo.vs_area} pts
+                </span>
+                {comparativo.vs_area > 0
+                  ? " — acima dos seus colegas de área"
+                  : comparativo.vs_area < 0
+                  ? " — mais saudável que a sua área"
+                  : " — exatamente na média da área"}
               </div>
             </motion.div>
           )}

@@ -142,6 +142,44 @@ export interface CheckInPayload {
   note?: string;
 }
 
+export interface AreaAnalytics {
+  area: string;
+  area_label: string;
+  avg_score: number;
+  avg_cafes: number;
+  avg_reunioes: number;
+  total_checkins: number;
+}
+
+export interface BrasilAnalytics {
+  total_usuarios: number;
+  total_checkins: number;
+  media_nacional: {
+    burny_score: number;
+    cafes_por_dia: number;
+    reunioes_por_dia: number;
+    minutos_transito: number;
+    stress: number;
+    buzzwords: number;
+  };
+  por_area: AreaAnalytics[];
+}
+
+export interface MeuComparativo {
+  usuario: {
+    avg_score: number;
+    avg_cafes: number;
+    avg_reunioes: number;
+    avg_stress: number;
+    area: string;
+    area_label: string;
+  };
+  media_nacional: { avg_score: number; avg_cafes: number; avg_reunioes: number };
+  media_area: { avg_score: number; avg_cafes: number; avg_reunioes: number };
+  vs_nacional: number;
+  vs_area: number;
+}
+
 export interface ConviteAmigo {
   codigo: string;
   tipo_relacao: string;
@@ -284,6 +322,12 @@ export const api = {
 
   usarConvite: (codigo: string) =>
     apiFetch<{ ok: boolean }>(`/convites/${codigo}/usar/`, { method: "POST" }),
+
+  getBrasilAnalytics: () =>
+    apiFetch<BrasilAnalytics>("/analytics/brasil/"),
+
+  getMeuComparativo: (token: string) =>
+    apiFetch<MeuComparativo>("/analytics/comparativo/", { token }),
 };
 
 // ──── Helpers ─────────────────────────────────────────────────────────────────

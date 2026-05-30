@@ -19,6 +19,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { BurnoutChart } from "@/components/landing/burnout-chart";
+import { BrasilCorporativo } from "@/components/brasil-corporativo";
 import { FeedItem, RankingEntry, api, timeAgo } from "@/lib/api";
 import {
   burnyHighlights,
@@ -458,6 +459,8 @@ export function BurnoutLanding() {
             </div>
           </div>
         </motion.section>
+
+        <BrasilCorporativo />
 
         <motion.section
           id="roadmap"

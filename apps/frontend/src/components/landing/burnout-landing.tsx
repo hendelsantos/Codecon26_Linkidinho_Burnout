@@ -7,6 +7,7 @@ import {
   Coffee,
   Flame,
   Gauge,
+  Loader2,
   MessageSquare,
   Rocket,
   Send,
@@ -14,13 +15,14 @@ import {
   Users,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import { BurnoutChart } from "@/components/landing/burnout-chart";
+import { FeedItem, RankingEntry, api, timeAgo } from "@/lib/api";
 import {
   burnyHighlights,
   featureCards,
-  feedMoments,
-  rankingEntries,
   statCards,
 } from "@/lib/site";
 
@@ -31,6 +33,24 @@ const fadeInUp = {
 };
 
 export function BurnoutLanding() {
+  const [feed, setFeed] = useState<FeedItem[]>([]);
+  const [rankings, setRankings] = useState<RankingEntry[]>([]);
+  const [feedLoading, setFeedLoading] = useState(true);
+  const [rankLoading, setRankLoading] = useState(true);
+
+  useEffect(() => {
+    api
+      .getFeed(5)
+      .then((r) => setFeed(r.results))
+      .catch(() => {})
+      .finally(() => setFeedLoading(false));
+    api
+      .getRankings("burnout")
+      .then((r) => setRankings(r.results.slice(0, 4)))
+      .catch(() => {})
+      .finally(() => setRankLoading(false));
+  }, []);
+
   const composerActions: Array<{ label: string; icon: LucideIcon }> = [
     { label: "Foto", icon: Coffee },
     { label: "Trauma", icon: Flame },
@@ -58,15 +78,18 @@ export function BurnoutLanding() {
           </div>
 
           <nav className="hidden items-center gap-6 text-sm text-slate-300 lg:flex">
-            <a href="#dashboard">Dashboard</a>
-            <a href="#feed">Feed</a>
+            <Link href="/dashboard">Dashboard</Link>
+            <Link href="/feed">Feed</Link>
             <a href="#stack">Stack</a>
             <a href="#roadmap">Roadmap</a>
           </nav>
 
-          <button className="burn-gradient rounded-full px-5 py-2 text-sm font-semibold text-black transition-transform hover:scale-[1.02]">
+          <Link
+            href="/onboarding"
+            className="burn-gradient rounded-full px-5 py-2 text-sm font-semibold text-black transition-transform hover:scale-[1.02]"
+          >
             Entrar no colapso
-          </button>
+          </Link>
         </motion.header>
 
         <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
@@ -96,12 +119,18 @@ export function BurnoutLanding() {
             </div>
 
             <div className="mt-8 flex flex-wrap gap-4">
-              <button className="burn-gradient rounded-full px-6 py-3 font-semibold text-black transition-transform hover:scale-[1.02]">
+              <Link
+                href="/onboarding"
+                className="burn-gradient rounded-full px-6 py-3 font-semibold text-black transition-transform hover:scale-[1.02]"
+              >
                 Ver o Dashboard do Caos
-              </button>
-              <button className="rounded-full border border-white/10 bg-white/5 px-6 py-3 font-semibold text-white transition-colors hover:bg-white/10">
+              </Link>
+              <a
+                href="#stack"
+                className="rounded-full border border-white/10 bg-white/5 px-6 py-3 font-semibold text-white transition-colors hover:bg-white/10"
+              >
                 Ler o manifesto operacional
-              </button>
+              </a>
             </div>
 
             <div className="mt-10 grid gap-4 md:grid-cols-4">
@@ -253,41 +282,52 @@ export function BurnoutLanding() {
               </div>
             </div>
 
-            {feedMoments.map((post, index) => (
-              <motion.article
-                key={post.author}
-                className="glass-panel rounded-[30px] p-5"
-                initial={{ opacity: 0, y: 28 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.25 }}
-                transition={{ delay: 0.08 * index, duration: 0.45 }}
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-lg font-semibold text-white">{post.author}</p>
-                    <p className="text-sm text-slate-400">{post.role}</p>
+            {feedLoading ? (
+              <div className="flex justify-center py-10">
+                <Loader2 className="h-7 w-7 animate-spin text-violet" />
+              </div>
+            ) : (
+              feed.map((post, index) => (
+                <motion.article
+                  key={post.id}
+                  className="glass-panel rounded-[30px] p-5"
+                  initial={{ opacity: 0, y: 28 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.25 }}
+                  transition={{ delay: 0.08 * index, duration: 0.45 }}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{post.avatar_emoji}</span>
+                      <div>
+                        <p className="font-semibold text-white">{post.author}</p>
+                        <p className="text-sm text-slate-400">
+                          {post.role} · {post.region}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-2">
+                      <span className="rounded-full border border-ember/30 bg-ember/10 px-2.5 py-0.5 text-xs font-semibold text-ember-soft">
+                        {post.burny_score}
+                      </span>
+                      <span className="rounded-full border border-white/10 px-3 py-1 text-xs text-slate-400">
+                        {timeAgo(post.created_at)}
+                      </span>
+                    </div>
                   </div>
-                  <div className="rounded-full border border-white/10 px-3 py-1 text-xs text-slate-400">
-                    {post.time}
-                  </div>
-                </div>
-                <p className="mt-4 text-base leading-8 text-slate-200">{post.message}</p>
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {post.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full bg-white/6 px-3 py-1 text-xs font-medium text-slate-300"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <div className="mt-5 flex items-center gap-5 text-sm text-slate-400">
-                  <span>{post.reactions} reacoes corporativas</span>
-                  <span>{post.comments} comentarios</span>
-                </div>
-              </motion.article>
-            ))}
+                  <p className="mt-4 text-base leading-8 text-slate-200">{post.message}</p>
+                  <p className="mt-3 border-l-2 border-violet/40 pl-3 text-sm italic leading-6 text-slate-400">
+                    {post.insight}
+                  </p>
+                </motion.article>
+              ))
+            )}
+            <Link
+              href="/feed"
+              className="block rounded-[28px] border border-white/8 bg-white/4 py-4 text-center text-sm font-medium text-slate-300 transition-colors hover:bg-white/8"
+            >
+              Ver todo o feed →
+            </Link>
           </motion.section>
 
           <motion.section
@@ -343,26 +383,38 @@ export function BurnoutLanding() {
               </div>
 
               <div className="space-y-3">
-                {rankingEntries.map((entry, index) => (
-                  <div
-                    key={entry.name}
-                    className="flex items-center justify-between rounded-[22px] border border-white/8 bg-black/25 px-4 py-3"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/8 text-sm font-semibold text-white">
-                        {index + 1}
-                      </div>
-                      <div>
-                        <p className="font-semibold text-white">{entry.name}</p>
-                        <p className="text-xs text-slate-400">{entry.role}</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-lg font-bold text-white">{entry.score}</p>
-                      <p className="text-xs text-slate-400">burny score</p>
-                    </div>
+                {rankLoading ? (
+                  <div className="flex justify-center py-6">
+                    <Loader2 className="h-6 w-6 animate-spin text-violet" />
                   </div>
-                ))}
+                ) : (
+                  rankings.map((entry, index) => (
+                    <div
+                      key={entry.id}
+                      className="flex items-center justify-between rounded-[22px] border border-white/8 bg-black/25 px-4 py-3"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-white/8 text-sm font-semibold text-white">
+                          {index + 1}
+                        </div>
+                        <div>
+                          <p className="font-semibold text-white">{entry.nickname}</p>
+                          <p className="text-xs text-slate-400">{entry.area}</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-lg font-bold text-white">{entry.value}</p>
+                        <p className="text-xs text-slate-400">burny score</p>
+                      </div>
+                    </div>
+                  ))
+                )}
+                <Link
+                  href="/ranking"
+                  className="block rounded-[22px] border border-white/8 bg-white/4 py-3 text-center text-sm font-medium text-slate-300 hover:bg-white/8"
+                >
+                  Ver ranking completo →
+                </Link>
               </div>
             </div>
           </motion.section>

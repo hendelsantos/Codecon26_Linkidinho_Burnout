@@ -72,7 +72,7 @@ export function BurnoutLanding() {
               <Flame className="h-5 w-5" />
             </div>
             <div className="hidden min-w-0 sm:block">
-              <p className="text-xs uppercase tracking-[0.35em] text-muted">Likidinho Burnout</p>
+              <p className="text-xs uppercase tracking-[0.35em] text-muted">BurnyOut</p>
               <p className="truncate text-sm font-semibold text-white">Corporate Suffering Analytics Network</p>
             </div>
           </div>
@@ -122,7 +122,7 @@ export function BurnoutLanding() {
                 Seu burnout agora vem com dashboard, ranking e selo premium de sobrevivência.
               </h1>
               <p className="mt-5 max-w-2xl text-sm leading-7 text-slate-300 sm:mt-6 sm:text-lg sm:leading-8">
-                Burny Out transforma café, reuniões infinitas, trânsito, buzzwords e bathroom revenue em uma rede social cinematográfica. O tom é exagerado, cômico e enterprise; a experiência é premium, organizada e pronta para virar demo memorável.
+                BurnyOut transforma café, reuniões infinitas, trânsito, buzzwords e bathroom revenue em uma rede social cinematográfica. O tom é exagerado, cômico e enterprise; a experiência é premium, organizada e pronta para virar demo memorável.
               </p>
             </div>
 
@@ -180,7 +180,7 @@ export function BurnoutLanding() {
                   <span>🔥</span>
                 </div>
                 <div>
-                  <p className="text-xl font-semibold text-white">Burny Out Prime</p>
+                  <p className="text-xl font-semibold text-white">BurnyOut Prime</p>
                   <p className="mt-1 text-sm text-slate-300">Dependente de café, funcional por obrigação e gloriosamente monitorado.</p>
                 </div>
               </div>
@@ -225,7 +225,7 @@ export function BurnoutLanding() {
                 <Users className="h-5 w-5" />
               </div>
               <div>
-                <p className="text-sm font-semibold text-white">Likidinho Burnout</p>
+                <p className="text-sm font-semibold text-white">BurnyOut</p>
                 <p className="text-xs text-slate-400">Rede de sobrevivência coletiva</p>
               </div>
             </div>

@@ -50,7 +50,7 @@ function DesabafoComposer({
     return (
       <div className="glass-panel rounded-[28px] p-5 text-center text-sm text-slate-400">
         <Link href="/onboarding" className="text-violet hover:underline">
-          Entre no Burny Out
+          Entre no BurnyOut
         </Link>{" "}
         para desabafar publicamente.
       </div>
@@ -324,7 +324,7 @@ export default function FeedPage() {
           <div className="burn-gradient flex h-9 w-9 items-center justify-center rounded-xl text-black">
             <Flame className="h-4 w-4" />
           </div>
-          <span className="text-sm font-semibold text-white">Burny Out</span>
+          <span className="text-sm font-semibold text-white">BurnyOut</span>
         </Link>
         <div className="flex items-center gap-2">
           <Link

@@ -92,7 +92,7 @@ export default function EntrarPage() {
               <Flame className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-xs uppercase tracking-[0.35em] text-muted">Burny Out</p>
+              <p className="text-xs uppercase tracking-[0.35em] text-muted">BurnyOut</p>
               <p className="text-sm font-semibold text-white">Corporate Suffering Analytics</p>
             </div>
           </Link>

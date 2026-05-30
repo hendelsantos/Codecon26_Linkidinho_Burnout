@@ -15,7 +15,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Burny Out | Likidinho Burnout Network",
+  title: "BurnyOut | Corporate Suffering Analytics Network",
   description:
     "Rede social satirica de analytics corporativo com dashboards cinematograficos, rankings absurdos e humor sem toxicidade.",
 };

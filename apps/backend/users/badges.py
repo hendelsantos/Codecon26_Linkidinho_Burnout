@@ -1,5 +1,5 @@
 """
-Badges de conquista do Burny Out.
+Badges de conquista do BurnyOut.
 
 Calculados dinamicamente a partir dos check-ins do usuário — sem model extra.
 """

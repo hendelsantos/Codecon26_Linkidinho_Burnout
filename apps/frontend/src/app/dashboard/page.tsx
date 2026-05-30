@@ -113,7 +113,7 @@ export default function DashboardPage() {
     const text = `Meu Burny Score é ${score?.current_score ?? "??"} — ${scoreLabel(score?.current_score ?? 0)}. ${score?.current_insight ?? ""} #BurnyOut`;
     try {
       if (navigator.share) {
-        await navigator.share({ title: "Burny Out", text });
+        await navigator.share({ title: "BurnyOut", text });
       } else {
         await navigator.clipboard.writeText(text);
         setCopied(true);
@@ -145,7 +145,7 @@ export default function DashboardPage() {
           <div className="burn-gradient flex h-9 w-9 items-center justify-center rounded-xl text-black">
             <Flame className="h-4 w-4" />
           </div>
-          <span className="text-sm font-semibold text-white">Burny Out</span>
+          <span className="text-sm font-semibold text-white">BurnyOut</span>
         </Link>
 
         <div className="flex items-center gap-3">

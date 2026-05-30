@@ -1,4 +1,4 @@
-"""Django settings for the Burny Out backend."""
+"""Django settings for the BurnyOut backend."""
 
 import os
 from pathlib import Path
@@ -190,8 +190,8 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "Burny Out API",
-    "DESCRIPTION": "API da rede social satirica de analytics corporativo Burny Out.",
+    "TITLE": "BurnyOut API",
+    "DESCRIPTION": "API da rede social satirica de analytics corporativo BurnyOut.",
     "VERSION": "0.1.0",
 }
 

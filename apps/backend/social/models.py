@@ -4,7 +4,7 @@ from django.db import models
 
 
 class Desabafo(models.Model):
-    """Post de burnout — o 'artigo' do Burny Out."""
+    """Post de burnout — o 'artigo' do BurnyOut."""
 
     NIVEL_CHOICES = [
         ("funcional", "Funcional demais para meu próprio bem"),

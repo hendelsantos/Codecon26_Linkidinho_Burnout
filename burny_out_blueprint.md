@@ -1,11 +1,11 @@
-# Burny Out
+# BurnyOut
 ## The Corporate Suffering Analytics Network™
 
 ---
 
 # Visão Geral
 
-Burny Out é uma rede social satírica baseada em analytics da vida corporativa moderna.
+BurnyOut é uma rede social satírica baseada em analytics da vida corporativa moderna.
 
 A plataforma coleta métricas absurdas do cotidiano profissional:
 - café
@@ -28,12 +28,12 @@ E transforma tudo em:
 
 # Conceito Principal
 
-Burny Out NÃO é:
+BurnyOut NÃO é:
 - uma rede social comum
 - um fórum tóxico
 - uma plataforma de texto livre
 
-Burny Out É:
+BurnyOut É:
 - uma engine de analytics sociais corporativos
 - uma sátira enterprise
 - uma plataforma coletiva de sofrimento operacional quantificado
@@ -53,7 +53,7 @@ em:
 # Branding
 
 ## Nome
-Burny Out
+BurnyOut
 
 ## Mascote
 Burny 🔥
@@ -380,6 +380,6 @@ Bathroom revenue exceeded quarterly expectations.
 
 # Filosofia do Produto
 
-O Burny Out existe para responder a pergunta:
+O BurnyOut existe para responder a pergunta:
 
 “E se transformássemos sofrimento corporativo em dashboards enterprise?”

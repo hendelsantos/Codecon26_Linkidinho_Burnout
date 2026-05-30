@@ -1,4 +1,4 @@
-# 🚀 Funcionalidades planejadas — Burny Out
+# 🚀 Funcionalidades planejadas — BurnyOut
 
 Documento de planejamento para implementação futura. Cada feature tem objetivo,
 escopo, arquivos envolvidos e checklist.
@@ -201,7 +201,7 @@ para cada outro_usuario:
 - [ ] Quantas figurinhas tem o álbum? (definir o range do catálogo)
 - [ ] De onde vêm os dados oficiais (nomes/imagens)? CSV manual ou API externa?
 - [ ] Trocas são automáticas (matching) ou manuais (usuário escolhe)?
-- [ ] Entra como módulo do Burny Out ou projeto separado?
+- [ ] Entra como módulo do BurnyOut ou projeto separado?
 
 ---
 

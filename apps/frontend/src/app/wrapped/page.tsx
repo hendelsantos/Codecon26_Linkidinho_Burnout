@@ -81,7 +81,7 @@ export default function WrappedPage() {
           <div className="burn-gradient flex h-9 w-9 items-center justify-center rounded-xl text-black">
             <Flame className="h-4 w-4" />
           </div>
-          <span className="text-sm font-semibold text-white">Burny Out</span>
+          <span className="text-sm font-semibold text-white">BurnyOut</span>
         </Link>
         <Link href="/dashboard" className="text-xs text-slate-400 hover:text-white">← Dashboard</Link>
       </header>

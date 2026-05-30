@@ -9,7 +9,7 @@ As imagens em Dados exemplo apontam para uma mistura de:
 - paineis densos e elegantes;
 - humor visual por contraste entre seriedade e absurdo.
 
-O objetivo nao e copiar Linkidinho literalmente, mas capturar a mesma presenca e reinterpretar isso como Burny Out / Likidinho Burnout.
+O objetivo nao e copiar Linkidinho literalmente, mas capturar a mesma presenca e reinterpretar isso como BurnyOut.
 
 ## Norte estetico
 

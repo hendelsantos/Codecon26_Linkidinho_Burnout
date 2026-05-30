@@ -16,7 +16,7 @@ def health_check(_request):
 def product_snapshot(_request):
 	return JsonResponse(
 		{
-			"network": "Likidinho Burnout",
+			"network": "BurnyOut",
 			"mode": "corporate suffering analytics",
 			"features": [
 				"burny-score",

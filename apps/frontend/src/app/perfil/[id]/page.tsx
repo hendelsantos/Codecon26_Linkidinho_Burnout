@@ -150,7 +150,7 @@ export default function PerfilPage() {
           <div className="burn-gradient flex h-9 w-9 items-center justify-center rounded-xl text-black">
             <Flame className="h-4 w-4" />
           </div>
-          <span className="text-sm font-semibold text-white">Burny Out</span>
+          <span className="text-sm font-semibold text-white">BurnyOut</span>
         </Link>
         <button
           onClick={() => router.back()}
@@ -186,7 +186,7 @@ export default function PerfilPage() {
                     {profile.area_label} · {profile.region}
                   </p>
                   <p className="mt-1 text-xs text-slate-500">
-                    No Burny Out desde {new Date(profile.created_at).toLocaleDateString("pt-BR", { month: "long", year: "numeric" })}
+                    No BurnyOut desde {new Date(profile.created_at).toLocaleDateString("pt-BR", { month: "long", year: "numeric" })}
                   </p>
                 </div>
               </div>

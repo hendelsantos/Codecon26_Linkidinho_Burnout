@@ -1,4 +1,4 @@
-# 🔥 Burny Out
+# 🔥 BurnyOut
 ### The Corporate Suffering Analytics Network™
 
 > *"Your burnout has charts now."*
@@ -9,7 +9,7 @@
 
 ## O que é
 
-Burny Out é uma **rede social satírica de analytics corporativo** onde café, reuniões inúteis, trânsito, bathroom revenue e sofrimento operacional viram dashboards, rankings globais e insights gerados por IA — dramaticamente exagerados, absurdamente precisos.
+BurnyOut é uma **rede social satírica de analytics corporativo** onde café, reuniões inúteis, trânsito, bathroom revenue e sofrimento operacional viram dashboards, rankings globais e insights gerados por IA — dramaticamente exagerados, absurdamente precisos.
 
 Construído em 48h para a **CODECON 2026**.
 

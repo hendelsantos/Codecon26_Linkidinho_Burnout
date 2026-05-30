@@ -2,7 +2,7 @@
 
 ## High concept
 
-Burny Out e a rede social onde sofrimento operacional vira KPI aspiracional.
+BurnyOut e a rede social onde sofrimento operacional vira KPI aspiracional.
 
 Nao e forum aberto.
 Nao e arena toxica.

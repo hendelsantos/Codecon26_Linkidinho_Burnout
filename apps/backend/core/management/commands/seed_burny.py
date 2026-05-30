@@ -51,7 +51,7 @@ REGIONS = [
 
 
 class Command(BaseCommand):
-    help = "Cria perfis e check-ins falsos para demo do Burny Out."
+    help = "Cria perfis e check-ins falsos para demo do BurnyOut."
 
     def add_arguments(self, parser):
         parser.add_argument("--days", type=int, default=21)

@@ -22,11 +22,17 @@ SECRET_KEY = os.getenv(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DJANGO_DEBUG", "true").lower() == "true"
 
+# Railway injeta RAILWAY_PUBLIC_DOMAIN automaticamente
+_railway_domain = os.getenv("RAILWAY_PUBLIC_DOMAIN", "")
 ALLOWED_HOSTS = [
     host.strip()
     for host in os.getenv("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
     if host.strip()
 ]
+if _railway_domain:
+    ALLOWED_HOSTS.append(_railway_domain)
+# Aceita qualquer subdomínio .up.railway.app em produção
+ALLOWED_HOSTS += [".up.railway.app", ".railway.app"]
 
 
 # Application definition

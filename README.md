@@ -79,6 +79,7 @@ Burnout/
 cd apps/backend
 cp .env.example .env
 .venv/bin/python manage.py migrate
+.venv/bin/python manage.py seed_burny   # opcional: 20 perfis e 21 dias de check-ins
 .venv/bin/python manage.py runserver
 ```
 
@@ -99,12 +100,37 @@ npm run dev
 
 Aplicacao disponivel em http://localhost:3000
 
-## Endpoints iniciais
+## Endpoints da API
 
-- GET /api/health/
-- GET /api/snapshot/
-- GET /api/schema/
-- GET /api/docs/
+Publicos:
+- `GET  /api/health/` — health check.
+- `GET  /api/snapshot/` — descricao publica do produto.
+- `GET  /api/feed/?limit=30` — feed satirico com insights da Burny AI.
+- `GET  /api/rankings/?category=burnout` — ranking dos ultimos 7 dias. Categorias: `burnout`, `coffees`, `meetings`, `traffic`, `bathroom`.
+- `GET  /api/schema/` e `GET /api/docs/` — OpenAPI + Swagger.
+
+Autenticados via header `X-Access-Token`:
+- `POST /api/profiles/` — cria perfil anonimo e devolve `access_token`.
+- `GET  /api/profiles/me/` — retorna o perfil do token.
+- `POST /api/checkins/` — registra check-in diario; backend calcula `burny_score` e gera insight.
+- `GET  /api/checkins/` — historico do proprio usuario.
+- `GET  /api/score/` — score atual, media semanal, totais e historico.
+
+Exemplo rapido:
+
+```bash
+TOKEN=$(curl -s -X POST http://localhost:8000/api/profiles/ \
+  -H "Content-Type: application/json" \
+  -d '{"nickname":"burny_demo","area":"dev","region":"Recife"}' \
+  | python -c "import json,sys;print(json.load(sys.stdin)['access_token'])")
+
+curl -X POST http://localhost:8000/api/checkins/ \
+  -H "Content-Type: application/json" \
+  -H "X-Access-Token: $TOKEN" \
+  -d '{"coffees":8,"useless_meetings":7,"traffic_minutes":120,"stress_level":9,"bathroom_revenue_cents":420,"buzzwords_endured":18}'
+
+curl http://localhost:8000/api/score/ -H "X-Access-Token: $TOKEN"
+```
 
 ## Principios do produto
 

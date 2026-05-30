@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 
 import { BurnoutChart } from "@/components/landing/burnout-chart";
 import { BrasilCorporativo } from "@/components/brasil-corporativo";
+import { BotaoCompartilharWhatsApp } from "@/components/compartilhar-whatsapp";
 import { FeedItem, RankingEntry, api, timeAgo } from "@/lib/api";
 import {
   burnyHighlights,
@@ -337,6 +338,7 @@ export function BurnoutLanding() {
             >
               Ver todo o feed →
             </Link>
+            <BotaoCompartilharWhatsApp />
           </motion.section>
 
           <motion.section

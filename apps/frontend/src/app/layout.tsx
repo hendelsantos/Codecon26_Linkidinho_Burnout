@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 import { FingirTrabalho } from "@/components/fingir-trabalho";
 import { GerarDesculpa } from "@/components/gerar-desculpa";
-import { CompartilharWhatsApp } from "@/components/compartilhar-whatsapp";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -34,7 +33,6 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         {children}
-        <CompartilharWhatsApp />
         <GerarDesculpa />
         <FingirTrabalho />
       </body>

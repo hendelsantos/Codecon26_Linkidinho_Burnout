@@ -266,13 +266,14 @@ export default function FeedPage() {
   const [loadingD, setLoadingD] = useState(true);
   const [loadingA, setLoadingA] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const token = auth.getToken();
+  // token lido apenas no cliente para evitar mismatch de hidratação (React error #418)
+  const [token, setToken] = useState<string | null>(null);
 
-  async function loadDesabafos() {
+  async function loadDesabafos(currentToken?: string | null) {
     setLoadingD(true);
     setError(null);
     try {
-      const res = await api.getDesabafos(30, token ?? undefined);
+      const res = await api.getDesabafos(30, (currentToken ?? auth.getToken()) ?? undefined);
       setDesabafos(res.results);
     } catch {
       setError("Não foi possível carregar. O backend está no ar?");
@@ -295,7 +296,9 @@ export default function FeedPage() {
   }
 
   useEffect(() => {
-    void loadDesabafos();
+    const t = auth.getToken();
+    setToken(t);
+    void loadDesabafos(t);
   }, []);
 
   function handleTabChange(t: Tab) {

@@ -356,21 +356,30 @@ export default function DashboardPage() {
               )}
 
               {/* Share card */}
-              <div className="mt-5 flex gap-3">
-                <button
-                  onClick={handleShare}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-full border border-ember/30 bg-ember/10 py-3 text-sm font-semibold text-ember-soft transition-all hover:bg-ember/20"
+              <div className="mt-5 flex flex-col gap-3">
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleShare}
+                    className="flex flex-1 items-center justify-center gap-2 rounded-full border border-ember/30 bg-ember/10 py-3 text-sm font-semibold text-ember-soft transition-all hover:bg-ember/20"
+                  >
+                    <Share2 className="h-4 w-4" />
+                    {copied ? "Copiado! 🔥" : "Compartilhar burnout"}
+                  </button>
+                  <button
+                    onClick={() => setConviteAberto(true)}
+                    className="flex flex-1 items-center justify-center gap-2 rounded-full border border-violet/30 bg-violet/10 py-3 text-sm font-semibold text-violet transition-all hover:bg-violet/20"
+                  >
+                    <span>👥</span>
+                    Convidar amigos
+                  </button>
+                </div>
+                <Link
+                  href="/certificado"
+                  className="flex w-full items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 py-3 text-sm font-semibold text-slate-300 transition-all hover:bg-white/10 hover:text-white"
                 >
-                  <Share2 className="h-4 w-4" />
-                  {copied ? "Copiado! 🔥" : "Compartilhar burnout"}
-                </button>
-                <button
-                  onClick={() => setConviteAberto(true)}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-full border border-violet/30 bg-violet/10 py-3 text-sm font-semibold text-violet transition-all hover:bg-violet/20"
-                >
-                  <span>👥</span>
-                  Convidar amigos
-                </button>
+                  <span>🏅</span>
+                  Gerar certificado de sobrevivência
+                </Link>
               </div>
             </motion.section>
           )}

@@ -93,16 +93,32 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": os.getenv("POSTGRES_ENGINE", "django.db.backends.sqlite3"),
-        "NAME": os.getenv("POSTGRES_DB", BASE_DIR / "db.sqlite3"),
-        "USER": os.getenv("POSTGRES_USER", ""),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", ""),
-        "HOST": os.getenv("POSTGRES_HOST", ""),
-        "PORT": os.getenv("POSTGRES_PORT", ""),
+# Suporte a DATABASE_URL (Railway, Heroku, etc.)
+_db_url = os.getenv("DATABASE_URL", "")
+if _db_url:
+    import urllib.parse as _up
+    _u = _up.urlparse(_db_url)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": _u.path.lstrip("/"),
+            "USER": _u.username or "",
+            "PASSWORD": _u.password or "",
+            "HOST": _u.hostname or "",
+            "PORT": str(_u.port or 5432),
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": os.getenv("POSTGRES_ENGINE", "django.db.backends.sqlite3"),
+            "NAME": os.getenv("POSTGRES_DB", BASE_DIR / "db.sqlite3"),
+            "USER": os.getenv("POSTGRES_USER", ""),
+            "PASSWORD": os.getenv("POSTGRES_PASSWORD", ""),
+            "HOST": os.getenv("POSTGRES_HOST", ""),
+            "PORT": os.getenv("POSTGRES_PORT", ""),
+        }
+    }
 
 
 # Password validation

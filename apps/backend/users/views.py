@@ -6,6 +6,26 @@ from .models import BURNY_SKILLS, Follow, Profile, SkillEndorsement
 from .serializers import ProfileCreateSerializer, ProfileDetailSerializer, ProfilePublicSerializer
 
 
+class LoginView(APIView):
+    """Login com apelido + senha → retorna access_token."""
+
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        nickname = request.data.get("nickname", "").strip()
+        password = request.data.get("password", "")
+
+        if not nickname or not password:
+            return Response({"detail": "Apelido e senha são obrigatórios."}, status=400)
+
+        profiles = Profile.objects.filter(nickname=nickname).exclude(password_hash="")
+        for profile in profiles:
+            if profile.check_password(password):
+                return Response({"access_token": str(profile.access_token)})
+
+        return Response({"detail": "Apelido ou senha incorretos."}, status=401)
+
+
 class ProfileCreateView(generics.CreateAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileCreateSerializer

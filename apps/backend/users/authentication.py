@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 
@@ -15,9 +16,6 @@ class AccessTokenAuthentication(BaseAuthentication):
             return None
         try:
             profile = Profile.objects.get(access_token=token)
-        except (Profile.DoesNotExist, ValueError):
+        except (Profile.DoesNotExist, ValueError, ValidationError):
             raise AuthenticationFailed("Token invalido ou expirado.")
         return (profile, None)
-
-    def authenticate_header(self, request):
-        return self.keyword

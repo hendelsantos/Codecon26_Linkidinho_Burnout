@@ -64,6 +64,7 @@ class ProfileDetailSerializer(ProfilePublicSerializer):
 
 class ProfileCreateSerializer(serializers.ModelSerializer):
     access_token = serializers.UUIDField(read_only=True)
+    password = serializers.CharField(write_only=True, min_length=6, required=True)
 
     class Meta:
         model = Profile
@@ -75,5 +76,13 @@ class ProfileCreateSerializer(serializers.ModelSerializer):
             "area",
             "access_token",
             "created_at",
+            "password",
         ]
         read_only_fields = ["id", "access_token", "created_at"]
+
+    def create(self, validated_data):
+        raw = validated_data.pop("password")
+        profile = Profile(**validated_data)
+        profile.set_password(raw)
+        profile.save()
+        return profile

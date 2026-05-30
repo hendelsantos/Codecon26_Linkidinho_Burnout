@@ -1,5 +1,7 @@
 import uuid
 
+from django.contrib.auth.hashers import check_password as _check_password
+from django.contrib.auth.hashers import make_password
 from django.db import models
 
 
@@ -23,6 +25,7 @@ class Profile(models.Model):
     region = models.CharField(max_length=64, default="Brasil")
     area = models.CharField(max_length=32, choices=AREAS, default="dev")
     access_token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    password_hash = models.CharField(max_length=256, blank=True, default="")
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -38,6 +41,14 @@ class Profile(models.Model):
     @property
     def is_anonymous(self) -> bool:
         return False
+
+    def set_password(self, raw: str) -> None:
+        self.password_hash = make_password(raw)
+
+    def check_password(self, raw: str) -> bool:
+        if not self.password_hash:
+            return False
+        return _check_password(raw, self.password_hash)
 
 
 BURNY_SKILLS = [

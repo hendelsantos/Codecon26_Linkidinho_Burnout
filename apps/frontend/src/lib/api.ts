@@ -145,11 +145,18 @@ async function apiFetch<T>(
 // ──── API functions ───────────────────────────────────────────────────────────
 
 export const api = {
+  login: (nickname: string, password: string) =>
+    apiFetch<{ access_token: string }>("/auth/login/", {
+      method: "POST",
+      body: JSON.stringify({ nickname, password }),
+    }),
+
   createProfile: (data: {
     nickname: string;
     area: string;
     region?: string;
     avatar_emoji?: string;
+    password: string;
   }) =>
     apiFetch<ProfileCreate>("/profiles/", {
       method: "POST",

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Flame, KeyRound, Loader2 } from "lucide-react";
+import { ChevronDown, Eye, EyeOff, Flame, KeyRound, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -11,43 +11,64 @@ import { auth } from "@/lib/auth";
 
 export default function EntrarPage() {
   const router = useRouter();
-  const [token, setToken] = useState("");
+
+  // Login com senha
+  const [nickname, setNickname] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Se já tem token válido, vai direto pro dashboard
+  // Recuperação por token (colapsável)
+  const [showToken, setShowToken] = useState(false);
+  const [token, setToken] = useState("");
+  const [tokenLoading, setTokenLoading] = useState(false);
+  const [tokenError, setTokenError] = useState<string | null>(null);
+
   useEffect(() => {
     if (auth.hasToken()) router.replace("/dashboard");
   }, [router]);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handlePasswordLogin(e: React.FormEvent) {
     e.preventDefault();
-    const t = token.trim();
-    if (!t) {
-      setError("Cole seu token de acesso para continuar.");
+    if (!nickname.trim() || !password) {
+      setError("Preencha o apelido e a senha.");
       return;
     }
-
-    // Valida formato UUID básico
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    if (!uuidRegex.test(t)) {
-      setError("Formato de token inválido. Deve ser um UUID como: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
-      return;
-    }
-
     setLoading(true);
     setError(null);
+    try {
+      const { access_token } = await api.login(nickname.trim(), password);
+      const profile = await api.getMe(access_token);
+      auth.setToken(access_token);
+      auth.setProfile(profile);
+      router.push("/dashboard");
+    } catch {
+      setError("Apelido ou senha incorretos. Se perdeu a senha, use o token de recuperação abaixo.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleTokenLogin(e: React.FormEvent) {
+    e.preventDefault();
+    const t = token.trim();
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(t)) {
+      setTokenError("Formato inválido. Use: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx");
+      return;
+    }
+    setTokenLoading(true);
+    setTokenError(null);
     try {
       const profile = await api.getMe(t);
       auth.setToken(t);
       auth.setProfile(profile);
       router.push("/dashboard");
     } catch {
-      setError(
-        "Token não reconhecido. Verifique se copiou corretamente ou crie uma conta nova.",
-      );
+      setTokenError("Token não reconhecido. Verifique se copiou corretamente.");
     } finally {
-      setLoading(false);
+      setTokenLoading(false);
     }
   }
 
@@ -83,6 +104,7 @@ export default function EntrarPage() {
           </Link>
         </div>
 
+        {/* Login com senha */}
         <div className="glass-panel rounded-[32px] p-8">
           <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl border border-violet/30 bg-violet/10">
             <KeyRound className="h-6 w-6 text-violet" />
@@ -91,27 +113,48 @@ export default function EntrarPage() {
           <p className="text-xs uppercase tracking-[0.3em] text-muted">Acesso</p>
           <h1 className="mt-2 text-3xl font-bold text-white">Retornar ao colapso.</h1>
           <p className="mt-2 text-sm leading-7 text-slate-400">
-            Cole seu token de acesso abaixo. Você recebeu ele ao se cadastrar. Sem senha, só burnout.
+            Entre com seu apelido e senha cadastrados.
           </p>
 
-          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+          <form onSubmit={handlePasswordLogin} className="mt-8 space-y-5">
             <div>
-              <label htmlFor="token" className="mb-2 block text-sm font-medium text-slate-300">
-                Token de acesso
+              <label htmlFor="nickname" className="mb-2 block text-sm font-medium text-slate-300">
+                Apelido operacional
               </label>
-              <textarea
-                id="token"
-                value={token}
-                onChange={(e) => setToken(e.target.value)}
-                placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-                rows={3}
-                spellCheck={false}
-                autoComplete="off"
-                className="w-full resize-none rounded-2xl border border-white/10 bg-black/30 px-4 py-3 font-mono text-sm text-white placeholder-slate-600 outline-none transition-colors focus:border-violet/60 focus:ring-2 focus:ring-violet/20"
+              <input
+                id="nickname"
+                type="text"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                placeholder="dev_em_chamas"
+                autoComplete="username"
+                className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-white placeholder-slate-600 outline-none transition-colors focus:border-violet/60 focus:ring-2 focus:ring-violet/20"
               />
-              <p className="mt-1.5 text-xs text-slate-500">
-                Formato: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-              </p>
+            </div>
+
+            <div>
+              <label htmlFor="password" className="mb-2 block text-sm font-medium text-slate-300">
+                Senha
+              </label>
+              <div className="relative">
+                <input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="sua senha de burnout"
+                  autoComplete="current-password"
+                  className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 pr-11 text-white placeholder-slate-600 outline-none transition-colors focus:border-violet/60 focus:ring-2 focus:ring-violet/20"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
             </div>
 
             {error && (
@@ -126,9 +169,61 @@ export default function EntrarPage() {
               className="burn-gradient flex w-full items-center justify-center gap-2 rounded-full py-4 text-base font-semibold text-black transition-all hover:scale-[1.01] disabled:opacity-60"
             >
               {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-              {loading ? "Verificando token…" : "Entrar"}
+              {loading ? "Verificando…" : "Entrar"}
             </button>
           </form>
+        </div>
+
+        {/* Recuperação por token */}
+        <div className="mt-4 overflow-hidden rounded-[24px] border border-white/8 bg-white/3">
+          <button
+            type="button"
+            onClick={() => setShowToken((v) => !v)}
+            className="flex w-full items-center justify-between px-6 py-4 text-sm text-slate-400 transition-colors hover:text-slate-200"
+          >
+            <span>🔑 Recuperar conta com token de emergência</span>
+            <ChevronDown
+              className={`h-4 w-4 shrink-0 transition-transform ${showToken ? "rotate-180" : ""}`}
+            />
+          </button>
+
+          {showToken && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              transition={{ duration: 0.25 }}
+              className="border-t border-white/8 px-6 pb-6 pt-4"
+            >
+              <p className="mb-4 text-xs leading-6 text-slate-500">
+                Cole o token UUID que foi exibido ao finalizar seu cadastro. Ele fica salvo no seu
+                histórico de área de transferência ou no lugar onde você o guardou.
+              </p>
+              <form onSubmit={handleTokenLogin} className="space-y-3">
+                <textarea
+                  value={token}
+                  onChange={(e) => setToken(e.target.value)}
+                  placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                  rows={2}
+                  spellCheck={false}
+                  autoComplete="off"
+                  className="w-full resize-none rounded-2xl border border-white/10 bg-black/30 px-4 py-3 font-mono text-sm text-white placeholder-slate-600 outline-none transition-colors focus:border-ember/50 focus:ring-2 focus:ring-ember/20"
+                />
+                {tokenError && (
+                  <p className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+                    {tokenError}
+                  </p>
+                )}
+                <button
+                  type="submit"
+                  disabled={tokenLoading}
+                  className="flex w-full items-center justify-center gap-2 rounded-full border border-ember/40 bg-ember/10 py-3 text-sm font-semibold text-ember transition-all hover:bg-ember/20 disabled:opacity-60"
+                >
+                  {tokenLoading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                  {tokenLoading ? "Verificando token…" : "Entrar com token"}
+                </button>
+              </form>
+            </motion.div>
+          )}
         </div>
 
         <p className="mt-6 text-center text-sm text-slate-500">

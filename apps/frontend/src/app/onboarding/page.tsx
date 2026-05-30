@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check, Copy, Flame, Loader2 } from "lucide-react";
+import { Check, Copy, Eye, EyeOff, Flame, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -96,6 +96,9 @@ function TokenStep({ token, onContinue }: { token: string; onContinue: () => voi
 export default function OnboardingPage() {
   const router = useRouter();
   const [nickname, setNickname] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [area, setArea] = useState("dev");
   const [region, setRegion] = useState("São Paulo");
   const [avatar, setAvatar] = useState("🔥");
@@ -109,6 +112,14 @@ export default function OnboardingPage() {
       setError("Escolha um apelido para sua sobrevivência.");
       return;
     }
+    if (password.length < 6) {
+      setError("A senha deve ter no mínimo 6 caracteres.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("As senhas não coincidem.");
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
@@ -117,6 +128,7 @@ export default function OnboardingPage() {
         area,
         region,
         avatar_emoji: avatar,
+        password,
       });
       auth.setToken(profile.access_token);
       auth.setProfile(profile);
@@ -220,6 +232,48 @@ export default function OnboardingPage() {
                 placeholder="dev_em_chamas, pm_em_crise…"
                 className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-white placeholder-slate-600 outline-none transition-colors focus:border-violet/60 focus:ring-2 focus:ring-violet/20"
               />
+            </div>
+
+            {/* Senha */}
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label htmlFor="password" className="mb-2 block text-sm font-medium text-slate-300">
+                  Senha
+                </label>
+                <div className="relative">
+                  <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="mín. 6 caracteres"
+                    autoComplete="new-password"
+                    className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 pr-11 text-white placeholder-slate-600 outline-none transition-colors focus:border-violet/60 focus:ring-2 focus:ring-violet/20"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300"
+                    tabIndex={-1}
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
+              <div>
+                <label htmlFor="confirmPassword" className="mb-2 block text-sm font-medium text-slate-300">
+                  Confirmar senha
+                </label>
+                <input
+                  id="confirmPassword"
+                  type={showPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="repita a senha"
+                  autoComplete="new-password"
+                  className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-white placeholder-slate-600 outline-none transition-colors focus:border-violet/60 focus:ring-2 focus:ring-violet/20"
+                />
+              </div>
             </div>
 
             {/* Area + Region */}

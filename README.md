@@ -1,162 +1,318 @@
-# 🔥 BurnyOut
+<div align="center">
+
+```
+██████╗ ██╗   ██╗██████╗ ███╗   ██╗██╗   ██╗ ██████╗ ██╗   ██╗████████╗
+██╔══██╗██║   ██║██╔══██╗████╗  ██║╚██╗ ██╔╝██╔═══██╗██║   ██║╚══██╔══╝
+██████╔╝██║   ██║██████╔╝██╔██╗ ██║ ╚████╔╝ ██║   ██║██║   ██║   ██║   
+██╔══██╗██║   ██║██╔══██╗██║╚██╗██║  ╚██╔╝  ██║   ██║██║   ██║   ██║   
+██████╔╝╚██████╔╝██║  ██║██║ ╚████║   ██║   ╚██████╔╝╚██████╔╝   ██║   
+╚═════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝    ╚═════╝  ╚═════╝    ╚═╝   
+```
+
 ### The Corporate Suffering Analytics Network™
 
-> *"Your burnout has charts now."*
+*"Your burnout has charts now."*
 
-**[🚀 Ver ao vivo →](https://frontend-production-db69.up.railway.app)**
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-railway.app-6366f1?style=for-the-badge&logoColor=white)](https://frontend-production-db69.up.railway.app)
+[![Backend API](https://img.shields.io/badge/⚡_API-Django_REST-0c4b33?style=for-the-badge)](https://backend-production-7444f.up.railway.app/api)
+[![CODECON 2026](https://img.shields.io/badge/🏆_CODECON-2026-ff6b2c?style=for-the-badge)](https://codecon.dev)
 
----
+[![Next.js](https://img.shields.io/badge/Next.js_15-black?style=flat-square&logo=next.js)](https://nextjs.org)
+[![Django](https://img.shields.io/badge/Django_5-0c4b33?style=flat-square&logo=django)](https://djangoproject.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://typescriptlang.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS_4-0ea5e9?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![Railway](https://img.shields.io/badge/Railway-0b0d0e?style=flat-square&logo=railway)](https://railway.app)
 
-## O que é
-
-BurnyOut é uma **rede social satírica de analytics corporativo** onde café, reuniões inúteis, trânsito, bathroom revenue e sofrimento operacional viram dashboards, rankings globais e insights gerados por IA — dramaticamente exagerados, absurdamente precisos.
-
-Construído em 48h para a **CODECON 2026**.
-
----
-
-## ✨ Features ao vivo
-
-| Feature | Status |
-|---------|--------|
-| 🔐 Onboarding com nickname + avatar emoji | ✅ |
-| 📊 Dashboard com Burny Score™ em tempo real | ✅ |
-| 🤖 Insights sarcásticos gerados por IA (OpenAI) | ✅ |
-| 📈 Histórico de check-ins e evolução do burnout | ✅ |
-| 🏆 Ranking global de sofrimento | ✅ |
-| 💬 Feed social com desabafos e reações | ✅ |
-| 🎬 Burny Wrapped™ — seu resumo anual de burnout | ✅ |
-| 🔗 Compartilhar resultados (Web Share + clipboard) | ✅ |
-| 🧠 Badges de conquista ("Burnout Lendário", "Bathroom Revenue King") | ✅ |
+</div>
 
 ---
 
-## 📸 Screenshots
+## Índice
 
-### Landing Page
-![Landing Page](docs/screenshots/landing.png)
-
-### Dashboard com Burny Score™
-![Dashboard](docs/screenshots/dashboard.png)
-
-### Ranking Global
-![Ranking](docs/screenshots/ranking.png)
-
-### Burny Wrapped™
-![Wrapped](docs/screenshots/wrapped.png)
-
----
-
-## 🌐 Deploy
-
-| Serviço | URL |
-|---------|-----|
-| **Frontend** | https://frontend-production-db69.up.railway.app |
-| **Backend API** | https://backend-production-7444f.up.railway.app/api |
-| **Plataforma** | Railway (Frontend + Backend + PostgreSQL) |
+- [Visão Geral](#-visão-geral)
+- [Features](#-features)
+- [Ferramentas Corporativas](#-ferramentas-corporativas)
+- [Burny Score™](#-burny-score)
+- [Stack Técnica](#-stack-técnica)
+- [Arquitetura](#-arquitetura)
+- [Deploy](#-deploy)
+- [Rodando Localmente](#-rodando-localmente)
+- [Seed de Dados](#-seed-de-dados)
+- [API](#-api)
 
 ---
 
-## 🛠️ Stack
+## 🔥 Visão Geral
+
+**BurnyOut** é uma rede social satírica de analytics corporativo onde café, reuniões inúteis, trânsito e sofrimento operacional viram dashboards, rankings globais e insights gerados por IA — dramaticamente exagerados, absurdamente precisos.
+
+> Construído em 48h para a **CODECON 2026**.
+
+A plataforma transforma a frase *"não aguento mais essa reunião"* em uma visualização digna de keynote. Cada check-in diário alimenta o **Burny Score™** — um índice proprietário de colapso corporativo iminente. O tom é enterprise demais para ser levado a sério e sério demais para parecer piada barata.
+
+---
+
+## ✨ Features
+
+| Feature | Descrição | Status |
+|---|---|:---:|
+| 🔐 **Onboarding anônimo** | Nickname + avatar emoji. Sem e-mail, sem drama | ✅ |
+| 📊 **Dashboard em tempo real** | Burny Score™, histórico, métricas da semana, insights de IA | ✅ |
+| 🤖 **IA Sarcástica** | Insights gerados via OpenAI com tom corporativo dramático | ✅ |
+| 📈 **Histórico de burnout** | Gráfico de área com evolução do score ao longo do tempo | ✅ |
+| 🏆 **Ranking global** | Quem sofre mais no Brasil e no mundo, por área e por empresa | ✅ |
+| 💬 **Feed social** | Desabafos anônimos com reações corporativas | ✅ |
+| 🎬 **Burny Wrapped™** | Resumo anual do seu sofrimento, pronto pra compartilhar | ✅ |
+| 📜 **Certificado de Sobrevivência** | Documento oficial de resistência corporativa, imprimível em A4 | ✅ |
+| 🧠 **Badges de conquista** | "Burnout Lendário", "Bathroom Revenue King", "Sobrevivente" | ✅ |
+| 🚨 **Modo Apocalipse** | Score ≥ 90 ativa alerta vermelho pulsante de colapso iminente | ✅ |
+| 💸 **Custo de reunião** | Calcula em R$ quanto suas reuniões inúteis custaram esta semana | ✅ |
+| 🔗 **Compartilhamento** | Web Share API + clipboard com cards formatados | ✅ |
+| 👥 **Seguir e Endossar** | Conexões sociais e endosso de habilidades de sobrevivência | ✅ |
+| 🚽 **Bathroom Revenue** | A métrica mais importante: quanto você fatura indo ao banheiro | ✅ |
+
+---
+
+## 🛠️ Ferramentas Corporativas
+
+Disponíveis em [`/ferramentas`](https://frontend-production-db69.up.railway.app/ferramentas) — quatro ferramentas de sobrevivência para o ambiente corporativo moderno:
+
+| Ferramenta | Descrição |
+|---|---|
+| 🎰 **Roleta da Sexta** | 15 destinos corporativos. Descubra seu destino antes de abrir o Slack |
+| 🌐 **Tradutor Corporativo** | Converte linguagem humana em burocrês fluente e vice-versa |
+| 💼 **Gerador de Título LinkedIn** | Transforma seu cargo em algo 400% mais impressionante |
+| 📝 **Carta de Demissão** | Gera uma carta formal usando seu perfil real, com motivo cômico aleatório |
+
+---
+
+## 🔢 Burny Score™
+
+O **Burny Score™** é calculado a partir de check-ins diários ponderados por métricas corporativas proprietárias:
+
+```
+Burny Score = Σ (métricas × pesos) / normalização
+```
+
+| Métrica | Símbolo | Peso |
+|---|:---:|:---:|
+| Cafés consumidos | ☕ | 5 pts / unidade |
+| Reuniões inúteis | 😵 | 10 pts / unidade |
+| Minutos no trânsito | 🚗 | 0.1 pt / minuto |
+| Nível de stress (0–10) | 💀 | 7 pts / unidade |
+| Buzzwords aguentadas | 🤖 | 2 pts / unidade |
+| Bathroom Revenue | 🚽 | calculado indiretamente |
+
+> **Score 0–39** — Sobrevivente &nbsp;|&nbsp; **40–59** — Em chamas &nbsp;|&nbsp; **60–79** — Burnout Clássico &nbsp;|&nbsp; **80–89** — Lendário &nbsp;|&nbsp; **90–100** — 🚨 COLAPSO IMINENTE
+
+Score máximo: **100**. Score típico de uma segunda-feira: **87**.
+
+---
+
+## 🧱 Stack Técnica
 
 ### Frontend
-- **Next.js 15** (App Router, TypeScript, Static Export)
-- **Tailwind CSS 4** com tema personalizado (enterprise noir / cyberpunk corporativo)
-- **Framer Motion** para animações
-- **Recharts** para visualizações de dados
-- **Lucide React** para ícones
+
+| Tecnologia | Versão | Uso |
+|---|---|---|
+| **Next.js** | 15 | App Router, TypeScript, SSR |
+| **Tailwind CSS** | 4 | Design system — tema enterprise noir |
+| **Framer Motion** | latest | Animações e transições |
+| **Recharts** | latest | Gráficos de área e histórico |
+| **Sonner** | latest | Notificações toast |
+| **Lucide React** | latest | Iconografia |
 
 ### Backend
-- **Django 5 + Django REST Framework**
-- **PostgreSQL** (Railway)
-- **OpenAI API** para insights sarcásticos gerados por IA
-- **drf-spectacular** para OpenAPI/Swagger automático
+
+| Tecnologia | Versão | Uso |
+|---|---|---|
+| **Django** | 5 | Framework principal |
+| **Django REST Framework** | 3 | API REST |
+| **PostgreSQL** | 16 | Banco de produção (Railway) |
+| **SQLite** | — | Banco de desenvolvimento |
+| **OpenAI API** | latest | Insights sarcásticos por IA |
+| **drf-spectacular** | latest | OpenAPI / Swagger automático |
 
 ---
 
-## 🗂️ Estrutura do projeto
+## 🏗️ Arquitetura
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         BURNYOUT™                               │
+│                 Corporate Suffering Platform                     │
+└──────────────────────────┬──────────────────────────────────────┘
+                           │
+          ┌────────────────┴────────────────┐
+          │                                 │
+   ┌──────▼──────┐                  ┌───────▼──────┐
+   │  Frontend   │                  │   Backend    │
+   │  Next.js 15 │◄────── API ─────►│  Django 5    │
+   │  Railway    │   /api/v1/*       │  Railway     │
+   └─────────────┘                  └──────┬───────┘
+                                           │
+                    ┌──────────────────────┼──────────────────────┐
+                    │                      │                      │
+             ┌──────▼──────┐       ┌───────▼──────┐      ┌───────▼──────┐
+             │  users/     │       │  metrics/    │      │  analytics/  │
+             │  auth, perfis│       │  check-ins   │      │  Burny Score │
+             └─────────────┘       └──────────────┘      └─────────────┘
+                    │                      │                      │
+             ┌──────▼──────┐       ┌───────▼──────┐      ┌───────▼──────┐
+             │  social/    │       │  rankings/   │      │  ai/         │
+             │  feed, reações│      │  global rank │      │  insights IA │
+             └─────────────┘       └──────────────┘      └─────────────┘
+                    │                      │                      │
+             ┌──────▼──────┐       ┌───────▼──────┐      ┌───────▼──────┐
+             │  wrapped/   │       │  moderation/ │      │  PostgreSQL  │
+             │  resumo anual│       │  filtros     │      │  Railway DB  │
+             └─────────────┘       └──────────────┘      └─────────────┘
+```
+
+### Estrutura de pastas
 
 ```
 Burnout/
 ├── apps/
 │   ├── backend/
-│   │   ├── ai/          # insights por IA
-│   │   ├── analytics/   # cálculo do Burny Score™
-│   │   ├── metrics/     # check-ins diários
-│   │   ├── rankings/    # ranking global
-│   │   ├── social/      # feed + desabafos
-│   │   ├── users/       # perfis e auth
-│   │   └── wrapped/     # Burny Wrapped™
+│   │   ├── ai/            # Insights sarcásticos via OpenAI
+│   │   ├── analytics/     # Cálculo do Burny Score™ e benchmarks
+│   │   ├── config/        # Settings, URLs, WSGI/ASGI
+│   │   ├── core/          # Health checks e config transversal
+│   │   ├── metrics/       # Check-ins diários
+│   │   ├── moderation/    # Filtros de linguagem e segurança de tom
+│   │   ├── rankings/      # Ranking global, por área e por região
+│   │   ├── social/        # Feed, desabafos e reações
+│   │   ├── users/         # Identidade, perfis, badges e auth
+│   │   └── wrapped/       # Burny Wrapped™ — consolidações periódicas
 │   └── frontend/
-│       └── src/app/     # páginas Next.js
-├── docs/
-└── Dados exemplo/
+│       └── src/
+│           ├── app/       # Rotas — App Router (Next.js)
+│           │   ├── dashboard/
+│           │   ├── ferramentas/
+│           │   ├── certificado/
+│           │   ├── ranking/
+│           │   ├── social/
+│           │   └── wrapped/
+│           ├── components/ # UI reutilizável e blocos de interface
+│           └── lib/        # API client, auth, utils
+├── docs/                  # Produto, arquitetura e decisões de design
+└── Dados exemplo/         # Seeds e fixtures de exemplo
 ```
 
 ---
 
-## ⚡ Como rodar localmente
+## 🌐 Deploy
 
-### Pré-requisitos
-- Python 3.12+
-- Node.js 20+
-- PostgreSQL (ou SQLite para dev)
+| Serviço | URL | Plataforma |
+|---|---|---|
+| **Frontend** | [frontend-production-db69.up.railway.app](https://frontend-production-db69.up.railway.app) | Railway |
+| **Backend API** | [backend-production-7444f.up.railway.app/api](https://backend-production-7444f.up.railway.app/api) | Railway |
+| **Banco de dados** | PostgreSQL gerenciado | Railway |
 
-### Backend
+O deploy é automático a partir do branch `main`. Frontend e backend têm pipelines independentes configuradas via `railway.json`.
+
+---
+
+## ⚡ Rodando Localmente
+
+**Pré-requisitos:** Python 3.12+, Node.js 20+
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/hendelsantos/Codecon26_Linkidinho_Burnout.git
+cd Codecon26_Linkidinho_Burnout
+```
+
+### 2. Backend
 
 ```bash
 cd apps/backend
-cp .env.example .env
-# edite .env com suas credenciais
+
+# Ambiente virtual
 python -m venv .venv && source .venv/bin/activate
+
+# Dependências
 pip install -r requirements.txt
+
+# Banco de dados
 python manage.py migrate
-python manage.py seed_burny   # 20 perfis + 21 dias de check-ins
+
+# Popular com dados de exemplo (20 perfis, 21 dias de check-ins)
+python manage.py seed_burny --days 21
+
+# Iniciar servidor
 python manage.py runserver
 ```
 
-API disponível em `http://localhost:8000/api/`
+API disponível em **`http://localhost:8000/api/`**
 
-### Frontend
+### 3. Frontend
 
 ```bash
 cd apps/frontend
-cp .env.example .env.local
-# edite NEXT_PUBLIC_API_URL=http://localhost:8000/api
+
+# Dependências
 npm install
+
+# Variável de ambiente
+echo "NEXT_PUBLIC_API_URL=http://localhost:8000/api" > .env.local
+
+# Iniciar servidor de desenvolvimento
 npm run dev
 ```
 
-App disponível em `http://localhost:3000`
+App disponível em **`http://localhost:3000`**
 
 ---
 
-## 🔢 Métricas do Burny Score™
+## 🌱 Seed de Dados
 
-O Burny Score™ é calculado a partir de:
-
-| Métrica | Peso |
-|---------|------|
-| ☕ Cafés consumidos | 5 pts/unidade |
-| 😵 Reuniões inúteis | 10 pts/unidade |
-| 🚗 Minutos no trânsito | 0.1 pt/minuto |
-| 💀 Stress level (0–10) | 7 pts/unidade |
-| 🚽 Bathroom Revenue | indireto |
-| 🤖 Buzzwords aguentadas | 2 pts/unidade |
-
-Score máximo: 100 (colapso total). Score típico de uma segunda-feira: 87.
-
----
-
-## 👥 Seed de dados
-
-O banco de produção tem **21 perfis** e **421 check-ins** reais. Execute `seed_burny` para popular localmente:
+O banco de produção possui **21+ perfis** e **400+ check-ins** reais. Para replicar localmente:
 
 ```bash
+# Popula com 21 dias de dados e reseta o banco
 python manage.py seed_burny --days 21 --reset
+
+# Apenas adiciona mais dados sem resetar
+python manage.py seed_burny --days 7
 ```
 
 ---
+
+## 🔌 API
+
+A API REST segue autenticação via header `X-Access-Token`. Principais endpoints:
+
+```
+POST   /api/users/register/          → Criar conta anônima
+GET    /api/profiles/me/             → Perfil do usuário autenticado
+PATCH  /api/profiles/me/             → Atualizar perfil
+
+POST   /api/metrics/checkin/         → Registrar check-in diário
+GET    /api/analytics/score/         → Burny Score atual
+GET    /api/analytics/history/       → Histórico de scores
+
+GET    /api/rankings/global/         → Ranking global de sofrimento
+GET    /api/social/feed/             → Feed de desabafos
+POST   /api/social/desabafo/         → Publicar desabafo
+
+GET    /api/wrapped/                 → Burny Wrapped™ anual
+GET    /api/analytics/bathroom/      → Ranking de Bathroom Revenue
+```
+
+Documentação interativa (Swagger) disponível em `/api/schema/swagger-ui/`.
+
+---
+
+<div align="center">
+
+**BurnyOut™** — *Because suffering deserves metrics.*
+
+Feito com ☕ (muitos), 😵 (algumas reuniões) e 💀 (deadline de 48h) para a CODECON 2026.
+
+</div>
 
 *Feito com 🔥 e sofrimento corporativo estruturado para a CODECON 2026.*
 

@@ -59,20 +59,27 @@ function msgAleatoria(tipo: string, excluir?: string): string {
 
 // ──── URLs ───────────────────────────────────────────────────────────────────
 
-const BASE_URL =
-  typeof window !== "undefined"
-    ? window.location.origin
-    : "https://frontend-production-db69.up.railway.app";
+function getBaseUrl() {
+  if (typeof window !== "undefined") return window.location.origin;
+  return "https://frontend-production-db69.up.railway.app";
+}
 
 // ──── Componente principal ────────────────────────────────────────────────────
 
 export function ConvidarAmigo() {
+  const [token, setToken] = useState<string | null>(null);
   const [aberto, setAberto] = useState(false);
   const [convites, setConvites] = useState<Record<string, ConviteAmigo>>({});
   const [carregando, setCarregando] = useState<string | null>(null);
   const [copiado, setCopiado] = useState<string | null>(null);
   const [expandido, setExpandido] = useState<string | null>(null);
   const [mensagens, setMensagens] = useState<Record<string, string>>({});
+  const [erro, setErro] = useState<string | null>(null);
+
+  // Lê o token após a montagem (evita hydration mismatch)
+  useEffect(() => {
+    setToken(auth.getToken());
+  }, []);
 
   // Fecha com ESC
   useEffect(() => {
@@ -84,14 +91,15 @@ export function ConvidarAmigo() {
 
   async function abrirModal() {
     setAberto(true);
-    const token = auth.getToken();
-    if (!token) return;
+    setErro(null);
+    const tk = auth.getToken();
+    if (!tk) return;
     try {
-      const lista = await api.getConvites(token);
+      const lista = await api.getConvites(tk);
       const mapa: Record<string, ConviteAmigo> = {};
       lista.forEach((c) => { mapa[c.tipo_relacao] = c; });
       setConvites(mapa);
-    } catch { /* sem convites ainda */ }
+    } catch { /* sem convites ainda — normal */ }
   }
 
   function toggleExpandir(key: string) {
@@ -110,32 +118,35 @@ export function ConvidarAmigo() {
   }
 
   async function gerarLink(tipo: string) {
-    const token = auth.getToken();
-    if (!token) return;
+    const tk = auth.getToken();
+    if (!tk) return;
     setCarregando(tipo);
+    setErro(null);
     try {
-      const convite = await api.gerarConvite(token, tipo);
+      const convite = await api.gerarConvite(tk, tipo);
       setConvites((prev) => ({ ...prev, [tipo]: convite }));
+    } catch {
+      setErro("Erro ao gerar link. Verifique se você está logado e tente novamente.");
     } finally {
       setCarregando(null);
     }
   }
 
   async function copiarLink(codigo: string) {
-    const link = `${BASE_URL}/onboarding?convite=${codigo}`;
+    const link = `${getBaseUrl()}/onboarding?convite=${codigo}`;
     await navigator.clipboard.writeText(link);
     setCopiado(codigo);
     setTimeout(() => setCopiado(null), 2500);
   }
 
   function abrirWhatsApp(tipo: string, codigo: string) {
-    const link = `${BASE_URL}/onboarding?convite=${codigo}`;
+    const link = `${getBaseUrl()}/onboarding?convite=${codigo}`;
     const msg = (mensagens[tipo] ?? msgAleatoria(tipo)) + link;
     const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
     window.open(url, "_blank", "noopener,noreferrer");
   }
 
-  const token = auth.getToken();
+  // Não renderiza nada até confirmar que tem token (após montagem no cliente)
   if (!token) return null;
 
   return (
@@ -177,6 +188,12 @@ export function ConvidarAmigo() {
 
             {/* Lista scrollável */}
             <div className="overflow-y-auto px-6 pb-6 sm:px-8 sm:pb-8 space-y-3">
+              {/* Banner de erro */}
+              {erro && (
+                <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-xs text-red-300">
+                  {erro}
+                </div>
+              )}
               {TIPOS.map(({ key, emoji, label }) => {
                 const convite = convites[key];
                 const isLoading = carregando === key;
@@ -229,7 +246,7 @@ export function ConvidarAmigo() {
                           <p className="text-xs text-slate-300 whitespace-pre-line leading-5">
                             {msg || msgAleatoria(key)}
                             {convite && (
-                              <span className="text-violet/70">{BASE_URL}/onboarding?convite={convite.codigo}</span>
+                              <span className="text-violet/70">{getBaseUrl()}/onboarding?convite={convite.codigo}</span>
                             )}
                             {!convite && (
                               <span className="text-slate-600 italic">[link gerado aqui]</span>

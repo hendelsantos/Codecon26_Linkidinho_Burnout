@@ -1,8 +1,13 @@
-"""Burny AI: gerador de insights satiricos baseado em templates."""
+"""Burny AI: gerador de insights satiricos baseado em templates e GPT."""
 
 from __future__ import annotations
 
+import logging
 import random
+
+from django.conf import settings
+
+logger = logging.getLogger(__name__)
 
 INSIGHTS: dict[str, list[str]] = {
     "coffees": [
@@ -51,7 +56,39 @@ def insight_for(metric: str) -> str:
     return random.choice(options)
 
 
+def _gpt_insight(profile, checkin) -> str | None:
+    """Gera um insight via GPT-4o-mini. Retorna None se falhar ou sem chave."""
+    api_key: str = getattr(settings, "OPENAI_API_KEY", "")
+    if not api_key:
+        return None
+    try:
+        import openai
+        client = openai.OpenAI(api_key=api_key)
+        prompt = (
+            f"Você é o Burny AI, uma IA corporativa passivo-agressiva e satírica. "
+            f"Gere um insight curto (máx 180 caracteres) sobre o dia corporativo de '{profile.nickname}', "
+            f"que trabalha com {profile.get_area_display()} em {profile.region}. "
+            f"Dados do dia: {checkin.coffees} cafés, {checkin.useless_meetings} reuniões inúteis, "
+            f"{checkin.traffic_minutes} min no trânsito, stress {checkin.stress_level}/10, "
+            f"Burny Score {checkin.burny_score}. "
+            f"Tom: irônico, enterprise, dramático. Responda APENAS o insight, sem aspas."
+        )
+        resp = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=80,
+            temperature=0.9,
+        )
+        return resp.choices[0].message.content.strip()
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("GPT insight failed: %s", exc)
+        return None
+
+
 def feed_line(profile, checkin) -> str:
+    gpt = _gpt_insight(profile, checkin)
+    if gpt:
+        return gpt
     template = random.choice(FEED_TEMPLATES)
     return template.format(
         nickname=profile.nickname,
@@ -63,3 +100,4 @@ def feed_line(profile, checkin) -> str:
         buzzwords=checkin.buzzwords_endured,
         score=checkin.burny_score,
     )
+

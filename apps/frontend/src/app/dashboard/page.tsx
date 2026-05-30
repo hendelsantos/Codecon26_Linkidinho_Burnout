@@ -1,12 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { BrainCircuit, Flame, Loader2, LogOut } from "lucide-react";
+import { BrainCircuit, Flame, Loader2, LogOut, Share2, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 
-import { CheckIn, CheckInPayload, Profile, ScoreResponse, api, timeAgo } from "@/lib/api";
+import { Badge, CheckIn, CheckInPayload, HistoryEntry, Profile, ScoreResponse, api, timeAgo } from "@/lib/api";
 import { auth } from "@/lib/auth";
 
 const METRIC_LABELS: Record<string, string> = {
@@ -44,11 +45,14 @@ export default function DashboardPage() {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [score, setScore] = useState<ScoreResponse | null>(null);
   const [checkins, setCheckins] = useState<CheckIn[]>([]);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [badges, setBadges] = useState<Badge[]>([]);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState<CheckInPayload>(DEFAULT_FORM);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [todayDone, setTodayDone] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const load = useCallback(async () => {
     const token = auth.getToken();
@@ -57,15 +61,19 @@ export default function DashboardPage() {
       return;
     }
     try {
-      const [p, s, ci] = await Promise.all([
+      const [p, s, ci, hist, bdg] = await Promise.all([
         api.getMe(token),
         api.getScore(token),
         api.getCheckIns(token),
+        api.getHistory(token).catch(() => []),
+        api.getBadges(token).catch(() => []),
       ]);
       setProfile(p);
       setScore(s);
       const ciArr = Array.isArray(ci) ? ci : [];
       setCheckins(ciArr);
+      setHistory(Array.isArray(hist) ? hist : []);
+      setBadges(Array.isArray(bdg) ? bdg : []);
       const today = new Date().toISOString().slice(0, 10);
       setTodayDone(ciArr.some((c) => c.date === today));
     } catch {
@@ -99,6 +107,21 @@ export default function DashboardPage() {
   function handleLogout() {
     auth.clear();
     router.push("/");
+  }
+
+  async function handleShare() {
+    const text = `Meu Burny Score é ${score?.current_score ?? "??"} — ${scoreLabel(score?.current_score ?? 0)}. ${score?.current_insight ?? ""} #BurnyOut`;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: "Burny Out", text });
+      } else {
+        await navigator.clipboard.writeText(text);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2500);
+      }
+    } catch {
+      /* cancelado pelo usuário */
+    }
   }
 
   if (loading) {
@@ -198,6 +221,39 @@ export default function DashboardPage() {
                   );
                 })}
               </div>
+
+              {/* Gráfico de histórico */}
+              {history.length > 1 && (
+                <div className="mt-6">
+                  <p className="mb-3 text-xs uppercase tracking-[0.3em] text-muted">Burny Score — histórico</p>
+                  <ResponsiveContainer width="100%" height={120}>
+                    <AreaChart data={history} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="burnGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#8257ff" stopOpacity={0.4} />
+                          <stop offset="95%" stopColor="#8257ff" stopOpacity={0} />
+                        </linearGradient>
+                      </defs>
+                      <XAxis dataKey="date" hide />
+                      <Tooltip
+                        contentStyle={{ background: "#0f1018", border: "1px solid #ffffff18", borderRadius: 12, fontSize: 12 }}
+                        labelFormatter={(v) => `📅 ${v}`}
+                        formatter={(v: number) => [`${v}`, "Burny Score"]}
+                      />
+                      <Area type="monotone" dataKey="burny_score" stroke="#8257ff" strokeWidth={2} fill="url(#burnGrad)" dot={false} />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+
+              {/* Share card */}
+              <button
+                onClick={handleShare}
+                className="mt-5 flex w-full items-center justify-center gap-2 rounded-full border border-ember/30 bg-ember/10 py-3 text-sm font-semibold text-ember-soft transition-all hover:bg-ember/20"
+              >
+                <Share2 className="h-4 w-4" />
+                {copied ? "Copiado! 🔥" : "Compartilhar meu burnout"}
+              </button>
             </motion.section>
           )}
 
@@ -342,6 +398,7 @@ export default function DashboardPage() {
               {[
                 { href: "/feed", label: "Feed & Desabafos" },
                 { href: "/ranking", label: "Ranking global" },
+                { href: "/wrapped", label: "🎬 Meu Burny Wrapped" },
               ].map(({ href, label }) => (
                 <Link
                   key={href}
@@ -354,6 +411,39 @@ export default function DashboardPage() {
               ))}
             </div>
           </motion.div>
+
+          {/* Badges */}
+          {badges.length > 0 && (
+            <motion.div
+              className="glass-panel rounded-[32px] p-6"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <div className="flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-violet" />
+                <p className="text-xs uppercase tracking-[0.3em] text-muted">Conquistas</p>
+              </div>
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                {badges.map((b) => (
+                  <div
+                    key={b.id}
+                    title={b.description}
+                    className={`rounded-2xl border p-3 text-center transition-all ${
+                      b.earned
+                        ? "border-violet/30 bg-violet/10"
+                        : "border-white/5 bg-black/20 opacity-40"
+                    }`}
+                  >
+                    <p className="text-2xl">{b.emoji}</p>
+                    <p className={`mt-1 text-xs font-medium ${b.earned ? "text-white" : "text-slate-500"}`}>
+                      {b.name}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
         </div>
       </div>
     </main>

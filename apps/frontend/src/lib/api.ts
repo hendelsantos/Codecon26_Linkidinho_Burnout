@@ -84,6 +84,39 @@ export interface RankingResponse {
   results: RankingEntry[];
 }
 
+export interface Badge {
+  id: string;
+  emoji: string;
+  name: string;
+  description: string;
+  earned: boolean;
+}
+
+export interface HistoryEntry {
+  date: string;
+  burny_score: number;
+  coffees: number;
+  useless_meetings: number;
+  traffic_minutes: number;
+  stress_level: number;
+}
+
+export interface Wrapped {
+  checkins_total: number;
+  coffees_total: number;
+  meetings_total: number;
+  traffic_hours: number;
+  bathroom_revenue_reais: number;
+  buzzwords_total: number;
+  burny_score_max: number;
+  burny_score_min: number;
+  burny_score_avg: number;
+  stress_avg: number;
+  worst_day: { date: string; score: number; insight: string } | null;
+  best_day: { date: string; score: number; insight: string } | null;
+  profile: { nickname: string; emoji: string; area: string; region: string };
+}
+
 export interface CheckIn {
   id: string;
   date: string;
@@ -212,6 +245,15 @@ export const api = {
   getScore: (token: string) => apiFetch<ScoreResponse>("/score/", { token }),
 
   getCheckIns: (token: string) => apiFetch<CheckIn[]>("/checkins/", { token }),
+
+  getHistory: (token: string) =>
+    apiFetch<HistoryEntry[]>("/checkins/history/", { token }),
+
+  getBadges: (token: string) =>
+    apiFetch<Badge[]>("/profiles/me/badges/", { token }),
+
+  getWrapped: (token: string) =>
+    apiFetch<Wrapped>("/wrapped/", { token }),
 };
 
 // ──── Helpers ─────────────────────────────────────────────────────────────────

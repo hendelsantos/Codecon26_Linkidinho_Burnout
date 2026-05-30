@@ -2,6 +2,7 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .badges import compute_badges
 from .models import BURNY_SKILLS, Follow, Profile, SkillEndorsement
 from .serializers import ProfileCreateSerializer, ProfileDetailSerializer, ProfilePublicSerializer
 
@@ -117,3 +118,22 @@ class SkillEndorseView(APIView):
             return Response({"action": "removed", "skill": skill})
 
         return Response({"action": "endorsed", "skill": skill}, status=201)
+
+
+class BadgesView(APIView):
+    """Badges de conquista do usuário autenticado."""
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        badges = compute_badges(request.user)
+        return Response([
+            {
+                "id": b.id,
+                "emoji": b.emoji,
+                "name": b.name,
+                "description": b.description,
+                "earned": b.earned,
+            }
+            for b in badges
+        ])

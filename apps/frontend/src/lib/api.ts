@@ -10,11 +10,46 @@ export interface Profile {
   region: string;
   area: string;
   area_label: string;
+  followers_count: number;
+  following_count: number;
   created_at: string;
 }
 
 export interface ProfileCreate extends Profile {
   access_token: string;
+}
+
+export interface SkillItem {
+  key: string;
+  label: string;
+  count: number;
+}
+
+export interface ProfileDetail extends Profile {
+  skills: SkillItem[];
+  is_following: boolean;
+}
+
+export interface ReactionCount {
+  key: string;
+  emoji: string;
+  count: number;
+}
+
+export interface Desabafo {
+  id: string;
+  author: Profile;
+  content: string;
+  nivel: string;
+  nivel_label: string;
+  reaction_counts: ReactionCount[];
+  viewer_reaction: string | null;
+  created_at: string;
+}
+
+export interface DesabafoResponse {
+  count: number;
+  results: Desabafo[];
 }
 
 export interface FeedItem {
@@ -123,8 +158,39 @@ export const api = {
 
   getMe: (token: string) => apiFetch<Profile>("/profiles/me/", { token }),
 
+  getProfile: (id: string, token?: string) =>
+    apiFetch<ProfileDetail>(`/profiles/${id}/`, { token }),
+
+  followProfile: (token: string, id: string) =>
+    apiFetch<{ action: "followed" | "unfollowed"; followers_count: number }>(
+      `/profiles/${id}/follow/`,
+      { method: "POST", token },
+    ),
+
+  endorseSkill: (token: string, id: string, skill: string) =>
+    apiFetch<{ action: "endorsed" | "removed"; skill: string }>(
+      `/profiles/${id}/endorse/`,
+      { method: "POST", token, body: JSON.stringify({ skill }) },
+    ),
+
   getFeed: (limit = 30) =>
     apiFetch<FeedResponse>(`/feed/?limit=${limit}`),
+
+  getDesabafos: (limit = 30, token?: string) =>
+    apiFetch<DesabafoResponse>(`/desabafos/?limit=${limit}`, { token }),
+
+  createDesabafo: (token: string, data: { content: string; nivel: string }) =>
+    apiFetch<Desabafo>("/desabafos/", {
+      method: "POST",
+      token,
+      body: JSON.stringify(data),
+    }),
+
+  reactToDesabafo: (token: string, id: string, emoji: string) =>
+    apiFetch<{ action: string; emoji: string }>(
+      `/desabafos/${id}/react/`,
+      { method: "POST", token, body: JSON.stringify({ emoji }) },
+    ),
 
   getRankings: (category = "burnout") =>
     apiFetch<RankingResponse>(`/rankings/?category=${category}`),

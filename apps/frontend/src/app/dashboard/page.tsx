@@ -309,10 +309,38 @@ export default function DashboardPage() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
+            <p className="text-xs uppercase tracking-[0.3em] text-muted">Minha rede</p>
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-3 text-center">
+                <p className="text-xl font-bold text-white">{profile?.followers_count ?? 0}</p>
+                <p className="mt-0.5 text-xs text-slate-400">Seguidores</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 p-3 text-center">
+                <p className="text-xl font-bold text-white">{profile?.following_count ?? 0}</p>
+                <p className="mt-0.5 text-xs text-slate-400">Seguindo</p>
+              </div>
+            </div>
+            {profile && (
+              <Link
+                href={`/perfil/${profile.id}`}
+                className="mt-3 flex items-center justify-between rounded-2xl border border-violet/20 bg-violet/8 px-4 py-3 text-sm text-violet transition-colors hover:bg-violet/15"
+              >
+                Ver meu perfil público
+                <span>→</span>
+              </Link>
+            )}
+          </motion.div>
+
+          <motion.div
+            className="glass-panel rounded-[32px] p-6"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.25 }}
+          >
             <p className="text-xs uppercase tracking-[0.3em] text-muted">Explorar</p>
             <div className="mt-4 space-y-2">
               {[
-                { href: "/feed", label: "Feed público" },
+                { href: "/feed", label: "Feed & Desabafos" },
                 { href: "/ranking", label: "Ranking global" },
               ].map(({ href, label }) => (
                 <Link

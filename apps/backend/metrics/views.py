@@ -1,4 +1,7 @@
 from rest_framework import generics, permissions
+from rest_framework.response import Response
+
+from moderation.service import moderate
 
 from .models import CheckIn
 from .serializers import CheckInSerializer
@@ -10,3 +13,11 @@ class CheckInListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return CheckIn.objects.filter(profile=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        note = request.data.get("note", "")
+        if note:
+            result = moderate(note)
+            if not result.safe:
+                return Response({"detail": result.reason}, status=400)
+        return super().create(request, *args, **kwargs)

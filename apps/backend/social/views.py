@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 
 from ai.services import feed_line
 from metrics.models import CheckIn
+from moderation.service import moderate
 
 from .models import Desabafo, Reacao
 from .serializers import DesabafoSerializer
@@ -58,6 +59,12 @@ class DesabafoListCreateView(APIView):
     def post(self, request):
         serializer = DesabafoSerializer(data=request.data, context={"request": request})
         serializer.is_valid(raise_exception=True)
+
+        texto = serializer.validated_data.get("texto", "")
+        result = moderate(texto)
+        if not result.safe:
+            return Response({"detail": result.reason}, status=400)
+
         serializer.save(author=request.user)
         return Response(serializer.data, status=201)
 

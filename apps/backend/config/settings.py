@@ -173,3 +173,14 @@ SPECTACULAR_SETTINGS = {
 }
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# ---------------------------------------------------------------------------
+# Moderação de conteúdo
+# ---------------------------------------------------------------------------
+
+# Chave da OpenAI — usada pela Moderation API (gratuita).
+# Sem chave: apenas a lista de palavras bloqueadas é aplicada.
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+
+# Palavras adicionais a bloquear além da lista padrão em moderation/service.py
+MODERATION_BLOCKED_WORDS: list[str] = []

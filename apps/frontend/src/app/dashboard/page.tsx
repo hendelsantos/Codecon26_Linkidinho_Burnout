@@ -97,16 +97,16 @@ export default function DashboardPage() {
 
       // Calcular streak de check-ins consecutivos
       const sortedDates = ciArr.map((c) => c.date).sort().reverse();
-      let s = 0;
+      let streak = 0;
       const cur = new Date();
       for (const d of sortedDates) {
         const expected = new Date(cur);
-        expected.setDate(cur.getDate() - s);
+        expected.setDate(cur.getDate() - streak);
         if (d === expected.toISOString().slice(0, 10)) {
-          s++;
+          streak++;
         } else break;
       }
-      setStreak(s);
+      setStreak(streak);
 
       // Verificar se já fez desabafo
       api.getDesabafos(1, token).then((r) => {

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Flame, Loader2 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -60,14 +61,22 @@ export default function OnboardingPage() {
         transition={{ duration: 0.55 }}
       >
         {/* Header */}
-        <div className="mb-8 flex items-center gap-3">
-          <div className="burn-gradient flex h-12 w-12 items-center justify-center rounded-2xl text-black shadow-[0_0_40px_rgba(130,87,255,0.45)]">
-            <Flame className="h-6 w-6" />
+        <div className="mb-8 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="burn-gradient flex h-12 w-12 items-center justify-center rounded-2xl text-black shadow-[0_0_40px_rgba(130,87,255,0.45)]">
+              <Flame className="h-6 w-6" />
+            </div>
+            <div>
+              <p className="text-xs uppercase tracking-[0.35em] text-muted">Burny Out</p>
+              <p className="text-sm font-semibold text-white">Corporate Suffering Analytics Network</p>
+            </div>
           </div>
-          <div>
-            <p className="text-xs uppercase tracking-[0.35em] text-muted">Burny Out</p>
-            <p className="text-sm font-semibold text-white">Corporate Suffering Analytics Network</p>
-          </div>
+          <Link
+            href="/"
+            className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+          >
+            ← Início
+          </Link>
         </div>
 
         <div className="glass-panel rounded-[32px] p-8">

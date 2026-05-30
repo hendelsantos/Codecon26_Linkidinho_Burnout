@@ -135,6 +135,7 @@ export default function DashboardPage() {
   }
 
   return (
+    <>
     <main className="mx-auto w-full max-w-7xl px-5 py-8 sm:px-8">
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-violet/15 blur-[120px]" />
@@ -460,5 +461,6 @@ export default function DashboardPage() {
     </main>
 
     <ConviteModal aberto={conviteAberto} onClose={() => setConviteAberto(false)} />
+    </>
   );
 }

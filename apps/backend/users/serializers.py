@@ -19,6 +19,7 @@ class ProfilePublicSerializer(serializers.ModelSerializer):
             "area_label",
             "followers_count",
             "following_count",
+            "monthly_salary_cents",
             "created_at",
         ]
         read_only_fields = ["id", "created_at", "area_label", "followers_count", "following_count"]

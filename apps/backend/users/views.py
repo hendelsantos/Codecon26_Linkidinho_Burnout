@@ -42,6 +42,16 @@ class CurrentProfileView(APIView):
         serializer = ProfilePublicSerializer(request.user, context={"request": request})
         return Response(serializer.data)
 
+    def patch(self, request):
+        """Atualiza campos do perfil próprio (salário mensal, area, region, avatar, nickname)."""
+        allowed = {"monthly_salary_cents", "area", "region", "avatar_emoji", "nickname"}
+        data = {k: v for k, v in request.data.items() if k in allowed}
+        for field, value in data.items():
+            setattr(request.user, field, value)
+        request.user.save(update_fields=list(data.keys()))
+        serializer = ProfilePublicSerializer(request.user, context={"request": request})
+        return Response(serializer.data)
+
 
 class PublicProfileView(APIView):
     """Perfil público de qualquer usuário — o 'linkedin profile' do burnout."""

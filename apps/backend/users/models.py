@@ -26,6 +26,7 @@ class Profile(models.Model):
     area = models.CharField(max_length=32, choices=AREAS, default="dev")
     access_token = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     password_hash = models.CharField(max_length=256, blank=True, default="")
+    monthly_salary_cents = models.PositiveIntegerField(null=True, blank=True, default=None)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

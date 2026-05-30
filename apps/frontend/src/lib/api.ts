@@ -12,6 +12,7 @@ export interface Profile {
   area_label: string;
   followers_count: number;
   following_count: number;
+  monthly_salary_cents: number | null;
   created_at: string;
 }
 
@@ -180,6 +181,22 @@ export interface MeuComparativo {
   vs_area: number;
 }
 
+export interface BathroomTopEntry {
+  nickname: string;
+  avatar_emoji: string;
+  area: string;
+  area_label: string;
+  total_revenue_cents: number;
+  total_checkins: number;
+  media_diaria_cents: number;
+}
+
+export interface BathroomRanking {
+  media_comunidade_cents: number;
+  total_gerado_comunidade_cents: number;
+  top_cagadores: BathroomTopEntry[];
+}
+
 export interface ConviteAmigo {
   codigo: string;
   tipo_relacao: string;
@@ -328,6 +345,16 @@ export const api = {
 
   getMeuComparativo: (token: string) =>
     apiFetch<MeuComparativo>("/analytics/comparativo/", { token }),
+
+  getBathroomRanking: () =>
+    apiFetch<BathroomRanking>("/analytics/bathroom/"),
+
+  updateProfile: (token: string, data: { monthly_salary_cents?: number | null }) =>
+    apiFetch<Profile>("/me/", {
+      method: "PATCH",
+      token,
+      body: JSON.stringify(data),
+    }),
 };
 
 // ──── Helpers ─────────────────────────────────────────────────────────────────

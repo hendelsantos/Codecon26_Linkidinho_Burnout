@@ -79,6 +79,12 @@ export default function DashboardPage() {
       setHistory(Array.isArray(hist) ? hist : []);
       setBadges(Array.isArray(bdg) ? bdg : []);
       setComparativo(comp ?? null);
+      // Auto-calcular bathroom revenue a partir do salário (20 min/dia, 22 dias úteis, 8h/dia)
+      if (p.monthly_salary_cents) {
+        const perMinute = p.monthly_salary_cents / (22 * 8 * 60);
+        const perCagada = Math.round(perMinute * 20);
+        setFormData((prev) => ({ ...prev, bathroom_revenue_cents: perCagada }));
+      }
       const today = new Date().toISOString().slice(0, 10);
       setTodayDone(ciArr.some((c) => c.date === today));
     } catch {

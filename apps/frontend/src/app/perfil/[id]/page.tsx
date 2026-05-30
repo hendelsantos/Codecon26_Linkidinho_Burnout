@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-import { ProfileDetail, SkillItem, api, timeAgo } from "@/lib/api";
+import { ProfileDetail, SkillItem, BathroomRanking, api, timeAgo } from "@/lib/api";
 import { auth } from "@/lib/auth";
 
 // ──── Helpers ─────────────────────────────────────────────────────────────
@@ -93,6 +93,9 @@ export default function PerfilPage() {
   const [followersCount, setFollowersCount] = useState(0);
   const [isFollowing, setIsFollowing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [bathroomRanking, setBathroomRanking] = useState<BathroomRanking | null>(null);
+  const [salaryInput, setSalaryInput] = useState("");
+  const [savingSalary, setSavingSalary] = useState(false);
 
   const isOwnProfile = myProfile?.id === params.id;
 
@@ -100,10 +103,17 @@ export default function PerfilPage() {
     async function load() {
       setLoading(true);
       try {
-        const p = await api.getProfile(params.id, token ?? undefined);
+        const [p, ranking] = await Promise.all([
+          api.getProfile(params.id, token ?? undefined),
+          api.getBathroomRanking().catch(() => null),
+        ]);
         setProfile(p);
         setFollowersCount(p.followers_count);
         setIsFollowing(p.is_following);
+        setBathroomRanking(ranking);
+        if (p.monthly_salary_cents) {
+          setSalaryInput(String(Math.round(p.monthly_salary_cents / 100)));
+        }
       } catch {
         setError("Perfil não encontrado ou o backend está offline.");
       } finally {
@@ -113,8 +123,20 @@ export default function PerfilPage() {
     void load();
   }, [params.id]);
 
-  async function handleFollow() {
-    if (!token) {
+  async function handleSaveSalary() {
+    if (!token || savingSalary) return;
+    const cents = Math.round(parseFloat(salaryInput) * 100);
+    if (!cents || cents <= 0) return;
+    setSavingSalary(true);
+    try {
+      const updated = await api.updateProfile(token, { monthly_salary_cents: cents });
+      setProfile((p) => p ? { ...p, monthly_salary_cents: updated.monthly_salary_cents } : p);
+    } finally {
+      setSavingSalary(false);
+    }
+  }
+
+  async function handleFollow() {    if (!token) {
       router.push("/onboarding");
       return;
     }
@@ -224,6 +246,137 @@ export default function PerfilPage() {
                 <p className="mt-1 text-xs text-slate-400">Seguindo</p>
               </div>
             </div>
+          </motion.div>
+
+          {/* Bathroom Revenue */}
+          <motion.div
+            className="glass-panel rounded-[28px] p-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+          >
+            <div className="mb-1 flex items-center gap-2">
+              <span className="text-xl">🚽</span>
+              <h2 className="text-sm font-semibold uppercase tracking-widest text-slate-400">
+                Receita no Banheiro
+              </h2>
+            </div>
+            <p className="mb-4 text-xs text-slate-500">
+              Quanto você rende pro seu empregador enquanto cuida das necessidades básicas da humanidade.
+            </p>
+
+            {/* Salary input — só para o próprio perfil */}
+            {isOwnProfile && token && (
+              <div className="mb-5 rounded-[18px] border border-violet/20 bg-violet/5 p-4">
+                <p className="mb-2 text-xs font-medium text-violet">
+                  {profile?.monthly_salary_cents ? "Seu salário mensal (CLT/PJ)" : "Cadastre seu salário para calcular"}
+                </p>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-slate-400">R$</span>
+                  <input
+                    type="number"
+                    min="1"
+                    step="100"
+                    value={salaryInput}
+                    onChange={(e) => setSalaryInput(e.target.value)}
+                    placeholder="Ex: 8000"
+                    className="flex-1 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white placeholder-slate-600 outline-none focus:border-violet/50"
+                  />
+                  <span className="text-sm text-slate-400">/mês</span>
+                  <button
+                    onClick={() => void handleSaveSalary()}
+                    disabled={savingSalary || !salaryInput}
+                    className="rounded-xl bg-violet px-4 py-2 text-sm font-semibold text-white disabled:opacity-50 hover:bg-violet/80 transition-colors"
+                  >
+                    {savingSalary ? "..." : "Salvar"}
+                  </button>
+                </div>
+                {profile?.monthly_salary_cents && (
+                  <div className="mt-3 grid grid-cols-3 gap-2 text-center">
+                    {(() => {
+                      const hourly = profile.monthly_salary_cents / (22 * 8 * 100);
+                      const perMin = hourly / 60;
+                      const perCagada = perMin * 20; // 20 min de média
+                      return (
+                        <>
+                          <div className="rounded-xl bg-black/20 p-2">
+                            <p className="text-base font-bold text-white">R${hourly.toFixed(2)}</p>
+                            <p className="text-[10px] text-slate-500">por hora</p>
+                          </div>
+                          <div className="rounded-xl bg-black/20 p-2">
+                            <p className="text-base font-bold text-white">R${perMin.toFixed(2)}</p>
+                            <p className="text-[10px] text-slate-500">por minuto</p>
+                          </div>
+                          <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-2">
+                            <p className="text-base font-bold text-emerald-400">R${perCagada.toFixed(2)}</p>
+                            <p className="text-[10px] text-emerald-600">por cagada*</p>
+                          </div>
+                        </>
+                      );
+                    })()}
+                  </div>
+                )}
+                {profile?.monthly_salary_cents && (
+                  <p className="mt-2 text-[10px] text-slate-600 italic">*estimativa de 20 min por sessão. Valores podem variar conforme a fibra da sua alimentação.</p>
+                )}
+              </div>
+            )}
+
+            {/* Comunidade stats */}
+            {bathroomRanking && (
+              <>
+                <div className="mb-3 grid grid-cols-2 gap-3">
+                  <div className="rounded-[16px] border border-white/8 bg-black/20 p-3 text-center">
+                    <p className="text-lg font-bold text-white">
+                      R${(bathroomRanking.media_comunidade_cents / 100).toFixed(2)}
+                    </p>
+                    <p className="mt-0.5 text-[11px] text-slate-400">média/dia na comunidade</p>
+                  </div>
+                  <div className="rounded-[16px] border border-emerald-500/20 bg-emerald-500/5 p-3 text-center">
+                    <p className="text-lg font-bold text-emerald-400">
+                      R${(bathroomRanking.total_gerado_comunidade_cents / 100).toFixed(0)}
+                    </p>
+                    <p className="mt-0.5 text-[11px] text-emerald-600">total gerado pela comunidade</p>
+                  </div>
+                </div>
+
+                {bathroomRanking.top_cagadores.length > 0 && (
+                  <>
+                    <p className="mb-2 text-[11px] uppercase tracking-widest text-slate-500">🏆 Hall of Fame do Banheiro</p>
+                    <div className="space-y-2">
+                      {bathroomRanking.top_cagadores.slice(0, 5).map((entry, i) => (
+                        <div
+                          key={entry.nickname}
+                          className={`flex items-center gap-3 rounded-[14px] border px-3 py-2 ${i === 0 ? "border-yellow-500/30 bg-yellow-500/5" : "border-white/6 bg-white/2"}`}
+                        >
+                          <span className="text-base font-bold text-slate-500 w-5 text-center">{i + 1}</span>
+                          <span className="text-lg">{entry.avatar_emoji}</span>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-white truncate">{entry.nickname}</p>
+                            <p className="text-[11px] text-slate-500">{entry.area_label}</p>
+                          </div>
+                          <div className="text-right shrink-0">
+                            <p className="text-sm font-bold text-emerald-400">R${(entry.total_revenue_cents / 100).toFixed(0)}</p>
+                            <p className="text-[10px] text-slate-600">total acumulado</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    {!isOwnProfile && !token && (
+                      <p className="mt-3 text-center text-xs text-slate-500">
+                        <a href="/onboarding" className="text-violet hover:underline">Entre</a> para aparecer no ranking
+                      </p>
+                    )}
+                  </>
+                )}
+
+                {bathroomRanking.top_cagadores.length === 0 && (
+                  <p className="text-center text-sm text-slate-500 py-4">
+                    Ninguém cadastrou salário ainda. Seja o primeiro a saber quanto ganha cagando.
+                  </p>
+                )}
+              </>
+            )}
           </motion.div>
 
           {/* Burny Skills */}

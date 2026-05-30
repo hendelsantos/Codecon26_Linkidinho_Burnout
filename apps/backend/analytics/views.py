@@ -172,3 +172,51 @@ class MeuComparativoView(APIView):
                 "vs_area": user_score - area_score,
             }
         )
+
+
+class BathroomRankingView(APIView):
+    """Ranking público de quem mais ganha cagando no expediente."""
+    permission_classes = []
+
+    def get(self, request):
+        from users.models import Profile
+        from django.db.models import Sum, Count
+
+        # Top 10 por receita total acumulada de banheiro
+        top = (
+            Profile.objects.filter(
+                monthly_salary_cents__isnull=False,
+                checkins__bathroom_revenue_cents__gt=0,
+            )
+            .annotate(
+                total_revenue=Sum("checkins__bathroom_revenue_cents"),
+                total_checkins=Count("checkins__id", distinct=True),
+            )
+            .filter(total_revenue__gt=0)
+            .order_by("-total_revenue")[:10]
+        )
+
+        # Média geral da comunidade
+        media = CheckIn.objects.filter(
+            bathroom_revenue_cents__gt=0
+        ).aggregate(
+            avg_revenue=Avg("bathroom_revenue_cents"),
+            total_gerado=Sum("bathroom_revenue_cents"),
+        )
+
+        return Response({
+            "media_comunidade_cents": round(media["avg_revenue"] or 0),
+            "total_gerado_comunidade_cents": media["total_gerado"] or 0,
+            "top_cagadores": [
+                {
+                    "nickname": p.nickname,
+                    "avatar_emoji": p.avatar_emoji,
+                    "area": p.area,
+                    "area_label": p.get_area_display(),
+                    "total_revenue_cents": p.total_revenue,
+                    "total_checkins": p.total_checkins,
+                    "media_diaria_cents": round(p.total_revenue / p.total_checkins) if p.total_checkins else 0,
+                }
+                for p in top
+            ],
+        })

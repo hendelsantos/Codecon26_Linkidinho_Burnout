@@ -47,9 +47,9 @@ function TokenStep({ token, onContinue }: { token: string; onContinue: () => voi
         </div>
 
         <p className="text-xs uppercase tracking-[0.3em] text-muted">Cadastro realizado</p>
-        <h1 className="mt-2 text-2xl font-bold text-white">Salve seu token de acesso!</h1>
+        <h1 className="mt-2 text-2xl font-bold text-white">Conta criada com sucesso!</h1>
         <p className="mt-2 text-sm leading-7 text-slate-400">
-          Este é seu <strong className="text-white">passaporte de burnout</strong>. Sem e-mail e sem senha — guarde ele para entrar de outro dispositivo ou depois de limpar o cache.
+          Seu cadastro está <strong className="text-white">salvo permanentemente</strong>. Se limpar o cache ou trocar de dispositivo, basta entrar com seu <strong className="text-white">apelido e senha</strong>. O token abaixo é seu <strong className="text-white">código de emergência</strong> caso esqueça a senha.
         </p>
 
         <div className="mt-6 rounded-2xl border border-violet/30 bg-violet/8 p-4">
@@ -68,8 +68,8 @@ function TokenStep({ token, onContinue }: { token: string; onContinue: () => voi
         </div>
 
         <div className="mt-4 rounded-2xl border border-yellow-500/20 bg-yellow-500/8 px-4 py-3 text-xs text-yellow-300">
-          ⚠️ Guarde este token em lugar seguro. Sem ele, você não consegue recuperar a conta.
-          Você também pode entrar pelo menu <strong>"Já tenho conta"</strong> na landing page.
+          🔑 Guarde este token como backup. Se esquecer a senha, use-o em{" "}
+          <strong>/entrar → "Esqueci minha senha"</strong>.
         </div>
 
         <button
@@ -83,9 +83,9 @@ function TokenStep({ token, onContinue }: { token: string; onContinue: () => voi
       <p className="mt-6 text-center text-xs text-slate-600">
         Para entrar depois:{" "}
         <Link href="/entrar" className="text-violet hover:underline">
-          burnyout.app/entrar
+          /entrar
         </Link>{" "}
-        e cole seu token.
+        com seu apelido e senha.
       </p>
     </motion.div>
   );

@@ -113,7 +113,7 @@ export default function EntrarPage() {
           <p className="text-xs uppercase tracking-[0.3em] text-muted">Acesso</p>
           <h1 className="mt-2 text-3xl font-bold text-white">Retornar ao colapso.</h1>
           <p className="mt-2 text-sm leading-7 text-slate-400">
-            Entre com seu apelido e senha cadastrados.
+            Seu cadastro está salvo. Limpou o cache? Sem problema — entre com seu apelido e senha.
           </p>
 
           <form onSubmit={handlePasswordLogin} className="mt-8 space-y-5">
@@ -181,7 +181,7 @@ export default function EntrarPage() {
             onClick={() => setShowToken((v) => !v)}
             className="flex w-full items-center justify-between px-6 py-4 text-sm text-slate-400 transition-colors hover:text-slate-200"
           >
-            <span>🔑 Recuperar conta com token de emergência</span>
+            <span>🔑 Esqueci minha senha — entrar com token de recuperação</span>
             <ChevronDown
               className={`h-4 w-4 shrink-0 transition-transform ${showToken ? "rotate-180" : ""}`}
             />
@@ -195,8 +195,7 @@ export default function EntrarPage() {
               className="border-t border-white/8 px-6 pb-6 pt-4"
             >
               <p className="mb-4 text-xs leading-6 text-slate-500">
-                Cole o token UUID que foi exibido ao finalizar seu cadastro. Ele fica salvo no seu
-                histórico de área de transferência ou no lugar onde você o guardou.
+                Esqueceu a senha? Cole o token UUID exibido ao final do cadastro. Ele é seu código de emergência para recuperar o acesso sem precisar da senha.
               </p>
               <form onSubmit={handleTokenLogin} className="space-y-3">
                 <textarea

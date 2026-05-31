@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "framer-motion";
 import { ArrowLeft, Flame, Loader2, UserCheck, UserPlus } from "lucide-react";
 import Link from "next/link";

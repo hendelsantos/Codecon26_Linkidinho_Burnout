@@ -31,8 +31,8 @@ def add_unique_together_if_missing(apps, schema_editor):
             DO $$ BEGIN
                 IF NOT EXISTS (
                     SELECT 1 FROM pg_indexes
-                    WHERE indexname LIKE '%conviteamigo%remetente%tipo_relacao%'
-                       OR indexname LIKE '%conviteamigo%tipo_relacao%remetente%'
+                    WHERE indexname LIKE '%%conviteamigo%%remetente%%tipo_relacao%%'
+                       OR indexname LIKE '%%conviteamigo%%tipo_relacao%%remetente%%'
                 ) THEN
                     CREATE UNIQUE INDEX users_conviteamigo_remetente_id_tipo_relacao_uniq
                     ON users_conviteamigo (remetente_id, tipo_relacao);

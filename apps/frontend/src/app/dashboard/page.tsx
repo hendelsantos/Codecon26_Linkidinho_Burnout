@@ -519,7 +519,7 @@ export default function DashboardPage() {
                   Gerar certificado de sobrevivência
                 </Link>
 
-                {score && score.current_score >= 80 && (
+                {score && score.current_score >= 80 ? (
                   <motion.div
                     initial={{ opacity: 0, y: 8, scale: 0.97 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -530,6 +530,18 @@ export default function DashboardPage() {
                     </p>
                     <PlanoFuga />
                   </motion.div>
+                ) : (
+                  <div className="relative overflow-hidden rounded-full border border-emerald-500/15 bg-emerald-500/5 py-3">
+                    <div className="flex items-center justify-center gap-2 opacity-40">
+                      <span className="text-sm">🏃</span>
+                      <span className="text-sm font-semibold text-emerald-300">Plano de Fuga Corporativa™</span>
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 backdrop-blur-[2px]">
+                      <p className="text-xs font-semibold text-slate-400">
+                        🔒 Requer Burny Score ≥ 80 · Atual: {score?.current_score ?? 0}
+                      </p>
+                    </div>
+                  </div>
                 )}
               </div>
             </motion.section>

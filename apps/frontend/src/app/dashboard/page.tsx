@@ -15,6 +15,7 @@ import { DicasCard } from "@/components/dicas-corporativas";
 import { SomAmbiente } from "@/components/som-ambiente";
 import { OnboardingTour } from "@/components/onboarding-tour";
 import { PlanoFuga } from "@/components/plano-fuga";
+import { BadgesSection } from "@/components/badges-section";
 
 const METRIC_LABELS: Record<string, string> = {
   coffees: "Cafés",
@@ -714,37 +715,13 @@ export default function DashboardPage() {
           </motion.div>
 
           {/* Badges */}
-          {badges.length > 0 && (
-            <motion.div
-              className="glass-panel rounded-[32px] p-6"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
-              <div className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-violet" />
-                <p className="text-xs uppercase tracking-[0.3em] text-muted">Conquistas</p>
-              </div>
-              <div className="mt-4 grid grid-cols-2 gap-2">
-                {badges.map((b) => (
-                  <div
-                    key={b.id}
-                    title={b.description}
-                    className={`rounded-2xl border p-3 text-center transition-all ${
-                      b.earned
-                        ? "border-violet/30 bg-violet/10"
-                        : "border-white/5 bg-black/20 opacity-40"
-                    }`}
-                  >
-                    <p className="text-2xl">{b.emoji}</p>
-                    <p className={`mt-1 text-xs font-medium ${b.earned ? "text-white" : "text-slate-500"}`}>
-                      {b.name}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          )}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <BadgesSection badges={badges} />
+          </motion.div>
 
           {/* Comparativo nacional */}
           {comparativo && (

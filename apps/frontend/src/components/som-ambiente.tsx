@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Settings, Volume2, VolumeX } from "lucide-react";
 
 // Sons gerados via Web Audio API — sem arquivos externos
 function createOfficeAudioContext() {
@@ -31,7 +32,11 @@ function createOfficeAudioContext() {
 
   // Teclado mecânico aleatório
   function teclado() {
+    const timers = new Set<number>();
+    let stopped = false;
+
     function clickKey() {
+      if (stopped) return;
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = "square";
@@ -43,16 +48,29 @@ function createOfficeAudioContext() {
       osc.start();
       osc.stop(ctx.currentTime + 0.04);
       const delay = 80 + Math.random() * 250;
-      const t = setTimeout(clickKey, delay);
-      return t;
+      const timer = window.setTimeout(() => {
+        timers.delete(timer);
+        clickKey();
+      }, delay);
+      timers.add(timer);
     }
-    const t = clickKey();
-    return { stop: () => clearTimeout(t) };
+    clickKey();
+    return {
+      stop: () => {
+        stopped = true;
+        timers.forEach((timer) => window.clearTimeout(timer));
+        timers.clear();
+      },
+    };
   }
 
   // Notificação suave ocasional
   function notificacoes() {
+    const timers = new Set<number>();
+    let stopped = false;
+
     function ping() {
+      if (stopped) return;
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = "sine";
@@ -64,11 +82,20 @@ function createOfficeAudioContext() {
       osc.start();
       osc.stop(ctx.currentTime + 0.4);
       const delay = 8000 + Math.random() * 15000;
-      const t = setTimeout(ping, delay);
-      return t;
+      const timer = window.setTimeout(() => {
+        timers.delete(timer);
+        ping();
+      }, delay);
+      timers.add(timer);
     }
-    const t = ping();
-    return { stop: () => clearTimeout(t) };
+    ping();
+    return {
+      stop: () => {
+        stopped = true;
+        timers.forEach((timer) => window.clearTimeout(timer));
+        timers.clear();
+      },
+    };
   }
 
   return { ventilacao, teclado, notificacoes, ctx };
@@ -95,6 +122,7 @@ export function SomAmbiente() {
     audioRef.current.ventilacao?.stop();
     audioRef.current.teclado?.stop();
     audioRef.current.notificacoes?.stop();
+    void audioRef.current.ctx?.close();
     audioRef.current = {};
   }
 
@@ -110,6 +138,7 @@ export function SomAmbiente() {
   function toggle() {
     if (ativo) {
       pararTudo();
+      setAberto(false);
     } else {
       iniciar();
     }
@@ -142,22 +171,25 @@ export function SomAmbiente() {
       <div className="flex items-center gap-1">
         <button
           onClick={toggle}
-          title={ativo ? "Parar som ambiente" : "Som de escritório"}
+          title={ativo ? "Desativar som ambiente" : "Ativar som ambiente"}
+          aria-label={ativo ? "Desativar som ambiente" : "Ativar som ambiente"}
           className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all ${
             ativo
               ? "border-violet/40 bg-violet/10 text-violet"
               : "border-white/10 bg-white/5 text-slate-400 hover:text-white"
           }`}
         >
-          {ativo ? "🔊" : "🔇"}{" "}
-          <span className="hidden sm:inline">{ativo ? "Som ativo" : "Escritório"}</span>
+          {ativo ? <Volume2 className="h-3.5 w-3.5" /> : <VolumeX className="h-3.5 w-3.5" />}
+          <span className="hidden sm:inline">{ativo ? "Desativar som" : "Som ambiente"}</span>
         </button>
         {ativo && (
           <button
             onClick={() => setAberto((v) => !v)}
-            className="rounded-full border border-white/10 bg-white/5 px-2 py-1.5 text-xs text-slate-400 hover:text-white"
+            title="Configurar som ambiente"
+            aria-label="Configurar som ambiente"
+            className="rounded-full border border-white/10 bg-white/5 p-1.5 text-slate-400 hover:text-white"
           >
-            ⚙️
+            <Settings className="h-3.5 w-3.5" />
           </button>
         )}
       </div>
@@ -176,6 +208,13 @@ export function SomAmbiente() {
               <span className="text-sm text-slate-300">{s.emoji} {s.label}</span>
             </label>
           ))}
+          <button
+            onClick={toggle}
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-xs font-semibold text-red-200 hover:bg-red-500/15"
+          >
+            <VolumeX className="h-3.5 w-3.5" />
+            Desativar som
+          </button>
         </div>
       )}
     </div>

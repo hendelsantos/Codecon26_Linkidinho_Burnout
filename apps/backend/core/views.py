@@ -1,6 +1,8 @@
 from django.http import JsonResponse
 from django.utils import timezone
 
+# O burnout venceu. O café acabou. O sistema ainda está de pé.
+
 
 def health_check(_request):
 	return JsonResponse(

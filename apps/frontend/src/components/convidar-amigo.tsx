@@ -14,6 +14,7 @@ const TIPOS = [
   { key: "conhecido_almoco", emoji: "🍽️", label: "Conhecido do almoço" },
   { key: "colega_profissao", emoji: "🤝", label: "Colega de profissão" },
   { key: "conhecido",        emoji: "👋", label: "Conhecido" },
+  { key: "chefe_querido",    emoji: "😬", label: "Meu chefe querido" },
 ];
 
 // ──── Mensagens cômicas por tipo ──────────────────────────────────────────────
@@ -48,6 +49,12 @@ const MENSAGENS: Record<string, string[]> = {
     `😅 Oi! Tô enviando esse convite pra você porque apareceu no meu contato e sei lá, vibe.\n\n*BurnyOut* é uma rede de burnout corporativo com gráficos sérios e humor sem toxicidade.\n\nNão precisa me responder. Só entra lá.\n\n👇\n`,
     `👋 Ei! Primeiro convite que você recebe de alguém que quase não te conhece mas quer sua companhia mesmo assim.\n\n*BurnyOut* — rede social que mede o colapso profissional. Entre como conhecido mesmo. É uma categoria oficial.\n\n👇\n`,
     `😂 Olha, você é meu "conhecido". Nem amigo, nem colega — mas também não é ninguém.\n\nPor isso, convite especial da categoria "conhecido" pro *BurnyOut*, a rede de burnout corporativo.\n\nNunca se sabe, pode virar amigo depois que você ver meus gráficos de sofrimento.\n\n👇\n`,
+  ],
+  chefe_querido: [
+    `😬 Olá! Encontrei uma rede social chamada *BurnyOut* que mede burnout corporativo com gráficos e rankings.\n\nTô em 3º lugar no ranking geral. Achei que você deveria saber.\n\nEm hipótese alguma isso tem relação com as nossas reuniões diárias às 8h.\n\n👇 Entre e veja meu perfil:\n`,
+    `🤝 Prezado(a) líder,\n\nSegue convite para a plataforma *BurnyOut*, onde profissionais monitoram sua saúde mental no trabalho.\n\nComo parte do meu plano de desenvolvimento individual, acredito que sua presença enriqueceria o debate.\n\nAtt,\n[Seu colaborador que ainda não pediu aumento]\n\n👇\n`,
+    `😅 Chefe! Tô te mandando esse link porque você sempre diz que tem "porta aberta".\n\nO *BurnyOut* é uma rede que mede sofrimento corporativo com dados reais. Você aparece nas minhas análises mais do que o esperado.\n\nNão é pessoal. São os algoritmos.\n\n👇\n`,
+    `🎩 Sabia que existe uma rede social que mede burnout profissional?\n\nMeu score tá em 87. Os dados apontam que reuniões sem pauta são o fator #1.\n\nEstou compartilhando por transparência. E porque você pediu que eu fosse mais proativo.\n\nAquele abraço 🙂\n👇\n`,
   ],
 };
 

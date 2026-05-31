@@ -86,7 +86,6 @@ export default function PerfilPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
   const token = auth.getToken();
-  const myProfile = auth.getProfile();
 
   const [profile, setProfile] = useState<ProfileDetail | null>(null);
   const [loading, setLoading] = useState(true);
@@ -97,23 +96,34 @@ export default function PerfilPage() {
   const [bathroomRanking, setBathroomRanking] = useState<BathroomRanking | null>(null);
   const [salaryInput, setSalaryInput] = useState("");
   const [savingSalary, setSavingSalary] = useState(false);
-
-  const isOwnProfile = myProfile?.id === params.id;
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
 
   useEffect(() => {
     async function load() {
       setLoading(true);
       try {
-        const [p, ranking] = await Promise.all([
+        const requests: [Promise<ProfileDetail>, Promise<BathroomRanking | null>] = [
           api.getProfile(params.id, token ?? undefined),
           api.getBathroomRanking().catch(() => null),
-        ]);
+        ];
+        const [p, ranking] = await Promise.all(requests);
         setProfile(p);
         setFollowersCount(p.followers_count);
         setIsFollowing(p.is_following);
         setBathroomRanking(ranking);
         if (p.monthly_salary_cents) {
           setSalaryInput(String(Math.round(p.monthly_salary_cents / 100)));
+        }
+        // Verificar propriedade via API (mais confiável que localStorage)
+        if (token) {
+          api.getMe(token).then((me) => {
+            setIsOwnProfile(me.id === params.id);
+            auth.setProfile(me); // manter localStorage atualizado
+          }).catch(() => {
+            // fallback: comparar com localStorage
+            const cached = auth.getProfile();
+            setIsOwnProfile(cached?.id === params.id);
+          });
         }
       } catch {
         setError("Perfil não encontrado ou o backend está offline.");
@@ -122,7 +132,7 @@ export default function PerfilPage() {
       }
     }
     void load();
-  }, [params.id]);
+  }, [params.id, token]);
 
   async function handleSaveSalary() {
     if (!token || savingSalary) return;

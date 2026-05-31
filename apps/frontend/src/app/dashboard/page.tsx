@@ -17,6 +17,134 @@ import { OnboardingTour } from "@/components/onboarding-tour";
 import { PlanoFuga } from "@/components/plano-fuga";
 import { BadgesSection } from "@/components/badges-section";
 
+// ──── Share Card Modal ────────────────────────────────────────────────────────
+
+function ShareCardModal({
+  checkin,
+  profile,
+  onClose,
+}: {
+  checkin: CheckIn;
+  profile: Profile;
+  onClose: () => void;
+}) {
+  const [copied, setCopied] = useState(false);
+
+  const scoreLabel = (s: number) =>
+    s >= 80 ? "COLAPSO IMINENTE" : s >= 60 ? "NÍVEL CRÍTICO" : s >= 40 ? "EM ALERTA" : "FUNCIONAL";
+
+  const cardText =
+    `${profile.avatar_emoji} ${profile.nickname} — ${profile.area_label}\n` +
+    `Burny Score: ${checkin.burny_score} (${scoreLabel(checkin.burny_score)})\n` +
+    `☕ ${checkin.coffees} cafés · 📅 ${checkin.useless_meetings} reuniões inúteis · 😤 stress ${checkin.stress_level}/10\n` +
+    `"${checkin.burny_insight}"\n#BurnyOut`;
+
+  function handleCopy() {
+    navigator.clipboard.writeText(cardText).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }).catch(() => {});
+  }
+
+  function handleShare() {
+    if (navigator.share) {
+      navigator.share({ title: "BurnyOut", text: cardText }).catch(() => {});
+    } else {
+      handleCopy();
+    }
+  }
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+    >
+      <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" />
+      <motion.div
+        className="relative z-10 w-full max-w-sm"
+        initial={{ scale: 0.85, opacity: 0, y: 24 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.92, opacity: 0 }}
+        transition={{ type: "spring", bounce: 0.3 }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Card visual — estilo Instagram Story corporativo */}
+        <div
+          className="relative overflow-hidden rounded-[32px] p-8 text-center"
+          style={{
+            background: "linear-gradient(145deg, #0e0b1f 0%, #12101e 40%, #0f1018 100%)",
+            border: "1px solid rgba(130,87,255,0.3)",
+            boxShadow: "0 0 80px rgba(130,87,255,0.15), 0 0 40px rgba(249,115,22,0.08)",
+          }}
+        >
+          {/* Glow decorativo */}
+          <div className="absolute -top-10 left-1/2 h-40 w-40 -translate-x-1/2 rounded-full bg-violet/20 blur-[60px]" />
+
+          <p className="relative text-[10px] uppercase tracking-[0.35em] text-violet/70">Burny Report™</p>
+          <p className="relative mt-2 text-5xl">{profile.avatar_emoji}</p>
+          <p className="relative mt-2 text-lg font-bold text-white">{profile.nickname}</p>
+          <p className="relative text-xs text-slate-400">{profile.area_label} · {profile.region}</p>
+
+          {/* Score badge */}
+          <div
+            className="relative mx-auto mt-5 inline-block rounded-full px-5 py-2"
+            style={{
+              background: checkin.burny_score >= 80
+                ? "rgba(239,68,68,0.15)" : checkin.burny_score >= 60
+                ? "rgba(249,115,22,0.15)" : "rgba(234,179,8,0.15)",
+              border: `1px solid ${checkin.burny_score >= 80 ? "rgba(239,68,68,0.4)" : checkin.burny_score >= 60 ? "rgba(249,115,22,0.4)" : "rgba(234,179,8,0.4)"}`,
+            }}
+          >
+            <span className="text-3xl font-bold text-white">{checkin.burny_score}</span>
+            <span className="ml-2 text-xs font-semibold tracking-widest uppercase text-slate-400">{scoreLabel(checkin.burny_score)}</span>
+          </div>
+
+          {/* Métricas */}
+          <div className="relative mt-5 grid grid-cols-3 gap-2 text-center">
+            <div className="rounded-2xl bg-white/5 py-3">
+              <p className="text-lg font-bold text-white">☕ {checkin.coffees}</p>
+              <p className="text-[10px] text-slate-500">cafés</p>
+            </div>
+            <div className="rounded-2xl bg-white/5 py-3">
+              <p className="text-lg font-bold text-white">📅 {checkin.useless_meetings}</p>
+              <p className="text-[10px] text-slate-500">reuniões</p>
+            </div>
+            <div className="rounded-2xl bg-white/5 py-3">
+              <p className="text-lg font-bold text-white">😤 {checkin.stress_level}</p>
+              <p className="text-[10px] text-slate-500">stress</p>
+            </div>
+          </div>
+
+          {/* Insight */}
+          <p className="relative mt-4 text-xs leading-6 text-slate-300 italic">&quot;{checkin.burny_insight}&quot;</p>
+
+          <p className="relative mt-5 text-[10px] tracking-widest text-slate-600">#BurnyOut · burnyout.app</p>
+        </div>
+
+        {/* Ações */}
+        <div className="mt-4 flex gap-3">
+          <button
+            onClick={handleShare}
+            className="burn-gradient flex flex-1 items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold text-black"
+          >
+            <Share2 className="h-4 w-4" />
+            Compartilhar
+          </button>
+          <button
+            onClick={handleCopy}
+            className="flex flex-1 items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 py-3 text-sm font-semibold text-white hover:bg-white/10"
+          >
+            {copied ? "✅ Copiado!" : "📋 Copiar texto"}
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 const METRIC_LABELS: Record<string, string> = {
   coffees: "Cafés",
   useless_meetings: "Reuniões inúteis",
@@ -124,6 +252,7 @@ export default function DashboardPage() {
   const [todayDone, setTodayDone] = useState(false);
   const [copied, setCopied] = useState(false);
   const [conviteAberto, setConviteAberto] = useState(false);
+  const [shareCheckin, setShareCheckin] = useState<CheckIn | null>(null);
   const [streak, setStreak] = useState(0);
   const [checklistDismissed, setChecklistDismissed] = useState(false);
   const [desabafoTexto, setDesabafoTexto] = useState("");
@@ -208,8 +337,9 @@ export default function DashboardPage() {
     setSubmitting(true);
     setSubmitError(null);
     try {
-      await api.createCheckIn(token, formData);
+      const newCheckin = await api.createCheckIn(token, formData);
       await load();
+      setShareCheckin(newCheckin);
       // 🎉 Confete corporativo
       confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ["#8257ff", "#ff6b2c", "#ffb14a", "#ffffff"] });
     } catch (err) {
@@ -277,6 +407,16 @@ export default function DashboardPage() {
   return (
     <>
     <OnboardingTour />
+    {/* Share Card Modal */}
+    <AnimatePresence>
+      {shareCheckin && profile && (
+        <ShareCardModal
+          checkin={shareCheckin}
+          profile={profile}
+          onClose={() => setShareCheckin(null)}
+        />
+      )}
+    </AnimatePresence>
     <main className="mx-auto w-full max-w-7xl px-5 py-8 sm:px-8">
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-violet/15 blur-[120px]" />

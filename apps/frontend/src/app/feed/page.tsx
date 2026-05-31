@@ -25,11 +25,11 @@ const NIVEL_OPTIONS = [
 ] as const;
 
 const REACTIONS = [
-  { key: "choro", emoji: "😭", label: "Me identifico" },
-  { key: "morto", emoji: "💀", label: "Morto" },
-  { key: "cafe", emoji: "☕", label: "Precisa de café" },
-  { key: "fogo", emoji: "🔥", label: "Em chamas" },
-  { key: "abraco", emoji: "🤝", label: "Solidariedade" },
+  { key: "choro", emoji: "😭", label: "Me Identifico 100%" },
+  { key: "morto", emoji: "💀", label: "Impacto Zero" },
+  { key: "cafe", emoji: "☕", label: "Precisa Escalar" },
+  { key: "fogo", emoji: "🔥", label: "Gerar Insights" },
+  { key: "abraco", emoji: "🤝", label: "Alinhar Stakeholder" },
 ] as const;
 
 // ──── Composer ────────────────────────────────────────────────────────────
@@ -231,7 +231,10 @@ function ActivityCard({ post, index }: { post: FeedItem; index: number }) {
       transition={{ delay: 0.04 * Math.min(index, 12), duration: 0.4 }}
     >
       <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3">
+        <Link
+          href={`/perfil/${post.author_id}`}
+          className="flex items-center gap-3 hover:opacity-80"
+        >
           <span className="text-2xl">{post.avatar_emoji}</span>
           <div>
             <p className="font-semibold text-white">{post.author}</p>
@@ -239,7 +242,7 @@ function ActivityCard({ post, index }: { post: FeedItem; index: number }) {
               {post.role} · {post.region}
             </p>
           </div>
-        </div>
+        </Link>
         <div className="flex shrink-0 items-center gap-2">
           <span className={`rounded-full border px-2.5 py-0.5 text-xs font-semibold ${scoreColor(post.burny_score)}`}>
             {post.burny_score}
@@ -258,9 +261,11 @@ function ActivityCard({ post, index }: { post: FeedItem; index: number }) {
 // ──── Page ────────────────────────────────────────────────────────────────
 
 type Tab = "desabafos" | "atividade";
+type FeedFilter = "geral" | "seguidos";
 
 export default function FeedPage() {
   const [tab, setTab] = useState<Tab>("desabafos");
+  const [feedFilter, setFeedFilter] = useState<FeedFilter>("geral");
   const [desabafos, setDesabafos] = useState<Desabafo[]>([]);
   const [activity, setActivity] = useState<FeedItem[]>([]);
   const [loadingD, setLoadingD] = useState(true);
@@ -282,11 +287,12 @@ export default function FeedPage() {
     }
   }
 
-  async function loadActivity() {
+  async function loadActivity(filter: FeedFilter = "geral", currentToken?: string | null) {
     setLoadingA(true);
     setError(null);
     try {
-      const res = await api.getFeed(30);
+      const tok = (currentToken ?? auth.getToken()) ?? undefined;
+      const res = await api.getFeed(30, filter, tok);
       setActivity(res.results);
     } catch {
       setError("Não foi possível carregar o feed de atividade.");
@@ -303,7 +309,12 @@ export default function FeedPage() {
 
   function handleTabChange(t: Tab) {
     setTab(t);
-    if (t === "atividade" && activity.length === 0) void loadActivity();
+    if (t === "atividade" && activity.length === 0) void loadActivity(feedFilter);
+  }
+
+  function handleFilterChange(f: FeedFilter) {
+    setFeedFilter(f);
+    void loadActivity(f);
   }
 
   function handlePosted(d: Desabafo) {
@@ -411,9 +422,40 @@ export default function FeedPage() {
       {/* Atividade Tab */}
       {tab === "atividade" && (
         <div className="space-y-4">
+          {/* Subtabs: Geral / Minha Rede */}
+          <div className="flex gap-1 rounded-2xl border border-white/10 bg-white/5 p-1">
+            <button
+              onClick={() => handleFilterChange("geral")}
+              className={`flex-1 rounded-xl py-2 text-xs font-semibold transition-all ${
+                feedFilter === "geral" ? "bg-white/15 text-white" : "text-slate-500 hover:text-slate-300"
+              }`}
+            >
+              🌐 Geral
+            </button>
+            <button
+              onClick={() => handleFilterChange("seguidos")}
+              disabled={!token}
+              className={`flex-1 rounded-xl py-2 text-xs font-semibold transition-all disabled:opacity-40 ${
+                feedFilter === "seguidos" ? "bg-white/15 text-white" : "text-slate-500 hover:text-slate-300"
+              }`}
+            >
+              🤝 Minha Rede
+            </button>
+          </div>
+          {feedFilter === "seguidos" && !token && (
+            <p className="text-center text-xs text-slate-500">
+              <Link href="/onboarding" className="text-violet hover:underline">Faça login</Link> para ver sua rede
+            </p>
+          )}
           {isLoading && activity.length === 0 ? (
             <div className="flex justify-center py-16">
               <Loader2 className="h-8 w-8 animate-spin text-violet" />
+            </div>
+          ) : activity.length === 0 ? (
+            <div className="glass-panel rounded-[28px] p-8 text-center text-sm text-slate-400">
+              {feedFilter === "seguidos"
+                ? "Ninguém da sua rede registrou burnout ainda. Vá atrás deles."
+                : "Feed vazio. Seja o primeiro a sofrer hoje."}
             </div>
           ) : (
             activity.map((post, i) => <ActivityCard key={post.id} post={post} index={i} />)

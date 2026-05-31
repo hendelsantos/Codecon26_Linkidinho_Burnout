@@ -26,9 +26,19 @@ export interface SkillItem {
   count: number;
 }
 
+export interface BurnoutStats {
+  checkins_total: number;
+  coffees_total: number;
+  meetings_total: number;
+  bathroom_revenue_reais: number;
+  burny_score_avg: number;
+  burny_score_max: number;
+}
+
 export interface ProfileDetail extends Profile {
   skills: SkillItem[];
   is_following: boolean;
+  burnout_stats: BurnoutStats;
 }
 
 export interface ReactionCount {
@@ -56,6 +66,7 @@ export interface DesabafoResponse {
 export interface FeedItem {
   id: string;
   author: string;
+  author_id: string;
   avatar_emoji: string;
   role: string;
   region: string;
@@ -102,17 +113,27 @@ export interface HistoryEntry {
   stress_level: number;
 }
 
+export interface WrappedEquivalencias {
+  titanic_meetings: number;
+  netflix_hours: number;
+  coffees_litros: number;
+  buzzwords_musicas: number;
+}
+
 export interface Wrapped {
+  period: string;
   checkins_total: number;
   coffees_total: number;
   meetings_total: number;
   traffic_hours: number;
+  traffic_minutes_total: number;
   bathroom_revenue_reais: number;
   buzzwords_total: number;
   burny_score_max: number;
   burny_score_min: number;
   burny_score_avg: number;
   stress_avg: number;
+  equivalencias: WrappedEquivalencias;
   worst_day: { date: string; score: number; insight: string } | null;
   best_day: { date: string; score: number; insight: string } | null;
   profile: { nickname: string; emoji: string; area: string; region: string };
@@ -280,8 +301,8 @@ export const api = {
       { method: "POST", token, body: JSON.stringify({ skill }) },
     ),
 
-  getFeed: (limit = 30) =>
-    apiFetch<FeedResponse>(`/feed/?limit=${limit}`),
+  getFeed: (limit = 30, filter: "geral" | "seguidos" = "geral", token?: string) =>
+    apiFetch<FeedResponse>(`/feed/?limit=${limit}&filter=${filter}`, { token }),
 
   getDesabafos: (limit = 30, token?: string) =>
     apiFetch<DesabafoResponse>(`/desabafos/?limit=${limit}`, { token }),
@@ -319,8 +340,8 @@ export const api = {
   getBadges: (token: string) =>
     apiFetch<Badge[]>("/profiles/me/badges/", { token }),
 
-  getWrapped: (token: string) =>
-    apiFetch<Wrapped>("/wrapped/", { token }),
+  getWrapped: (token: string, month?: string) =>
+    apiFetch<Wrapped>(`/wrapped/${month ? `?month=${month}` : ""}`, { token }),
 
   // ──── Convites ────────────────────────────────────────────────────────────
 

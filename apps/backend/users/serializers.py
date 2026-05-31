@@ -37,9 +37,11 @@ class ProfileDetailSerializer(ProfilePublicSerializer):
     skills = serializers.SerializerMethodField()
     is_following = serializers.SerializerMethodField()
 
+    burnout_stats = serializers.SerializerMethodField()
+
     class Meta(ProfilePublicSerializer.Meta):
-        fields = ProfilePublicSerializer.Meta.fields + ["skills", "is_following"]
-        read_only_fields = ProfilePublicSerializer.Meta.read_only_fields + ["skills", "is_following"]
+        fields = ProfilePublicSerializer.Meta.fields + ["skills", "is_following", "burnout_stats"]
+        read_only_fields = ProfilePublicSerializer.Meta.read_only_fields + ["skills", "is_following", "burnout_stats"]
 
     def get_skills(self, obj):
         from django.db.models import Count
@@ -61,6 +63,30 @@ class ProfileDetailSerializer(ProfilePublicSerializer):
             return False
         from .models import Follow
         return Follow.objects.filter(follower=request.user, following=obj).exists()
+
+    def get_burnout_stats(self, obj):
+        from django.db.models import Avg, Max, Sum
+        from metrics.models import CheckIn
+        qs = CheckIn.objects.filter(profile=obj)
+        total = qs.count()
+        if total == 0:
+            return {"checkins_total": 0, "coffees_total": 0, "meetings_total": 0,
+                    "bathroom_revenue_reais": 0, "burny_score_avg": 0, "burny_score_max": 0}
+        agg = qs.aggregate(
+            coffees=Sum("coffees"),
+            meetings=Sum("useless_meetings"),
+            bathroom=Sum("bathroom_revenue_cents"),
+            avg_score=Avg("burny_score"),
+            max_score=Max("burny_score"),
+        )
+        return {
+            "checkins_total": total,
+            "coffees_total": agg["coffees"] or 0,
+            "meetings_total": agg["meetings"] or 0,
+            "bathroom_revenue_reais": round((agg["bathroom"] or 0) / 100, 2),
+            "burny_score_avg": round(agg["avg_score"] or 0, 1),
+            "burny_score_max": agg["max_score"] or 0,
+        }
 
 
 class ProfileCreateSerializer(serializers.ModelSerializer):

@@ -1,10 +1,8 @@
-"use client";
-
 import { motion } from "framer-motion";
 import { ArrowLeft, Flame, Loader2, UserCheck, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { toast } from "sonner";
 import { ProfileDetail, SkillItem, BathroomRanking, api, timeAgo } from "@/lib/api";
@@ -18,6 +16,21 @@ const NIVEL_EMOJIS: Record<string, string> = {
   critico: "🤯",
   colapso: "💀",
 };
+
+const CORPORATE_STATUSES = [
+  { emoji: "📅", text: "Em reunião que poderia ser e-mail" },
+  { emoji: "🚽", text: "No banheiro gerando receita" },
+  { emoji: "☕", text: "Na terceira xícara. Não perguntem." },
+  { emoji: "💀", text: "Operacionalmente presente, emocionalmente ausente" },
+  { emoji: "📊", text: "Gerando insights acionáveis" },
+  { emoji: "🎯", text: "100% focado em entregas de valor" },
+  { emoji: "😶", text: "Em modo de preservação estratégica de energia" },
+  { emoji: "🔥", text: "Priorizando o backlog de burnout" },
+  { emoji: "🕐", text: "Em daily stand-up (37 minutos)" },
+  { emoji: "🌀", text: "Alinhando stakeholders cross-funcionais" },
+  { emoji: "🧟", text: "De licença médica não remunerada" },
+  { emoji: "📞", text: "Em call com cliente. Fingindo que está ótimo." },
+];
 
 const ALL_SKILLS = [
   { key: "reunioes_survival", label: "Sobrevivência em Reuniões de 2h" },
@@ -97,6 +110,13 @@ export default function PerfilPage() {
   const [salaryInput, setSalaryInput] = useState("");
   const [savingSalary, setSavingSalary] = useState(false);
   const [isOwnProfile, setIsOwnProfile] = useState(false);
+
+  // Status corporativo determinístico por perfil (varia por usuário, estável por reload)
+  const corporateStatus = useMemo(() => {
+    if (!params.id) return CORPORATE_STATUSES[0];
+    const idx = params.id.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) % CORPORATE_STATUSES.length;
+    return CORPORATE_STATUSES[idx];
+  }, [params.id]);
 
   useEffect(() => {
     async function load() {
@@ -226,7 +246,14 @@ export default function PerfilPage() {
                   <p className="text-sm text-slate-400">
                     {profile.area_label} · {profile.region}
                   </p>
-                  <p className="mt-1 text-xs text-slate-500">
+                  {/* Status corporativo */}
+                  <div className="mt-2 flex items-center gap-1.5">
+                    <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
+                    <span className="text-xs text-slate-500">
+                      {corporateStatus.emoji} {corporateStatus.text}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-xs text-slate-600">
                     No BurnyOut desde {new Date(profile.created_at).toLocaleDateString("pt-BR", { month: "long", year: "numeric" })}
                   </p>
                 </div>
@@ -249,7 +276,7 @@ export default function PerfilPage() {
                   ) : (
                     <UserPlus className="h-3.5 w-3.5" />
                   )}
-                  {isFollowing ? "Seguindo" : "Seguir"}
+                  {isFollowing ? "Sofrendo Junto" : "Sofrer Junto"}
                 </button>
               )}
             </div>
@@ -258,13 +285,42 @@ export default function PerfilPage() {
             <div className="mt-6 grid grid-cols-2 gap-3">
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
                 <p className="text-2xl font-bold text-white">{followersCount}</p>
-                <p className="mt-1 text-xs text-slate-400">Seguidores</p>
+                <p className="mt-1 text-xs text-slate-400">Sofredores</p>
               </div>
               <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
                 <p className="text-2xl font-bold text-white">{profile.following_count}</p>
-                <p className="mt-1 text-xs text-slate-400">Seguindo</p>
+                <p className="mt-1 text-xs text-slate-400">Sofre com</p>
               </div>
             </div>
+
+            {/* Currículo de Burnout */}
+            {profile.burnout_stats && profile.burnout_stats.checkins_total > 0 && (
+              <div className="mt-5">
+                <p className="mb-3 text-[10px] uppercase tracking-[0.3em] text-slate-500">Currículo de Burnout™</p>
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="rounded-[16px] border border-white/8 bg-black/20 p-3 text-center">
+                    <p className="text-xl font-bold text-white">{profile.burnout_stats.checkins_total}</p>
+                    <p className="mt-0.5 text-[10px] text-slate-500">colapsos documentados</p>
+                  </div>
+                  <div className="rounded-[16px] border border-white/8 bg-black/20 p-3 text-center">
+                    <p className="text-xl font-bold text-white">{profile.burnout_stats.meetings_total}</p>
+                    <p className="mt-0.5 text-[10px] text-slate-500">reuniões inúteis</p>
+                  </div>
+                  <div className="rounded-[16px] border border-white/8 bg-black/20 p-3 text-center">
+                    <p className="text-xl font-bold text-white">{profile.burnout_stats.coffees_total}</p>
+                    <p className="mt-0.5 text-[10px] text-slate-500">cafés consumidos</p>
+                  </div>
+                  <div className="col-span-2 rounded-[16px] border border-violet/15 bg-violet/5 p-3 text-center">
+                    <p className="text-xl font-bold text-white">{profile.burnout_stats.burny_score_avg}</p>
+                    <p className="mt-0.5 text-[10px] text-violet/70">burny score médio</p>
+                  </div>
+                  <div className="rounded-[16px] border border-red-500/15 bg-red-500/5 p-3 text-center">
+                    <p className="text-xl font-bold text-red-300">{profile.burnout_stats.burny_score_max}</p>
+                    <p className="mt-0.5 text-[10px] text-red-500/70">pico de colapso</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </motion.div>
 
           {/* Bathroom Revenue */}

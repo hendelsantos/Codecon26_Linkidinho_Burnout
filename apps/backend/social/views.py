@@ -15,10 +15,19 @@ class FeedView(APIView):
 
     def get(self, request):
         limit = min(int(request.query_params.get("limit", 30)), 100)
-        checkins = (
-            CheckIn.objects.select_related("profile")
-            .order_by("-created_at")[:limit]
-        )
+        filtro = request.query_params.get("filter", "geral")
+
+        qs = CheckIn.objects.select_related("profile").order_by("-created_at")
+
+        # Filtro "seguidos" — retorna somente check-ins de quem o usuário segue
+        if filtro == "seguidos" and getattr(request.user, "is_authenticated", False):
+            from users.models import Follow
+            seguidos_ids = Follow.objects.filter(
+                follower=request.user
+            ).values_list("following_id", flat=True)
+            qs = qs.filter(profile_id__in=seguidos_ids)
+
+        checkins = qs[:limit]
         items = []
         for checkin in checkins:
             profile = checkin.profile
@@ -26,6 +35,7 @@ class FeedView(APIView):
                 {
                     "id": str(checkin.id),
                     "author": profile.nickname,
+                    "author_id": str(profile.id),
                     "avatar_emoji": profile.avatar_emoji,
                     "role": profile.get_area_display(),
                     "region": profile.region,

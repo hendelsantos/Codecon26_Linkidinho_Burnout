@@ -77,6 +77,34 @@ _DEFINITIONS = [
         "description": "Stress médio acima de 7 no histórico.",
         "check": lambda s: (s.get("stress_avg") or 0) >= 7,
     },
+    {
+        "id": "promovido_sem_aumento",
+        "emoji": "🏆",
+        "name": "Promovido sem Aumento",
+        "description": "7+ check-ins com stress médio ≥ 8. Parabéns. Mais responsabilidade, mesmo salário.",
+        "check": lambda s: (s.get("count") or 0) >= 7 and (s.get("stress_avg") or 0) >= 8,
+    },
+    {
+        "id": "cafezinho_desespero",
+        "emoji": "☕💀",
+        "name": "Cafezinho do Desespero",
+        "description": "10+ check-ins registrados. Seu sofrimento está clinicamente documentado.",
+        "check": lambda s: (s.get("count") or 0) >= 10,
+    },
+    {
+        "id": "reunioes_impossivel",
+        "emoji": "📅🔥",
+        "name": "Mestre das Reuniões Inúteis",
+        "description": "50+ reuniões inúteis registradas. Quantos e-mails poderiam ter sido.",
+        "check": lambda s: (s.get("useless_meetings__sum") or 0) >= 50,
+    },
+    {
+        "id": "viciado_institucional",
+        "emoji": "🤖",
+        "name": "Vício Institucionalizado",
+        "description": "100+ cafés consumidos. Sua dependência virou currículo.",
+        "check": lambda s: (s.get("coffees__sum") or 0) >= 100,
+    },
 ]
 
 

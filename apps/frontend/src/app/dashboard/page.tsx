@@ -7,10 +7,13 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from "recharts";
 
+import confetti from "canvas-confetti";
 import { Badge, CheckIn, CheckInPayload, Desabafo, HistoryEntry, MeuComparativo, Profile, ScoreResponse, api, timeAgo } from "@/lib/api";
 import { auth } from "@/lib/auth";
 import { ConviteModal } from "@/components/convidar-amigo";
 import { DicasCard } from "@/components/dicas-corporativas";
+import { SomAmbiente } from "@/components/som-ambiente";
+import { OnboardingTour } from "@/components/onboarding-tour";
 
 const METRIC_LABELS: Record<string, string> = {
   coffees: "Cafés",
@@ -64,6 +67,8 @@ export default function DashboardPage() {
   const [desabafoEnviando, setDesabafoEnviando] = useState(false);
   const [desabafoEnviado, setDesabafoEnviado] = useState(false);
   const [hasDesabafo, setHasDesabafo] = useState(false);
+  const [logoClicks, setLogoClicks] = useState(0);
+  const [easterEgg, setEasterEgg] = useState(false);
 
   const load = useCallback(async () => {
     const token = auth.getToken();
@@ -136,11 +141,26 @@ export default function DashboardPage() {
     try {
       await api.createCheckIn(token, formData);
       await load();
+      // 🎉 Confete corporativo
+      confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 }, colors: ["#8257ff", "#ff6b2c", "#ffb14a", "#ffffff"] });
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : "Erro ao registrar check-in.");
     } finally {
       setSubmitting(false);
     }
+  }
+
+  function handleLogoClick() {
+    setLogoClicks((n) => {
+      const next = n + 1;
+      if (next >= 5) {
+        setEasterEgg(true);
+        setTimeout(() => { setEasterEgg(false); setLogoClicks(0); }, 4000);
+        confetti({ particleCount: 300, spread: 120, origin: { y: 0.5 }, colors: ["#8257ff", "#ff6b2c", "#ffb14a"] });
+        return 0;
+      }
+      return next;
+    });
   }
 
   function handleLogout() {
@@ -187,20 +207,39 @@ export default function DashboardPage() {
 
   return (
     <>
+    <OnboardingTour />
     <main className="mx-auto w-full max-w-7xl px-5 py-8 sm:px-8">
       <div className="absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute left-1/4 top-0 h-96 w-96 rounded-full bg-violet/15 blur-[120px]" />
         <div className="absolute right-1/4 bottom-0 h-80 w-80 rounded-full bg-ember/10 blur-[100px]" />
       </div>
 
+      {/* Easter egg overlay */}
+      {easterEgg && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+          onClick={() => setEasterEgg(false)}
+        >
+          <div className="text-center">
+            <p className="text-6xl">🔥</p>
+            <p className="mt-4 text-2xl font-bold text-white">Você encontrou o burnout secreto</p>
+            <p className="mt-2 text-sm text-slate-400">Parabéns. Isso já era esperado de você.</p>
+            <p className="mt-1 text-xs text-slate-600">Clique para continuar sofrendo</p>
+          </div>
+        </motion.div>
+      )}
+
       {/* Header */}
       <header className="glass-panel mb-8 flex items-center justify-between rounded-full px-5 py-3">
-        <Link href="/" className="flex items-center gap-3">
+        <button onClick={handleLogoClick} className="flex items-center gap-3">
           <div className="burn-gradient flex h-9 w-9 items-center justify-center rounded-xl text-black">
             <Flame className="h-4 w-4" />
           </div>
           <span className="text-sm font-semibold text-white">BurnyOut</span>
-        </Link>
+        </button>
 
         <div className="flex items-center gap-3">
           <Link
@@ -209,6 +248,7 @@ export default function DashboardPage() {
           >
             <span>🛠️</span> Ferramentas
           </Link>
+          <SomAmbiente />
           {profile && (
             <div className="flex items-center gap-2">
               <span className="text-2xl">{profile.avatar_emoji}</span>

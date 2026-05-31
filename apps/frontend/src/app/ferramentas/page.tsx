@@ -646,6 +646,145 @@ function CartaDemissao() {
   );
 }
 
+// ─── Dados: Guia Galáctico ───────────────────────────────────────────────────
+
+const CITACOES_GUIA = [
+  {
+    texto: "Não entre em pânico.",
+    fonte: "O Guia Galáctico do Mochileiro",
+    real: true,
+  },
+  {
+    texto: "A resposta para a vida, o universo e tudo mais é 42. Infelizmente ninguém sabe qual é a pergunta.",
+    fonte: "O Guia Galáctico do Mochileiro",
+    real: true,
+  },
+  {
+    texto: "Tempo é uma ilusão. Hora do almoço, duplamente.",
+    fonte: "Ford Prefect",
+    real: true,
+  },
+  {
+    texto: "O espaço é grande. Imensamente, espantosamente, assustadoramente grande. Você mal consegue imaginar.",
+    fonte: "O Guia Galáctico do Mochileiro",
+    real: true,
+  },
+  {
+    texto: "Reuniões corporativas são o equivalente galáctico da poesia Vogon: inevitáveis, sem sentido e terrivelmente longas. O Guia recomenda: não entre em pânico.",
+    fonte: "O Guia Galáctico do Mochileiro",
+    real: false,
+  },
+  {
+    texto: "Todo profissional em burnout está, na verdade, a exatamente 42 reuniões inúteis de distância de pedir demissão.",
+    fonte: "O Guia Galáctico do Mochileiro",
+    real: false,
+  },
+  {
+    texto: "O café corporativo é invariavelmente ruim. Em qualquer ponto do universo observável. Isso é uma constante mais confiável que a velocidade da luz.",
+    fonte: "O Guia Galáctico do Mochileiro",
+    real: false,
+  },
+  {
+    texto: "Erros de navegação são apenas desvios não documentados no mapa galáctico. O mesmo vale para bugs em produção às 17h59 de uma sexta-feira.",
+    fonte: "O Guia Galáctico do Mochileiro",
+    real: false,
+  },
+  {
+    texto: "Toda meta impossível tem uma origem simples: alguém que não vai precisar executá-la a definiu.",
+    fonte: "O Guia Galáctico do Mochileiro",
+    real: false,
+  },
+  {
+    texto: "A solução para a maioria dos problemas corporativos é surpreendentemente simples: as pessoas precisam ser um pouco mais honestas umas com as outras.",
+    fonte: "O Guia Galáctico do Mochileiro",
+    real: false,
+  },
+  {
+    texto: "Pedir demissão é o ato mais racionalmente galáctico que um terráqueo pode praticar em plena carreira. O universo continuará funcionando.",
+    fonte: "O Guia Galáctico do Mochileiro",
+    real: false,
+  },
+  {
+    texto: "O universo corporativo se expande a uma velocidade diretamente proporcional à distância dos decisores da realidade operacional.",
+    fonte: "O Guia Galáctico do Mochileiro",
+    real: false,
+  },
+  {
+    texto: "Qualquer coisa que acontece, acontece. Qualquer coisa que ao acontecer causa outra coisa a acontecer, causa essa outra coisa a acontecer. Qualquer coisa que ao acontecer causa outra coisa a acontecer, mas esqueça isso porque ninguém na reunião estava prestando atenção.",
+    fonte: "Douglas Adams (adaptado ao ambiente corporativo)",
+    real: false,
+  },
+  {
+    texto: "Um prazo razoável é como um horizonte: quanto mais você se aproxima, mais longe ele parece estar.",
+    fonte: "O Guia Galáctico do Mochileiro",
+    real: false,
+  },
+];
+
+// ─── Componente: Consultar o Guia ─────────────────────────────────────────────
+
+function ConsultarOGuia() {
+  const [citacao, setCitacao] = useState<(typeof CITACOES_GUIA)[0] | null>(null);
+  const [animKey, setAnimKey] = useState(0);
+
+  function consultar() {
+    const idx = Math.floor(Math.random() * CITACOES_GUIA.length);
+    setCitacao(CITACOES_GUIA[idx]);
+    setAnimKey((k) => k + 1);
+  }
+
+  return (
+    <div className="rounded-[28px] border border-white/8 bg-black/25 p-6">
+      <div className="mb-4 flex items-center gap-3">
+        <span className="text-3xl">📖</span>
+        <div>
+          <h2 className="text-lg font-bold text-white">Consultar o Guia</h2>
+          <p className="text-xs text-slate-500">Sabedoria galáctica para momentos de crise corporativa</p>
+        </div>
+      </div>
+
+      <AnimatePresence mode="wait">
+        {citacao ? (
+          <motion.div
+            key={animKey}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="mb-4 rounded-[20px] border border-amber-400/20 bg-amber-400/5 p-5"
+          >
+            <p className="text-xs font-semibold uppercase tracking-widest text-amber-400/70 mb-3">O Guia diz:</p>
+            <p className="text-sm leading-relaxed text-white italic">&ldquo;{citacao.texto}&rdquo;</p>
+            <p className="mt-3 text-xs text-slate-500">— {citacao.fonte}</p>
+            {!citacao.real && (
+              <p className="mt-1 text-xs text-slate-700">* Citação inspirada no Guia. Douglas Adams aprovaria.</p>
+            )}
+          </motion.div>
+        ) : (
+          <motion.div
+            key="idle"
+            className="mb-4 rounded-[20px] border border-white/5 bg-white/3 py-8 text-center"
+          >
+            <p className="text-4xl">🌌</p>
+            <p className="mt-3 text-sm text-slate-500">O Guia tem uma resposta para tudo.</p>
+            <p className="text-xs text-slate-600">Inclusive para o seu burnout.</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <button
+        onClick={consultar}
+        className="w-full rounded-full bg-amber-500/80 py-3 text-sm font-bold text-white transition-all hover:bg-amber-500"
+      >
+        {citacao ? "🔄 Consultar novamente" : "📖 Consultar o Guia"}
+      </button>
+
+      <p className="mt-3 text-center text-xs text-slate-700">
+        NÃO ENTRE EM PÂNICO.
+      </p>
+    </div>
+  );
+}
+
 // ─── Página ───────────────────────────────────────────────────────────────────
 
 export default function FerramentasPage() {
@@ -681,6 +820,9 @@ export default function FerramentasPage() {
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <CartaDemissao />
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
+          <ConsultarOGuia />
         </motion.div>
       </div>
 

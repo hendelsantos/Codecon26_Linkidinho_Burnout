@@ -136,15 +136,20 @@ export default function PerfilPage() {
 
   async function handleSaveSalary() {
     if (!token || savingSalary) return;
-    const cents = Math.round(parseFloat(salaryInput) * 100);
-    if (!cents || cents <= 0) return;
+    const cents = Math.round(parseFloat(salaryInput.replace(",", ".")) * 100);
+    if (!cents || isNaN(cents) || cents <= 0) {
+      toast.error("Valor inválido. Digite apenas números, ex: 8000");
+      return;
+    }
     setSavingSalary(true);
     try {
       const updated = await api.updateProfile(token, { monthly_salary_cents: cents });
       setProfile((p) => p ? { ...p, monthly_salary_cents: updated.monthly_salary_cents } : p);
       toast.success("Salário salvo com sucesso!");
-    } catch {
-      toast.error("Erro ao salvar salário. Tente novamente.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error("[salary] PATCH falhou:", msg);
+      toast.error(`Erro ao salvar: ${msg.slice(0, 80)}`);
     } finally {
       setSavingSalary(false);
     }

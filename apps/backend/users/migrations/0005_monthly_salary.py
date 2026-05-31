@@ -4,23 +4,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+    """Adiciona monthly_salary_cents ao Profile.
+
+    Reescrita para remover operações de constraint que falhavam em produção
+    (RemoveConstraint + AlterUniqueTogether desnecessários para esta feature).
+    """
 
     dependencies = [
         ("users", "0004_conviteamigo"),
     ]
 
     operations = [
-        migrations.RemoveConstraint(
-            model_name="conviteamigo",
-            name="unique_convite_por_tipo",
-        ),
         migrations.AddField(
             model_name="profile",
             name="monthly_salary_cents",
             field=models.PositiveIntegerField(blank=True, default=None, null=True),
-        ),
-        migrations.AlterUniqueTogether(
-            name="conviteamigo",
-            unique_together={("remetente", "tipo_relacao")},
         ),
     ]

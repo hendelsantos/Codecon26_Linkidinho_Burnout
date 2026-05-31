@@ -302,7 +302,7 @@ export default function DashboardPage() {
       )}
 
       {/* Header */}
-      <header className="glass-panel mb-8 flex items-center justify-between rounded-full px-5 py-3">
+      <header className="glass-panel relative z-50 mb-8 flex items-center justify-between rounded-full px-5 py-3">
         <button onClick={handleLogoClick} className="flex items-center gap-3">
           <div className="burn-gradient flex h-9 w-9 items-center justify-center rounded-xl text-black">
             <Flame className="h-4 w-4" />

@@ -9,83 +9,278 @@ import { api } from "@/lib/api";
 // ─── Dados ────────────────────────────────────────────────────────────────────
 
 const DESTINOS_ROLETA = [
-  { emoji: "🔥", text: "Deploy em produção", sub: "Sexta, 18h. Boa sorte." },
-  { emoji: "😱", text: "Reunião surpresa", sub: "Sem pauta. Sem motivo." },
-  { emoji: "🐛", text: "Bug crítico em produção", sub: "Era pra ser simples." },
-  { emoji: "😰", text: "RH quer falar com você", sub: "\"Não é nada grave.\"" },
-  { emoji: "😤", text: "Folga que não é folga", sub: "\"Pode dar uma olhada naquilo?\"" },
-  { emoji: "💀", text: "Sprint extra urgente", sub: "Deadline: ontem." },
-  { emoji: "⏳", text: "Code review eterno", sub: "4h de comentários em 5 linhas." },
-  { emoji: "🚨", text: "Deadline antecipado", sub: "\"Consegue entregar hoje?\"" },
-  { emoji: "📄", text: "PDF urgente pro chefe", sub: "São 16h58. Prazo: 17h." },
-  { emoji: "🤯", text: "Feature nova sem requisito", sub: "\"Você que decide o escopo.\"" },
-  { emoji: "☕", text: "Café acabou", sub: "O colapso se aproxima." },
-  { emoji: "📞", text: "Ligação surpresa do cliente", sub: "No horário de almoço." },
-  { emoji: "🎉", text: "Você foi promovido!", sub: "...de júnior para pleno de sofrimento." },
-  { emoji: "🕐", text: "Daily marcada para as 8h", sub: "No dia seguinte ao deploy." },
-  { emoji: "🧊", text: "Freeze de release", sub: "Justamente na sua feature." },
+  { emoji: "😱", text: "Reunião surpresa sem pauta", sub: "\"É rapidinho, 10 minutinhos.\" (durou 2h)" },
+  { emoji: "😰", text: "RH quer bater um papo", sub: "\"Pode ser às 17h55 de hoje?\"" },
+  { emoji: "🏝️", text: "Gestor entrou de férias hoje", sub: "Você acaba de assumir a equipe dele também." },
+  { emoji: "🚨", text: "Deadline antecipado em 5 dias", sub: "\"O cliente pediu. A gente prometeu. Boa sorte.\"" },
+  { emoji: "📄", text: "Apresentação urgente pro diretor", sub: "São 16h58. Reunião: 17h. Formato: PowerPoint." },
+  { emoji: "🤯", text: "Projeto novo sem briefing nem orçamento", sub: "\"Você tem criatividade, não tem?\"" },
+  { emoji: "☕", text: "Café acabou E a máquina quebrou", sub: "Produtividade: encerrada. Civilização: ameaçada." },
+  { emoji: "📞", text: "Ligação do cliente no horário de almoço", sub: "\"Só uma dúvidinha rápida de 45 minutos.\"" },
+  { emoji: "🎉", text: "Você foi promovido!", sub: "...sem aumento. Mas tem mais responsabilidade!" },
+  { emoji: "🕐", text: "Reunião matinal às 7h30", sub: "\"Para alinhar antes do trabalho começar.\"" },
+  { emoji: "🤖", text: "Colega usou IA e entregou pior", sub: "Você tem que consertar. E não pode falar nada." },
+  { emoji: "🔔", text: "LinkedIn notificando sua própria vaga", sub: "A mesma vaga que você já ocupa." },
+  { emoji: "🧟", text: "Reunião pós-reunião de alinhamento", sub: "Para discutir o que foi discutido na reunião anterior." },
+  { emoji: "📊", text: "Apresentação pro CEO amanhã às 8h", sub: "\"Você sabe fazer em PowerPoint, né? Legal.\"" },
+  { emoji: "📧", text: "E-mail encadeado com 47 pessoas em cópia", sub: "\"Apenas respondendo a todos.\"" },
+  { emoji: "💀", text: "Relatório mensal com dado errado descoberto pelo CEO", sub: "Na frente de todo mundo. Ao vivo." },
+  { emoji: "🔄", text: "Projeto pausado pela 3ª vez este trimestre", sub: "\"Mas agora é prioridade máxima de verdade.\"" },
+  { emoji: "🎪", text: "Treinamento obrigatório de 8 horas", sub: "Sobre algo que você já faz há 5 anos." },
+  { emoji: "📋", text: "Auditoria surpresa amanhã de manhã", sub: "\"Os documentos estão todos em dia, né?\" (não estão)" },
+  { emoji: "🧠", text: "Workshop de inovação com post-its", sub: "Resultado: mais uma reunião para discutir os post-its." },
+  { emoji: "💸", text: "Corte de budget aprovado", sub: "Justamente no seu projeto. No dia do lançamento." },
+  { emoji: "🥳", text: "Confraternização obrigatória na sexta às 19h", sub: "\"Vai ser demitido quem não aparecer.\" (subtexto)" },
 ];
 
 const TRADUCOES: [string, string][] = [
-  ["não sei fazer isso", "vou precisar de alguns sprints de spike para mapear a solução técnica"],
-  ["esqueci", "houve um gap de comunicação no meu processo de gestão de tarefas"],
-  ["estou com preguiça", "estou priorizando estrategicamente meu backlog pessoal"],
-  ["o código está uma bagunça", "a arquitetura atual apresenta oportunidades de melhoria incremental"],
-  ["não vou conseguir entregar", "a entrega está em processo estratégico de maturação"],
-  ["a reunião foi inútil", "alinhamos expectativas e calibramos o roadmap colaborativo"],
-  ["não entendi nada", "vou mapear os pontos de melhoria no onboarding do processo"],
-  ["meu chefe é idiota", "o processo de liderança apresenta gaps de desenvolvimento humano"],
-  ["quero pedir demissão", "estou explorando oportunidades de crescimento no mercado"],
-  ["tô estressado", "estou em um momento de alto impacto e aprendizado acelerado"],
-  ["não sei", "deixa eu validar internamente e retorno com mais clareza"],
-  ["o prazo é impossível", "vou precisar priorizar e negociar escopo para garantir qualidade"],
-  ["não foi minha culpa", "houve um misalignment de expectativas no processo de entrega"],
-  ["tô cansado", "estou maximizando minha produtividade dentro dos limites sustentáveis"],
-  ["a empresa está quebrada", "estamos em um momento de rightsizing estratégico"],
-  ["não fiz nada hoje", "trabalhei em atividades de background que impactam a produtividade long-term"],
-  ["que reunião chata", "foi uma sessão rica em inputs para o próximo ciclo de planejamento"],
-  ["não funciona", "identificamos um comportamento inesperado no ambiente de produção"],
-  ["copiei do stack overflow", "consultei fontes especializadas e adaptei a solução ao nosso contexto"],
-  ["tô sofrendo", "estou passando por um momento de alta densidade de aprendizado"],
-  ["não quero ir à reunião", "vou avaliar minha disponibilidade e confirmar participação"],
-  ["me mandaram embora", "fui desligado como parte de uma reestruturação organizacional estratégica"],
+  ["não sei fazer isso", "vou precisar de um período de discovery para mapear a viabilidade e os riscos desta iniciativa"],
+  ["esqueci", "houve um gap de comunicação assíncrona no meu fluxo de gestão de entregáveis"],
+  ["estou com preguiça", "estou em modo de preservação estratégica de energia para maximizar minha performance no próximo ciclo"],
+  ["o trabalho está uma bagunça", "o processo atual apresenta oportunidades ricas de melhoria incremental com alto potencial de impacto"],
+  ["não vou conseguir entregar", "a entrega está em processo de maturação estratégica com foco em qualidade sustentável"],
+  ["a reunião foi inútil", "foi uma sessão de altíssimo valor para calibrar o alinhamento cross-funcional dos stakeholders"],
+  ["não entendi nada", "preciso de mais contexto para garantir que minha contribuição seja verdadeiramente impactante"],
+  ["meu chefe é idiota", "o processo de liderança atual apresenta gaps significativos de desenvolvimento humano e visão estratégica"],
+  ["quero pedir demissão", "estou explorando sinergias com oportunidades externas de crescimento exponencial"],
+  ["tô estressado", "estou em um momento de alta densidade de aprendizado acelerado com impacto pessoal relevante"],
+  ["não sei", "vou alinhar internamente, mapear os pontos de atenção e retorno com um update estruturado"],
+  ["o prazo é impossível", "vou priorizar o escopo de maior impacto e propor uma entrega faseada orientada a valor"],
+  ["não foi minha culpa", "houve um misalignment de expectativas no processo de comunicação interfuncional"],
+  ["tô cansado", "estou otimizando minha performance dentro dos limites sustentáveis do meu modelo de trabalho"],
+  ["a empresa está quebrada", "estamos em um momento emocionante de rightsizing estratégico e reestruturação de valor"],
+  ["não fiz nada hoje", "atuei em atividades de suporte estratégico ao ambiente operacional com impacto long-term"],
+  ["que reunião chata", "foi uma sessão rica em inputs que certamente vão calibrar nosso próximo ciclo de planejamento"],
+  ["não funciona", "identificamos um comportamento não esperado que demanda investigação aprofundada e plano de ação"],
+  ["errei feio", "houve um desvio no processo de garantia de qualidade que será endereçado com um plano de melhoria contínua"],
+  ["tô sofrendo", "estou vivenciando um momento de alta intensidade de crescimento e desenvolvimento pessoal acelerado"],
+  ["fui ao banheiro por 40 minutos", "conduzi uma sessão de foco profundo em ambiente alternativo com menor bandwidth de interrupções"],
+  ["dormi na reunião", "entrei em modo de processamento assíncrono durante a sessão de alinhamento estratégico"],
+  ["não fui trabalhar", "exerci meu direito ao modelo híbrido em sua forma mais radical e sustentável"],
+  ["fiz o mínimo possível", "priorizei estrategicamente as entregas de maior ROI dentro do meu bandwidth disponível neste ciclo"],
+  ["não quero ir à reunião", "vou avaliar minha disponibilidade e confirmar participação de forma assíncrona"],
+  ["me mandaram embora", "fui desligado como parte de uma reestruturação organizacional estratégica com foco em eficiência operacional"],
+  ["não aguento mais", "atingi o limite do meu modelo operacional atual e preciso recalibrar minha estratégia de impacto"],
+  ["fui contratado pra outra coisa", "meu escopo evoluiu de forma orgânica para atender às necessidades dinâmicas do negócio"],
+  ["não tem orçamento", "estamos priorizando alocação de recursos de forma estratégica dentro das restrições do ciclo atual"],
+  ["o cliente é impossível", "o cliente está em um momento de alto envolvimento que representa uma oportunidade de fidelização"],
+  ["a meta é ridícula", "a meta foi calibrada de forma ambiciosa para estimular uma performance fora da curva"],
+  ["ninguém me avisou", "houve uma falha no fluxo de comunicação top-down que será corrigida no próximo ciclo"],
+  ["o sistema caiu", "estamos enfrentando uma indisponibilidade temporária de infraestrutura crítica com impacto operacional"],
 ];
 
 const JARGOES_EXTRA = [
-  "Vamos alinhar stakeholders e garantir sinergia operacional.",
-  "Precisamos escalar essa solução de forma ágil e sustentável.",
-  "O foco agora é garantir entrega de valor com qualidade.",
-  "Vou trackear isso no nosso board e retorno com um update.",
-  "Precisamos mapear os blockers e pivotar se necessário.",
+  "Vamos alinhar stakeholders e garantir sinergia operacional cross-funcional.",
+  "Precisamos escalar isso de forma ágil, sustentável e orientada a dados.",
+  "O foco agora é garantir entrega de valor incremental com excelência operacional.",
+  "Vou trackear isso e retorno com um update estruturado em breve.",
+  "Precisamos mapear os blockers, pivotar quando necessário e manter o momentum.",
+  "Isso demanda um deep dive multidisciplinar para garantir o fit estratégico.",
+  "Vamos democratizar o aprendizado organizacional e fomentar a cultura de inovação.",
+  "Precisamos de um kickoff para alinhar o norte estratégico antes de executar.",
+  "Vou sensibilizar as lideranças e retorno com um plano de ação estruturado.",
+  "Isso precisa de mais maturidade antes de escalar para a alta gestão.",
 ];
 
-const PREFIXOS_LINKEDIN = ["Chief", "Head of", "Senior", "Lead", "Principal", "Strategic", "Global"];
+const PREFIXOS_LINKEDIN = [
+  "Chief", "Head of", "Senior", "Lead", "Principal", "Strategic", "Global",
+  "Fractional", "Visionary", "Quantum", "Holistic", "Disruptive", "Next-Gen",
+];
 const CARGOS_LINKEDIN = [
   "Pixel Architect", "Synergy Engineer", "Growth Hacker", "Digital Transformer",
-  "Agile Warrior", "Blockchain Pioneer", "Cloud Native Developer", "AI Whisperer",
-  "Disruption Specialist", "Innovation Catalyst", "Fullstack Visionary",
+  "Agile Warrior", "Blockchain Philosopher", "AI Whisperer", "Disruption Specialist",
+  "Innovation Catalyst", "Fullstack Visionary", "Vibe Officer", "Metaverse Janitor",
+  "Scrum Master of the Universe", "Chief Feelings Engineer", "NFT Strategist",
+  "Web3 Dream Weaver", "Burnout Consultant", "Pivot Specialist", "PowerPoint Artist",
+  "Spreadsheet Poet", "Meeting Architect", "Buzzword Sommelier",
 ];
 const QUALIFICADORES_LINKEDIN = [
-  "| Disruption Enthusiast", "| Open to Work", "| Keynote Speaker",
-  "| Building the Future™", "| 10x Engineer", "| Thought Leader",
-  "| Helping companies scale 🚀", "| Ex-Google (estagiário 2019)",
+  "| Disruption Enthusiast 🔥", "| Open to Work 👀", "| Keynote Speaker (em eventos de 8 pessoas)",
+  "| Building the Future™", "| 10x Engineer (nos cafés)", "| Thought Leader",
+  "| Helping companies scale 🚀", "| Ex-Google (estagiário 3 semanas em 2019)",
+  "| Autor do livro que ninguém leu", "| TEDx Speaker (organizei o meu próprio)",
+  "| Mudando o mundo um deck por vez", "| Disponível para mentorias não remuneradas",
+  "| Inventor do Framework que ninguém adotou",
 ];
 const HASHTAGS_LINKEDIN = [
-  "#GrowthMindset #Leadership #Innovation",
-  "#OpenToWork #Disruption #BuildingTheFuture",
-  "#AgileLeadership #DigitalTransformation",
-  "#Blockchain #AI #Metaverse",
+  "#GrowthMindset #Leadership #Innovation #Gratidão",
+  "#OpenToWork #Disruption #BuildingTheFuture #Blessed",
+  "#AgileLeadership #DigitalTransformation #SeiLáOQuê",
+  "#Blockchain #AI #Metaverse #NFT #Web3 #TheFuture",
+  "#Empreendedorismo #Propósito #Foco #Mindset #Flow",
+  "#LiderandoComPropósito #InovaçãoRadical #Sinergia",
 ];
 
-const MOTIVOS_DEMISSAO = [
-  "após constatar que minha alma começou a depreciar mais rápido que o legado de código da empresa",
-  "pois atingi o limite máximo de reuniões que poderiam ter sido e-mails suportado pelo organismo humano",
-  "depois de perceber que o café da empresa era o único benefício real do pacote de remuneração",
-  "em razão de ter recebido o décimo sprint com prazo 'urgente' consecutivo",
-  "pois o alinhamento estratégico entre minha sanidade e o roadmap tornou-se insustentável",
-  "após o sistema de produção cair na minha primeira sexta-feira de folga",
-  "porque fui promovido de júnior a sênior de sofrimento sem aumento correspondente",
-  "pois meu Burny Score atingiu níveis que a OMS classifica como inadmissíveis",
+type CartaFn = (nome: string, area: string, data: string) => string;
+
+const CARTAS_DEMISSAO: CartaFn[] = [
+  (nome, area, data) =>
+`Cara RH,
+
+Venho por meio desta carta comunicar que ${nome}, profissional da área de ${area}, entrou em processo irreversível de rejeição ao ambiente corporativo.
+
+A decisão foi tomada no exato momento em que recebi, pela décima terceira vez, uma mensagem às 23h com o assunto "URGENTE: dá pra dar uma olhadinha rápida?" sobre algo que estava parado há oito meses.
+
+Após consulta com minha terapeuta, meu psicólogo e o motorista de aplicativo que me ouviu chorar durante 40 minutos na última quinta-feira, chegamos ao consenso de que a situação é clinicamente insustentável.
+
+Solicito formalmente como parte do offboarding:
+• Reembolso de 1.847 horas em reuniões que provei matematicamente serem e-mails
+• Devolução do meu entusiasmo de primeiro dia de trabalho
+• Um pedido formal de desculpas pela palavra "sinergia"
+
+Com relutância zero e alívio máximo,
+
+${nome}
+Ex-${area} · Sobrevivente Certificado™
+${data}
+
+P.S.: Aquele bug em produção que ninguém sabe de onde vem? Era eu. Tchau.`,
+
+  (nome, area, data) =>
+`COMUNICADO OFICIAL DE RESCISÃO BILATERAL
+(Ênfase no bilateral porque foi claramente os dois lados)
+
+Para: Departamento de Recursos (Humanos, pressupõe-se)
+De: ${nome}, ${area} — também conhecido como "aquele que sempre entrega"
+Assunto: Pedido de demissão com comentário construtivo
+
+Prezados,
+
+Após cuidadosa análise do meu Burny Score, que atingiu 94 pontos (zona de perigo clinicamente reconhecida), tomei a difícil decisão de priorizar minha sobrevivência biológica em detrimento desta parceria profissional.
+
+Fatos que contribuíram para esta decisão:
+1. Fui promovido três vezes sem aumento, apenas com "mais responsabilidades"
+2. Descobri que "cultura horizontal" significa que todo mundo manda em mim
+3. O café da copa piorou no mesmo trimestre que os lucros melhoraram
+4. A frase "não é sobre o dinheiro, é sobre o impacto" foi dita por quem tem participação nos resultados
+
+Peço que minha posição seja preenchida por no mínimo 2,7 pessoas.
+
+Atenciosamente,
+${nome}
+CBO — Chief Burnout Officer (autodenominado)
+${data}`,
+
+  (nome, area, data) =>
+`À Empresa,
+
+Eu me demito.
+
+Não porque não gosto de vocês. Gosto. Gosto tanto que precisei parar antes que esse sentimento virasse outra coisa.
+
+Mas veja: passei os últimos tempos calculando mentalmente, durante as reuniões, quantos anos de vida útil eu tinha restantes. O resultado era sempre menor do que eu queria.
+
+Tentei fazer isso funcionar. De verdade. Comprei aquele livro de gestão do tempo. Fiz o curso de produtividade pessoal. Botei o celular no modo avião nas férias — por quase 11 minutos até o gestor ligar no fixo da pousada.
+
+Hoje, ${nome} S/A encerra suas operações nesta unidade.
+
+Podem ficar com a caneca personalizada, a sacochila do último evento de integração e a esperança de que o próximo vai aguentar mais tempo.
+
+Cuida,
+
+${nome}
+${area} · ${data}
+
+P.S.: A senha do Wi-Fi é @empresa2019. Alguém deveria trocar isso faz anos.`,
+
+  (nome, area, data) =>
+`Memorando Interno — CONFIDENCIAL (bom, não mais)
+
+De: ${nome}
+Para: A Organização Em Geral
+Data: ${data}
+Assunto: Encerramento das Atividades de ${nome} Nesta Instituição
+
+Prezada Liderança,
+
+Venho comunicar que, após extensa análise de custo-benefício existencial, cheguei à conclusão de que meu salário não cobre adequadamente o custo emocional de ouvir a expressão "mindset de dono" de pessoas que não são donas de nada.
+
+Adicionalmente, identifico os seguintes fatores de risco que tornaram esta decisão inevitável:
+→ Participei de 4 "reestruturações estratégicas" em 2 anos, cada uma prometendo "menos reuniões"
+→ Fui convidado para mais 3 reuniões para falar sobre como ter menos reuniões
+→ Meu plano de carreira foi apresentado em um slide de PowerPoint com fonte Comic Sans
+→ Fui designado como "ponto focal" de um projeto que ninguém sabe o que é
+
+Esta carta serve como aviso prévio oficial, emocional e espiritual.
+
+Respeitosamente,
+${nome}
+Antiga Referência Técnica de ${area}
+(Agora: Referência Técnica de Nenhum Lugar, Muito Mais Feliz)`,
+
+  (nome, area, data) =>
+`Boa tarde,
+
+Peço demissão.
+
+Não se preocupem, já documentei tudo. Escrevi 47 páginas explicando cada processo que só eu sabia fazer. Gravei 12 vídeos tutoriais. Montei uma planilha de fluxos com notas em três cores e legendas detalhadas.
+
+Ninguém vai ler. Eu sei. Mas eu precisava fazer isso por mim.
+
+Caso alguém precise de mim após o desligamento, estarei:
+a) Finalmente terminando aquela série que pausei em 2019
+b) Dormindo depois das 7h pela primeira vez em anos
+c) Descobrindo que "horário de almoço" é uma coisa que existe
+d) Aprendendo a não sentir culpa por não responder mensagem em 4 minutos
+
+Agradeço a jornada. Fica o aprendizado, vai o resto.
+
+Abraços,
+${nome}
+${area} (cargo que na prática era o dobro disso)
+${data}
+
+P.S.: Aquele processo que "só funciona se fizer exatamente assim"? Nunca funcionou de verdade. A gente só fingia.`,
+
+  (nome, area, data) =>
+`[RASCUNHO GERADO AUTOMATICAMENTE PELO SISTEMA BURNYOUT™]
+[AVISO: ESTE DOCUMENTO PODE CONTER VERDADES ABSOLUTAS]
+
+Prezada ${area} Corp S.A.,
+
+Eu, ${nome}, após atingir o achievement desbloqueado "Sobrevivente de 500+ Reuniões Inúteis", venho por meio desta carta exercer meu direito constitucional de ir embora.
+
+A decisão foi baseada nos seguintes KPIs pessoais:
+• ROI emocional: -340%
+• NPS interno (quanto eu indicaria trabalhar aqui): -8
+• Burnout Score: 94/100 (novo recorde pessoal)
+• Cafés necessários para funcionar: 6/dia (tendência de alta)
+• Vezes que sorri em all-hands de olhos vazios: incontáveis
+
+Meta para o próximo trimestre: não ter metas.
+
+Objetivo pessoal: descobrir o que é fim de semana.
+
+OKR do desligamento: sair com algum resquício de personalidade intacto.
+
+Esta carta foi revisada, aprovada e assinada por mim mesmo, sem necessidade de alinhamento com stakeholders.
+
+${nome}
+${data}
+(Enviado às 17h01 de uma sexta-feira. De propósito.)`,
+
+  (nome, area, data) =>
+`Olá,
+
+Depois de muito reflection, vou compartilhar alguns learnings desta jornada incrível antes de fazer meu move para o próximo chapter.
+
+Esta empresa me deu muito. Me deu insônia, um diagnóstico de ansiedade generalizada, a habilidade de trabalhar em 3 telas simultaneamente e uma tolerância sobre-humana a ruído de teclado mecânico em open space.
+
+Mas chegou a hora de dar um step back, recalibrar meu mindset e investir em meu próprio wellbeing journey.
+
+Quero deixar claro que não saio por dinheiro. Saio porque:
+1. Recebi uma proposta com o dobro do salário
+2. Mas principalmente pelo wellbeing (item 1 ajudou bastante)
+
+Aos meus colegas que ficam: vocês são resilientes demais. Busquem ajuda.
+
+Stay strong,
+
+${nome}
+${area} · Ex-membro do time que não tinha nome oficial
+${data}
+
+#Gratidão #NovosHorizontes #OpenToWork #LinkedIn`,
 ];
 
 // ─── Componente: Roleta da Sexta ──────────────────────────────────────────────
@@ -374,27 +569,10 @@ function CartaDemissao() {
   }, []);
 
   function gerar() {
-    const motivo = MOTIVOS_DEMISSAO[Math.floor(Math.random() * MOTIVOS_DEMISSAO.length)];
     const data = new Date().toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" });
     const nome = nickname.trim() || "Profissional Anônimo";
-
-    setCarta(
-`À Diretoria de Recursos Humanos,
-
-Por meio desta carta, eu, ${nome}, profissional da área de ${area}, venho comunicar formalmente meu pedido de desligamento desta organização, ${motivo}.
-
-Agradeço pelos momentos de aprendizado, especialmente aqueles que, em retrospecto, parecem situações de treinamento intensivo para tolerância ao caos corporativo.
-
-Fica registrado que contribuí com o máximo de minha capacidade dentro das condições disponíveis, incluindo, mas não limitado a: cafés consumidos como combustível de sobrevivência, reuniões suportadas stoicamente e deadlines honrados às custas do sono.
-
-Solicito que o processo de offboarding inclua a devolução dos seguintes itens emocionais: paz interior, equilíbrio work-life e a crença ingênua de que "isso aqui é diferente".
-
-Atenciosamente,
-
-${nome}
-${area} · BurnyOut Analytics System
-${data}`
-    );
+    const template = CARTAS_DEMISSAO[Math.floor(Math.random() * CARTAS_DEMISSAO.length)];
+    setCarta(template(nome, area.trim() || "Tecnologia", data));
   }
 
   function copiar() {
@@ -455,7 +633,7 @@ ${data}`
                 {copiado ? "✅ Copiado!" : "📋 Copiar carta"}
               </button>
               <button onClick={gerar} className="text-xs text-slate-500 underline hover:text-white">
-                🔄 Gerar nova versão
+                🔄 Sortear outra carta
               </button>
             </div>
             <p className="mt-3 text-xs italic text-slate-700">

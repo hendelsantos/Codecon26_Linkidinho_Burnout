@@ -98,7 +98,11 @@ export default function DashboardPage() {
         const perCagada = Math.round(perMinute * 20);
         setFormData((prev) => ({ ...prev, bathroom_revenue_cents: perCagada }));
       }
-      const today = new Date().toISOString().slice(0, 10);
+      const today = [
+        new Date().getFullYear(),
+        String(new Date().getMonth() + 1).padStart(2, "0"),
+        String(new Date().getDate()).padStart(2, "0"),
+      ].join("-");
       setTodayDone(ciArr.some((c) => c.date === today));
 
       // Calcular streak de check-ins consecutivos

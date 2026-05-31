@@ -1,3 +1,5 @@
+from django.db import IntegrityError
+from django.utils import timezone
 from rest_framework import serializers
 
 from ai.services import insight_for
@@ -33,10 +35,25 @@ class CheckInSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("stress_level deve estar entre 0 e 10.")
         return value
 
+    def validate(self, attrs):
+        request = self.context.get("request")
+        if request and request.user:
+            date = attrs.get("date", timezone.localdate())
+            if CheckIn.objects.filter(profile=request.user, date=date).exists():
+                raise serializers.ValidationError(
+                    "Você já registrou um check-in hoje. Volte amanhã!"
+                )
+        return attrs
+
     def create(self, validated_data):
         profile = self.context["request"].user
         breakdown = compute_burny_score(validated_data)
         validated_data["burny_score"] = breakdown.total
         validated_data["burny_insight"] = insight_for(dominant_metric(validated_data))
         validated_data["profile"] = profile
-        return super().create(validated_data)
+        try:
+            return super().create(validated_data)
+        except IntegrityError:
+            raise serializers.ValidationError(
+                "Você já registrou um check-in hoje. Volte amanhã!"
+            )

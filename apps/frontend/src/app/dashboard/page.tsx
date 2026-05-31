@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { BrainCircuit, Flame, Loader2, LogOut, MessageSquare, Share2, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -32,6 +32,68 @@ const DEFAULT_FORM: CheckInPayload = {
   bathroom_revenue_cents: 200,
   buzzwords_endured: 8,
 };
+
+const STRESS_EMOJIS = ["😊","😌","😐","😐","😤","😤","😩","😩","🤯","🤯","💀"];
+const STRESS_COMMENTS = [
+  "Você ok?","Bem.","Normal.","Aceitável.","Começando a pesar.",
+  "Chegando lá.","Definido.","Sério.","Quase no limite.","Próximo.","Máximo.",
+];
+
+interface MetricDef {
+  key: keyof Omit<CheckInPayload, "note">;
+  label: string;
+  emoji: string;
+  min: number;
+  max: number;
+  step: number;
+  stress?: true;
+  comment: (v: number) => string;
+  display: (v: number) => string;
+}
+
+const CHECKIN_METRICS: MetricDef[] = [
+  {
+    key: "coffees", label: "Cafés consumidos", emoji: "☕", min: 0, max: 20, step: 1,
+    comment: (v) => v === 0 ? "Hm. Suspeito." : v <= 2 ? "Descansado?" : v <= 4 ? "Normal corporativo." : v <= 7 ? "Dependência moderada." : v <= 10 ? "Seu coração chora." : "Você não é humano.",
+    display: (v) => String(v),
+  },
+  {
+    key: "useless_meetings", label: "Reuniões inúteis", emoji: "📅", min: 0, max: 20, step: 1,
+    comment: (v) => v === 0 ? "Sortudo." : v <= 2 ? "Relativamente vivo." : v <= 5 ? "Padrão da indústria." : v <= 8 ? "Poderiam ser e-mails." : "Você trabalha ou se reúne?",
+    display: (v) => String(v),
+  },
+  {
+    key: "traffic_minutes", label: "Minutos no trânsito", emoji: "🚗", min: 0, max: 300, step: 5,
+    comment: (v) => v === 0 ? "Home office detectado." : v <= 30 ? "Quase tranquilo." : v <= 60 ? "Gerenciável." : v <= 120 ? "Podcast obrigatório." : v <= 180 ? "Cidadão paulistano." : "Boa sorte com o joelho.",
+    display: (v) => `${v}min`,
+  },
+  {
+    key: "stress_level", label: "Nível de stress", emoji: "😤", min: 0, max: 10, step: 1, stress: true,
+    comment: (v) => STRESS_COMMENTS[v] ?? "Máximo.",
+    display: (v) => STRESS_EMOJIS[v] ?? "💀",
+  },
+  {
+    key: "buzzwords_endured", label: "Buzzwords aguentadas", emoji: "📢", min: 0, max: 60, step: 1,
+    comment: (v) => v === 0 ? "Empresa saudável?" : v <= 5 ? "Reunião curta." : v <= 15 ? "Synergy level baixo." : v <= 30 ? "Fully committed." : "Move fast, burn harder.",
+    display: (v) => String(v),
+  },
+  {
+    key: "bathroom_revenue_cents", label: "Bathroom Revenue", emoji: "🚽", min: 0, max: 2000, step: 50,
+    comment: (v) => v === 0 ? "Produtividade suspeita." : v <= 100 ? "Pausa simbólica." : v <= 300 ? `R$${(v / 100).toFixed(0)} de paz.` : v <= 600 ? "Gerente ainda espera." : "Gênio das pausas.",
+    display: (v) => `R$${(v / 100).toFixed(0)}`,
+  },
+];
+
+function previewScore(data: CheckInPayload): number {
+  return Math.min(100, Math.round(
+    data.coffees * 2 +
+    data.useless_meetings * 4 +
+    (data.traffic_minutes / 300) * 15 +
+    data.stress_level * 5 +
+    data.buzzwords_endured * 0.5 +
+    (data.bathroom_revenue_cents / 2000) * 5,
+  ));
+}
 
 function scoreBadge(score: number) {
   if (score >= 80) return "border-red-500/40 bg-red-500/10 text-red-300";
@@ -490,34 +552,74 @@ export default function DashboardPage() {
                 Volte amanhã para registrar mais sofrimento corporativo. Seu burnout agradece.
               </p>
             ) : (
-              <form onSubmit={handleCheckIn} className="mt-6 space-y-5">
-                {(
-                  [
-                    ["coffees", "Cafés consumidos", 0, 20],
-                    ["useless_meetings", "Reuniões inúteis", 0, 20],
-                    ["traffic_minutes", "Minutos no trânsito", 0, 300],
-                    ["stress_level", "Nível de stress (0-10)", 0, 10],
-                    ["buzzwords_endured", "Buzzwords aguentadas", 0, 60],
-                    ["bathroom_revenue_cents", "Bathroom Revenue (centavos)", 0, 2000],
-                  ] as [keyof CheckInPayload, string, number, number][]
-                ).map(([key, label, min, max]) => (
-                  <div key={key}>
-                    <div className="mb-2 flex items-center justify-between">
-                      <label className="text-sm font-medium text-slate-300">{label}</label>
-                      <span className="text-sm font-bold text-white">{formData[key]}</span>
+              <form onSubmit={handleCheckIn} className="mt-6 space-y-3">
+                {CHECKIN_METRICS.map((m) => {
+                  const val = formData[m.key] as number;
+                  return m.stress ? (
+                    <div key={m.key} className="rounded-[20px] border border-white/8 bg-black/20 p-4">
+                      <div className="mb-3 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="text-base">{m.emoji}</span>
+                          <label className="text-sm font-medium text-slate-300">{m.label}</label>
+                        </div>
+                        <AnimatePresence mode="wait">
+                          <motion.span key={STRESS_COMMENTS[val]} initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 4 }} transition={{ duration: 0.18 }} className="text-xs italic text-slate-500">
+                            {STRESS_COMMENTS[val]}
+                          </motion.span>
+                        </AnimatePresence>
+                      </div>
+                      <div className="flex items-center justify-between px-1">
+                        {STRESS_EMOJIS.map((emoji, i) => (
+                          <motion.button key={i} type="button" whileTap={{ scale: 1.4 }}
+                            onClick={() => setFormData((p) => ({ ...p, stress_level: i }))}
+                            animate={{ scale: val === i ? 1.3 : 1, opacity: val === i ? 1 : 0.22 }}
+                            transition={{ type: "spring", stiffness: 400, damping: 18 }}
+                            className="text-xl"
+                          >{emoji}</motion.button>
+                        ))}
+                      </div>
                     </div>
-                    <input
-                      type="range"
-                      min={min}
-                      max={max}
-                      value={formData[key]}
-                      onChange={(e) =>
-                        setFormData((p) => ({ ...p, [key]: Number(e.target.value) }))
-                      }
-                      className="w-full accent-violet"
+                  ) : (
+                    <div key={m.key} className="rounded-[20px] border border-white/8 bg-black/20 p-4">
+                      <div className="mb-2 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="text-base">{m.emoji}</span>
+                          <label className="text-sm font-medium text-slate-300">{m.label}</label>
+                        </div>
+                        <AnimatePresence mode="wait">
+                          <motion.span key={m.comment(val)} initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 4 }} transition={{ duration: 0.18 }} className="text-xs italic text-slate-500">
+                            {m.comment(val)}
+                          </motion.span>
+                        </AnimatePresence>
+                      </div>
+                      <div className="mt-1 flex items-center gap-3">
+                        <input type="range" min={m.min} max={m.max} step={m.step} value={val}
+                          onChange={(e) => setFormData((p) => ({ ...p, [m.key]: Number(e.target.value) }))}
+                          className="flex-1 cursor-pointer accent-violet"
+                        />
+                        <motion.span key={val} initial={{ scale: 0.8, opacity: 0.5 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.08 }} className="min-w-[3.5rem] text-right text-xl font-bold text-white">
+                          {m.display(val)}
+                        </motion.span>
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* Preview do Burny Score */}
+                <div className="rounded-[20px] border border-violet/20 bg-violet/8 p-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs uppercase tracking-[0.3em] text-muted">Preview Burny Score</p>
+                    <motion.span key={previewScore(formData)} initial={{ scale: 0.85, opacity: 0.5 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.1 }} className="text-2xl font-bold text-white">
+                      ~{previewScore(formData)}
+                    </motion.span>
+                  </div>
+                  <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/10">
+                    <motion.div className="h-full rounded-full" style={{ background: "linear-gradient(90deg, #8257ff, #f97316, #ef4444)" }}
+                      animate={{ width: `${previewScore(formData)}%` }}
+                      transition={{ type: "spring", stiffness: 200, damping: 30 }}
                     />
                   </div>
-                ))}
+                </div>
 
                 {submitError && (
                   <p className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
@@ -525,9 +627,7 @@ export default function DashboardPage() {
                   </p>
                 )}
 
-                <button
-                  type="submit"
-                  disabled={submitting}
+                <button type="submit" disabled={submitting}
                   className="burn-gradient flex w-full items-center justify-center gap-2 rounded-full py-4 text-base font-semibold text-black transition-all hover:scale-[1.01] disabled:opacity-60"
                 >
                   {submitting && <Loader2 className="h-4 w-4 animate-spin" />}

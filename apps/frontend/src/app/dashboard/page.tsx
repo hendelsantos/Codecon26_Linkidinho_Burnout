@@ -14,6 +14,7 @@ import { ConviteModal } from "@/components/convidar-amigo";
 import { DicasCard } from "@/components/dicas-corporativas";
 import { SomAmbiente } from "@/components/som-ambiente";
 import { OnboardingTour } from "@/components/onboarding-tour";
+import { PlanoFuga } from "@/components/plano-fuga";
 
 const METRIC_LABELS: Record<string, string> = {
   coffees: "Cafés",
@@ -454,6 +455,19 @@ export default function DashboardPage() {
                   <span>🏅</span>
                   Gerar certificado de sobrevivência
                 </Link>
+
+                {score && score.current_score >= 80 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ type: "spring", bounce: 0.35 }}
+                  >
+                    <p className="mb-1.5 text-center text-[10px] uppercase tracking-[0.3em] text-emerald-400/60">
+                      🔓 desbloqueado com score {score.current_score}
+                    </p>
+                    <PlanoFuga />
+                  </motion.div>
+                )}
               </div>
             </motion.section>
           )}

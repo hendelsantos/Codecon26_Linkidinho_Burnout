@@ -123,6 +123,7 @@ class ConviteAmigo(models.Model):
         ("conhecido_almoco", "🍽️ Conhecido do almoço"),
         ("colega_profissao", "🤝 Colega de profissão"),
         ("conhecido", "👋 Conhecido"),
+        ("chefe_querido", "😬 Meu chefe querido (a culpa é dele)"),
     ]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

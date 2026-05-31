@@ -112,6 +112,8 @@ export default function PerfilPage() {
   const [salaryInput, setSalaryInput] = useState("");
   const [savingSalary, setSavingSalary] = useState(false);
   const [isOwnProfile, setIsOwnProfile] = useState(false);
+  const [dinheiroPressCount, setDinheiroPressCount] = useState(0);
+  const [dinheiroMsg, setDinheiroMsg] = useState<string | null>(null);
 
   // Status corporativo determinístico por perfil (varia por usuário, estável por reload)
   const corporateStatus = useMemo(() => {
@@ -193,6 +195,37 @@ export default function PerfilPage() {
 
   // Merge endorsed skills with full list (endorsed first, then rest)
   const endorsedKeys = new Set((profile?.skills ?? []).map((s) => s.key));
+
+  const DINHEIRO_MSGS_PROPRIO = [
+    "💀 Vai trabalhar, isso aqui não paga suas contas.",
+    "🤡 Você mesmo criou esse botão e ainda esperava algo diferente.",
+    "☕ O dinheiro não vai aparecer. O café também não se faz sozinho.",
+    "😐 Clicou de novo. Impressionante comprometimento.",
+    "📉 Cada clique aqui é um minuto a menos de produtividade. Tá ótimo.",
+    "🧘 Respira. Vai trabalhar. Respira. Vai trabalhar.",
+    "💼 Seu chefe viu isso. Brincadeira. Mas e se viu?",
+    "🏳️ Ok, pode parar de clicar. O dinheiro não existe.",
+    "🔥 Burnout score +1. Parabéns.",
+  ];
+
+  const DINHEIRO_MSGS_OUTRO = [
+    `💀 ${profile?.nickname ?? "Essa pessoa"} também tentou isso. Não funcionou.`,
+    "😂 Você achou que ia funcionar no perfil de outra pessoa?",
+    "🤝 Solidariedade: clicamos juntos, não ganhamos juntos.",
+    "📊 Análise: 0 reais gerados. 100% de fracasso. Típico corporativo.",
+    "🧟 Vai trabalhar. Os dois. Cada um no seu.",
+    "☕ Pelo menos o café é real. O dinheiro, não.",
+  ];
+
+  function handleDinheiro() {
+    const msgs = isOwnProfile ? DINHEIRO_MSGS_PROPRIO : DINHEIRO_MSGS_OUTRO;
+    const idx = dinheiroPressCount % msgs.length;
+    setDinheiroMsg(msgs[idx]);
+    setDinheiroPressCount((c) => c + 1);
+    setTimeout(() => setDinheiroMsg(null), 3000);
+  }
+
+
   const allSkillItems: SkillItem[] = [
     ...(profile?.skills ?? []),
     ...ALL_SKILLS.filter((s) => !endorsedKeys.has(s.key)).map((s) => ({
@@ -293,6 +326,27 @@ export default function PerfilPage() {
                 <p className="text-2xl font-bold text-white">{profile.following_count}</p>
                 <p className="mt-1 text-xs text-slate-400">Sofre com</p>
               </div>
+            </div>
+
+            {/* Botão da riqueza */}
+            <div className="mt-4 flex flex-col items-center gap-2">
+              <button
+                onClick={handleDinheiro}
+                className="w-full rounded-2xl border border-yellow-400/20 bg-yellow-400/5 py-3 text-sm font-semibold text-yellow-300 transition-all hover:bg-yellow-400/10 hover:scale-[1.02] active:scale-95"
+              >
+                💰 Aperte e ganhe dinheiro
+              </button>
+              {dinheiroMsg && (
+                <motion.p
+                  key={dinheiroPressCount}
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="text-xs text-slate-400 text-center px-2"
+                >
+                  {dinheiroMsg}
+                </motion.p>
+              )}
             </div>
 
             {/* Currículo de Burnout */}

@@ -133,6 +133,7 @@ export default function DashboardPage() {
   const [hasDesabafo, setHasDesabafo] = useState(false);
   const [logoClicks, setLogoClicks] = useState(0);
   const [easterEgg, setEasterEgg] = useState(false);
+  const [activeRightTab, setActiveRightTab] = useState<"historico" | "conquistas" | "explorar">("historico");
 
   const load = useCallback(async () => {
     const token = auth.getToken();
@@ -738,197 +739,129 @@ export default function DashboardPage() {
             </div>
           </motion.div>
 
-          <motion.section
-            className="glass-panel rounded-[32px] p-6"
+          {/* Painel com abas */}
+          <motion.div
+            className="glass-panel rounded-[32px] p-5"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.15 }}
           >
-            <p className="text-xs uppercase tracking-[0.3em] text-muted">Histórico</p>
-            <h2 className="mt-2 text-xl font-semibold text-white">Seus últimos colapsos</h2>
-
-            <div className="mt-5 space-y-3">
-              {checkins.length === 0 ? (
-                <p className="text-sm text-slate-400">
-                  Nenhum check-in ainda. Sua negação está documentada.
-                </p>
-              ) : (
-                checkins.slice(0, 10).map((ci) => (
-                  <div
-                    key={ci.id}
-                    className="rounded-[22px] border border-white/8 bg-black/25 p-4"
-                  >
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-medium text-white">{ci.date}</p>
-                      <span
-                        className={`rounded-full border px-3 py-0.5 text-xs font-semibold ${scoreBadge(ci.burny_score)}`}
-                      >
-                        {ci.burny_score}
-                      </span>
-                    </div>
-                    <p className="mt-2 text-xs leading-5 text-slate-400">{ci.burny_insight}</p>
-                  </div>
-                ))
-              )}
-            </div>
-          </motion.section>
-
-          <motion.div
-            className="glass-panel rounded-[32px] p-6"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <p className="text-xs uppercase tracking-[0.3em] text-muted">Minha rede</p>
-            <div className="mt-4 grid grid-cols-2 gap-3">
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-3 text-center">
-                <p className="text-xl font-bold text-white">{profile?.followers_count ?? 0}</p>
-                <p className="mt-0.5 text-xs text-slate-400">Seguidores</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-3 text-center">
-                <p className="text-xl font-bold text-white">{profile?.following_count ?? 0}</p>
-                <p className="mt-0.5 text-xs text-slate-400">Seguindo</p>
-              </div>
-            </div>
-            {profile && (
-              <Link
-                href={`/perfil/${profile.id}`}
-                className="mt-3 flex items-center justify-between rounded-2xl border border-violet/20 bg-violet/8 px-4 py-3 text-sm text-violet transition-colors hover:bg-violet/15"
-              >
-                Ver meu perfil público
-                <span>→</span>
-              </Link>
-            )}
-          </motion.div>
-
-          <motion.div
-            className="glass-panel rounded-[32px] p-6"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.25 }}
-          >
-            <p className="text-xs uppercase tracking-[0.3em] text-muted">Explorar</p>
-            <div className="mt-4 space-y-2">
-              {[
-                { href: "/feed", label: "Feed & Desabafos" },
-                { href: "/ranking", label: "Ranking global" },
-                { href: "/wrapped", label: "🎬 Meu Burny Wrapped" },
-              ].map(({ href, label }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className="flex items-center justify-between rounded-2xl border border-white/8 bg-black/20 px-4 py-3 text-sm text-white transition-colors hover:bg-white/8"
+            {/* Tab bar */}
+            <div className="flex gap-1 rounded-2xl bg-white/5 p-1">
+              {([
+                { key: "historico", label: "Histórico", emoji: "📊" },
+                { key: "conquistas", label: "Conquistas", emoji: "🏆" },
+                { key: "explorar", label: "Explorar", emoji: "🌐" },
+              ] as const).map((tab) => (
+                <button
+                  key={tab.key}
+                  onClick={() => setActiveRightTab(tab.key)}
+                  className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl py-2 text-xs font-semibold transition-all ${
+                    activeRightTab === tab.key
+                      ? "bg-white/10 text-white"
+                      : "text-slate-500 hover:text-slate-300"
+                  }`}
                 >
-                  {label}
-                  <span className="text-slate-500">→</span>
-                </Link>
+                  <span>{tab.emoji}</span>
+                  <span className="hidden sm:inline">{tab.label}</span>
+                </button>
               ))}
             </div>
-          </motion.div>
 
-          {/* Badges */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <BadgesSection badges={badges} />
-          </motion.div>
+            <div className="mt-4">
+              <AnimatePresence mode="wait">
+                {activeRightTab === "historico" && (
+                  <motion.div key="historico" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.18 }} className="space-y-2">
+                    {checkins.length === 0 ? (
+                      <p className="py-6 text-center text-sm text-slate-400">Nenhum check-in ainda. Sua negação está documentada.</p>
+                    ) : (
+                      checkins.slice(0, 7).map((ci) => (
+                        <div key={ci.id} className="rounded-[18px] border border-white/8 bg-black/25 p-3.5">
+                          <div className="flex items-center justify-between">
+                            <p className="text-sm font-medium text-white">{ci.date}</p>
+                            <span className={`rounded-full border px-3 py-0.5 text-xs font-semibold ${scoreBadge(ci.burny_score)}`}>{ci.burny_score}</span>
+                          </div>
+                          <p className="mt-1.5 text-xs leading-5 text-slate-400">{ci.burny_insight}</p>
+                        </div>
+                      ))
+                    )}
+                    {comparativo && (
+                      <div className="mt-2 rounded-[18px] border border-white/8 bg-black/20 p-4">
+                        <p className="mb-3 text-xs uppercase tracking-[0.3em] text-muted">Você vs Brasil</p>
+                        <div className="grid grid-cols-3 gap-2 text-center">
+                          <div className="rounded-xl border border-white/8 bg-black/20 p-2">
+                            <p className="text-lg font-bold text-white">{comparativo.usuario.avg_score}</p>
+                            <p className="text-[10px] text-slate-400">Você</p>
+                          </div>
+                          <div className="rounded-xl border border-violet/20 bg-violet/8 p-2">
+                            <p className={`text-lg font-bold ${comparativo.vs_nacional > 0 ? "text-ember-soft" : "text-emerald-400"}`}>
+                              {comparativo.vs_nacional > 0 ? "+" : ""}{comparativo.vs_nacional}
+                            </p>
+                            <p className="text-[10px] text-violet">vs BR</p>
+                          </div>
+                          <div className="rounded-xl border border-white/8 bg-black/20 p-2">
+                            <p className="text-lg font-bold text-slate-300">{comparativo.media_nacional.avg_score}</p>
+                            <p className="text-[10px] text-slate-400">Média BR</p>
+                          </div>
+                        </div>
+                        <p className="mt-3 text-xs italic leading-5 text-slate-500">
+                          {comparativo.vs_nacional > 15 ? `${comparativo.vs_nacional} pts acima da média. Isso não é conquista normal.`
+                            : comparativo.vs_nacional > 5 ? `Levemente acima da média. Você e o Brasil corporativo estão em sintonia.`
+                            : comparativo.vs_nacional < -15 ? `${Math.abs(comparativo.vs_nacional)} pts abaixo da média. Você está bem. Ou em negação.`
+                            : comparativo.vs_nacional < -5 ? `Levemente abaixo da média. Continue assim. Ou procure terapia.`
+                            : `Na média nacional. Você representa o Brasil corporativo com precisão.`}
+                        </p>
+                      </div>
+                    )}
+                  </motion.div>
+                )}
 
-          {/* Comparativo nacional */}
-          {comparativo && (
-            <motion.div
-              className="glass-panel rounded-[32px] p-6"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.35 }}
-            >
-              <p className="text-xs uppercase tracking-[0.3em] text-muted">Você vs Brasil</p>
-              <p className="mt-1 text-sm text-slate-400">
-                Média dos últimos 7 dias vs. média nacional
-              </p>
+                {activeRightTab === "conquistas" && (
+                  <motion.div key="conquistas" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.18 }}>
+                    <BadgesSection badges={badges} />
+                  </motion.div>
+                )}
 
-              {/* Score comparativo */}
-              <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-                <div className="rounded-2xl border border-white/8 bg-black/20 p-3">
-                  <p className="text-2xl font-bold text-white">{comparativo.usuario.avg_score}</p>
-                  <p className="mt-1 text-[10px] text-slate-400">Você</p>
-                </div>
-                <div className="rounded-2xl border border-violet/20 bg-violet/8 p-3">
-                  <p className={`text-2xl font-bold ${comparativo.vs_nacional > 0 ? "text-ember-soft" : comparativo.vs_nacional < 0 ? "text-emerald-400" : "text-white"}`}>
-                    {comparativo.vs_nacional > 0 ? "+" : ""}{comparativo.vs_nacional}
-                  </p>
-                  <p className="mt-1 text-[10px] text-violet">vs nacional</p>
-                </div>
-                <div className="rounded-2xl border border-white/8 bg-black/20 p-3">
-                  <p className="text-2xl font-bold text-slate-300">{comparativo.media_nacional.avg_score}</p>
-                  <p className="mt-1 text-[10px] text-slate-400">Média BR</p>
-                </div>
-              </div>
-
-              {/* Comentário cômico */}
-              <div className="mt-3 rounded-[16px] border border-white/8 bg-white/3 px-4 py-3">
-                <p className="text-xs leading-5 text-slate-400 italic">
-                  {comparativo.vs_nacional > 15
-                    ? `Você está ${comparativo.vs_nacional} pontos acima da média nacional. Isso não é uma conquista que se comemora normalmente.`
-                    : comparativo.vs_nacional > 5
-                    ? `Levemente acima da média. Você e o Brasil corporativo estão em sintonia — o que diz muito sobre o Brasil corporativo.`
-                    : comparativo.vs_nacional < -15
-                    ? `${Math.abs(comparativo.vs_nacional)} pontos abaixo da média. Você está bem. Ou está em negação. Difícil dizer.`
-                    : comparativo.vs_nacional < -5
-                    ? `Levemente abaixo da média. Continue assim. Ou procure terapia. Ou ambos.`
-                    : `Na média nacional de sofrimento. Você representa o Brasil corporativo com precisão.`
-                  }
-                </p>
-              </div>
-
-              {/* Métricas detalhadas */}
-              <div className="mt-3 space-y-2">
-                {[
-                  {
-                    emoji: "☕",
-                    label: "Cafés/dia",
-                    voce: comparativo.usuario.avg_cafes,
-                    media: comparativo.media_nacional.avg_cafes,
-                  },
-                  {
-                    emoji: "📅",
-                    label: "Reuniões/dia",
-                    voce: comparativo.usuario.avg_reunioes,
-                    media: comparativo.media_nacional.avg_reunioes,
-                  },
-                ].map((m) => {
-                  const diff = Number((m.voce - m.media).toFixed(1));
-                  return (
-                    <div key={m.label} className="flex items-center gap-2 text-xs">
-                      <span>{m.emoji}</span>
-                      <span className="flex-1 text-slate-400">{m.label}</span>
-                      <span className="font-semibold text-white">{m.voce}</span>
-                      <span className={`font-mono ${diff > 0 ? "text-ember-soft" : diff < 0 ? "text-emerald-400" : "text-slate-500"}`}>
-                        {diff > 0 ? `+${diff}` : diff < 0 ? diff : "="}
-                      </span>
+                {activeRightTab === "explorar" && (
+                  <motion.div key="explorar" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.18 }} className="space-y-4">
+                    <div>
+                      <p className="mb-3 text-xs uppercase tracking-[0.3em] text-muted">Minha rede</p>
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="rounded-2xl border border-white/10 bg-white/5 p-3 text-center">
+                          <p className="text-xl font-bold text-white">{profile?.followers_count ?? 0}</p>
+                          <p className="text-xs text-slate-400">Seguidores</p>
+                        </div>
+                        <div className="rounded-2xl border border-white/10 bg-white/5 p-3 text-center">
+                          <p className="text-xl font-bold text-white">{profile?.following_count ?? 0}</p>
+                          <p className="text-xs text-slate-400">Seguindo</p>
+                        </div>
+                      </div>
+                      {profile && (
+                        <Link href={`/perfil/${profile.id}`} className="mt-2 flex items-center justify-between rounded-2xl border border-violet/20 bg-violet/8 px-4 py-3 text-sm text-violet transition-colors hover:bg-violet/15">
+                          Ver meu perfil público <span>→</span>
+                        </Link>
+                      )}
                     </div>
-                  );
-                })}
-              </div>
-
-              {/* Comparativo com área */}
-              <div className="mt-3 rounded-[14px] border border-white/6 bg-white/2 px-3 py-2 text-xs text-slate-500">
-                Vs. {comparativo.usuario.area_label}: {" "}
-                <span className={comparativo.vs_area > 0 ? "text-ember-soft" : comparativo.vs_area < 0 ? "text-emerald-400" : "text-slate-400"}>
-                  {comparativo.vs_area > 0 ? "+" : ""}{comparativo.vs_area} pts
-                </span>
-                {comparativo.vs_area > 0
-                  ? " — acima dos seus colegas de área"
-                  : comparativo.vs_area < 0
-                  ? " — mais saudável que a sua área"
-                  : " — exatamente na média da área"}
-              </div>
-            </motion.div>
-          )}
-
-          {/* Dica corporativa rotativa */}
-          <DicasCard />
+                    <div>
+                      <p className="mb-3 text-xs uppercase tracking-[0.3em] text-muted">Navegar</p>
+                      <div className="space-y-2">
+                        {[
+                          { href: "/feed", label: "Feed & Desabafos" },
+                          { href: "/ranking", label: "Ranking global" },
+                          { href: "/wrapped", label: "🎬 Meu Burny Wrapped" },
+                        ].map(({ href, label }) => (
+                          <Link key={href} href={href} className="flex items-center justify-between rounded-2xl border border-white/8 bg-black/20 px-4 py-3 text-sm text-white transition-colors hover:bg-white/8">
+                            {label} <span className="text-slate-500">→</span>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                    <DicasCard />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
         </div>
       </div>
     </main>

@@ -70,6 +70,9 @@ A plataforma transforma a frase *"não aguento mais essa reunião"* em uma visua
 | 🔗 **Compartilhamento** | Web Share API + clipboard com cards formatados | ✅ |
 | 👥 **Seguir e Endossar** | Conexões sociais e endosso de habilidades de sobrevivência | ✅ |
 | 🚽 **Bathroom Revenue** | A métrica mais importante: quanto você fatura indo ao banheiro | ✅ |
+| 📨 **Convites tipados por relação** | Links únicos por tipo: amigo, colega, conhecido, almoço, profissão e **chefe querido** — cada um com mensagem cômica exclusiva no WhatsApp | ✅ |
+| 😬 **Convite para o chefe** | Tipo especial "Meu chefe querido (a culpa é dele)" com mensagens irônicas estilo e-mail corporativo | ✅ |
+| 💰 **Botão de enriquecimento** | Botão "Aperte e ganhe dinheiro" no perfil que não faz nada — mas a resposta muda a cada clique | ✅ |
 
 ---
 
@@ -300,6 +303,11 @@ POST   /api/social/desabafo/         → Publicar desabafo
 
 GET    /api/wrapped/                 → Burny Wrapped™ anual
 GET    /api/analytics/bathroom/      → Ranking de Bathroom Revenue
+
+GET    /api/users/convites/          → Listar convites do usuário por tipo de relação
+POST   /api/users/convites/          → Gerar link de convite (body: {"tipo_relacao": "chefe_querido"})
+GET    /api/users/convites/{codigo}/ → Info pública de um convite (usada no onboarding)
+POST   /api/users/convites/{codigo}/usar/ → Registrar uso do convite após cadastro
 ```
 
 Documentação interativa (Swagger) disponível em `/api/schema/swagger-ui/`.

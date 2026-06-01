@@ -419,7 +419,7 @@ export const REGIONS = [
   "Remoto com camera off",
 ] as const;
 
-export const AVATARS = ["🔥", "💀", "🧟", "👑", "🪫", "🤖", "👻", "🎯", "🧠", "🛸"] as const;
+export const AVATARS = ["🔥", "💀", "🧟", "👑", "🪫", "🤖", "👻", "🎯", "🧠", "🛸", "🤡", "🗿", "🦀", "🥴"] as const;
 
 export const RANKING_CATEGORIES = [
   { value: "burnout", label: "Burnout" },

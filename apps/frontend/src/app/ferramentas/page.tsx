@@ -85,14 +85,72 @@ const JARGOES_EXTRA = [
 const PREFIXOS_LINKEDIN = [
   "Chief", "Head of", "Senior", "Lead", "Principal", "Strategic", "Global",
   "Fractional", "Visionary", "Quantum", "Holistic", "Disruptive", "Next-Gen",
+  "Executive", "Associate", "Deputy", "Interim", "Acting", "Transformational",
+  "Digital", "Exponential", "Agile", "Lean", "Future-Proof",
 ];
 const CARGOS_LINKEDIN = [
+  // Genéricos absurdos
   "Pixel Architect", "Synergy Engineer", "Growth Hacker", "Digital Transformer",
   "Agile Warrior", "Blockchain Philosopher", "AI Whisperer", "Disruption Specialist",
   "Innovation Catalyst", "Fullstack Visionary", "Vibe Officer", "Metaverse Janitor",
   "Scrum Master of the Universe", "Chief Feelings Engineer", "NFT Strategist",
   "Web3 Dream Weaver", "Burnout Consultant", "Pivot Specialist", "PowerPoint Artist",
   "Spreadsheet Poet", "Meeting Architect", "Buzzword Sommelier",
+  // 💻 TI / Desenvolvimento
+  "Full Stack do Stack Overflow", "DevOps do Caos Controlado", "Analista de Ctrl+C Ctrl+V",
+  "Engenheiro de Ambiente Local", "Cloud Native Enthusiast (Free Tier)",
+  "Data Scientist de Excel Avançado", "Arquiteto de Soluções Temporárias",
+  "Desenvolvedor de Features Não Testadas", "Bug Farmer", "Junior Sênior",
+  "Especialista em Deploy às Sextas-Feiras", "Legacy Code Therapist",
+  "Git Conflict Resolver", "Jira Ticket Creator", "Readme Writer",
+  "Engenheiro de Microserviços que Virou Monolito", "Analista de Logs às 3h da manhã",
+  "Especialista em Funcionar na Minha Máquina", "Tech Lead de Uma Pessoa",
+  "Scrum Poker Champion", "Arquiteto de PoCs Que Viraram Produção",
+  // 📊 Marketing
+  "Brand Awareness Guardian", "Content Creator de Nicho Vazio", "SEO Philosopher",
+  "Influencer de 47 Seguidores", "Storyteller Corporativo", "Copywriter de CTAs",
+  "Social Media Overnight Manager", "Growth Marketing Alchemist",
+  "Especialista em KPIs Que Ninguém Entende", "Email Marketing Necromancer",
+  "Analytics Dashboard Curator", "Persona Creator", "Funil de Vendas Artesanal",
+  "Campanha de Awareness Sem Budget", "Engenheiro de Hashtags",
+  // 👥 Recursos Humanos
+  "Cultura Keeper", "Talent Acquisition Specialist (sem vagas abertas)",
+  "People Partner", "Head of Vibes", "Happiness Engineer",
+  "Especialista em Clima Organizacional", "Onboarding Experience Designer",
+  "Offboarding Specialist (crescimento acelerado)", "Employee Engagement Illusionist",
+  "Diversity Champion Não Remunerado", "Treinamento de Soft Skills Minister",
+  "Analista de Turnover Involuntário",
+  // 💰 Financeiro / Controladoria
+  "Budget Controller de Planilha", "Cash Flow Philosopher",
+  "Analista de Cortes Estratégicos", "CFO Assistente de Planilha XLS",
+  "Forecasting Specialist (nunca acerta)", "Controller de Surpresas Fiscais",
+  "Especialista em Conciliação Às Vésperas do Fechamento",
+  "Analista de Centro de Custo Desconhecido",
+  // ⚖️ Jurídico / Compliance
+  "Compliance Enthusiast", "Contract Guardian", "Risk Analyst de Tudo",
+  "Especialista em Pareceres Que Ninguém Lê", "LGPD Awareness Officer",
+  "Analista de Cláusulas Que Ninguém Entende", "Chief No Officer",
+  // 🎨 Design / UX
+  "UX Visionary", "Visual Storyteller", "Pixel Pusher Pro",
+  "Interface Dream Weaver", "Design System Keeper",
+  "Especialista em Protótipos Que Nunca Ficam Prontos",
+  "Figma Archeologist", "UX Researcher Sem Budget de Pesquisa",
+  "Chief Canva Officer", "Colorista Estratégico",
+  // 📦 Operações / Processos
+  "Process Excellence Ninja", "Gestora de Formulários Esquecidos",
+  "Coordenador de Reuniões Sobre Reuniões", "Especialista em Atas Não Lidas",
+  "Office Experience Officer", "Analista de Processos Que Ninguém Segue",
+  "Especialista em Workflow de Post-it", "BPM Philosopher",
+  "KPI Dashboard Maintainer", "Gestor de Indicadores Ignorados",
+  // 📋 Comercial / Vendas
+  "Account Executive de Pipeline Vazio", "Sales Development Representative",
+  "Closador de Oportunidades Perdidas", "Customer Success Sem Sucesso",
+  "Especialista em Follow-up Sem Resposta", "Inside Sales Enthusiast",
+  "CRM Data Entry Specialist", "Relationship Builder Non-Remunerado",
+  // 🏥 Outros
+  "Especialista em Apresentações do Keynote", "Chief Remote Work Officer",
+  "Analista de Bem-Estar Não Aplicado", "Especialista em Feedback 360 Sem Resultado",
+  "OKR Alignment Specialist", "Facilitador de Workshops Inúteis",
 ];
 const QUALIFICADORES_LINKEDIN = [
   "| Disruption Enthusiast 🔥", "| Open to Work 👀", "| Keynote Speaker (em eventos de 8 pessoas)",
@@ -101,6 +159,12 @@ const QUALIFICADORES_LINKEDIN = [
   "| Autor do livro que ninguém leu", "| TEDx Speaker (organizei o meu próprio)",
   "| Mudando o mundo um deck por vez", "| Disponível para mentorias não remuneradas",
   "| Inventor do Framework que ninguém adotou",
+  "| Ex-Startup (que fechou em 8 meses)", "| Palestrante (a convite do meu chefe)",
+  "| Criador de Conteúdo (quando dá tempo)", "| Apaixonado por Inovação e Café ☕",
+  "| Certificado em Curso Que Já Venceu", "| Mentor (de quem me paga almoço)",
+  "| Foco em Resultados (que alguém definiu)", "| Disponível pra freela (desesperadamente)",
+  "| Formado em Algo Não Relacionado ao Cargo", "| Autodidata desde ontem",
+  "| Aprendendo com os erros (dos outros)",
 ];
 const HASHTAGS_LINKEDIN = [
   "#GrowthMindset #Leadership #Innovation #Gratidão",
@@ -109,6 +173,15 @@ const HASHTAGS_LINKEDIN = [
   "#Blockchain #AI #Metaverse #NFT #Web3 #TheFuture",
   "#Empreendedorismo #Propósito #Foco #Mindset #Flow",
   "#LiderandoComPropósito #InovaçãoRadical #Sinergia",
+  "#DevLife #TechBrasil #Código #FullStack #Startup",
+  "#RH #PeopleFirst #CulturaOrganizacional #Employee",
+  "#Marketing #Growth #Conversão #B2B #Funil",
+  "#Financeiro #Budget #Controladoria #Excel #CFO",
+  "#Design #UX #UI #Figma #UserResearch",
+  "#Processos #Operações #BPM #Excelência #Kaizen",
+  "#Vendas #Pipeline #CRM #CustomerSuccess #Closar",
+  "#Juridico #Compliance #LGPD #Contratos #Risk",
+  "#OpenToWork #HiringMe #AvailableNow #Urgente",
 ];
 
 type CartaFn = (nome: string, area: string, data: string) => string;
@@ -524,6 +597,36 @@ function GeradorLinkedIn() {
               placeholder="Ex: Desenvolvedor, Analista, Estagiário..."
               className="w-full rounded-[16px] border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-slate-600 outline-none focus:border-violet/40"
             />
+          </div>
+          {/* Chips de área rápida */}
+          <div>
+            <p className="mb-2 text-xs text-slate-600">Ou escolha sua área:</p>
+            <div className="flex flex-wrap gap-1.5">
+              {[
+                { label: "💻 Dev / TI", value: "Desenvolvimento" },
+                { label: "📊 Marketing", value: "Marketing" },
+                { label: "👥 RH", value: "Recursos Humanos" },
+                { label: "💰 Financeiro", value: "Financeiro" },
+                { label: "⚖️ Jurídico", value: "Jurídico" },
+                { label: "🎨 Design", value: "Design" },
+                { label: "📦 Operações", value: "Operações" },
+                { label: "📋 Comercial", value: "Comercial" },
+                { label: "🏥 Saúde", value: "Saúde" },
+                { label: "🏫 Educação", value: "Educação" },
+              ].map((area) => (
+                <button
+                  key={area.value}
+                  onClick={() => setCargo(area.value)}
+                  className={`rounded-full border px-3 py-1 text-xs transition-all ${
+                    cargo === area.value
+                      ? "border-violet bg-violet/20 text-violet"
+                      : "border-white/10 bg-white/3 text-slate-400 hover:border-violet/40 hover:text-white"
+                  }`}
+                >
+                  {area.label}
+                </button>
+              ))}
+            </div>
           </div>
           <button
             onClick={gerar}

@@ -506,6 +506,12 @@ export default function DashboardPage() {
 
         <div className="flex items-center gap-3">
           <Link
+            href="/feed"
+            className="hidden items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-slate-400 transition-all hover:text-white sm:flex"
+          >
+            <span>💬</span> Comunidade
+          </Link>
+          <Link
             href="/ferramentas"
             className="hidden items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-medium text-slate-400 transition-all hover:text-white sm:flex"
           >

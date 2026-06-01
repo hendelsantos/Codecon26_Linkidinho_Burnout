@@ -212,6 +212,60 @@ const CHECKIN_METRICS: MetricDef[] = [
   },
 ];
 
+// ──── Sistema de XP e Nível de Sofrimento ────────────────────────────────────
+
+const BURNOUT_LEVELS = [
+  { min: 0,    label: "Estagiário do Sofrimento", emoji: "😶", next: 100  },
+  { min: 100,  label: "Júnior do Burnout",        emoji: "😅", next: 300  },
+  { min: 300,  label: "Pleno do Caos",            emoji: "😰", next: 600  },
+  { min: 600,  label: "Sênior do Desespero",      emoji: "😩", next: 1000 },
+  { min: 1000, label: "Lead de Burnout",          emoji: "🤯", next: 1500 },
+  { min: 1500, label: "Gerente do Colapso",       emoji: "💀", next: 2500 },
+  { min: 2500, label: "Diretor do Trauma",        emoji: "🔥", next: 4000 },
+  { min: 4000, label: "VP de Sofrimento",         emoji: "☠️", next: 6000 },
+  { min: 6000, label: "CTO do Trauma",            emoji: "👹", next: null },
+] as const;
+
+function getBurnoutLevel(xp: number) {
+  let level: (typeof BURNOUT_LEVELS)[number] = BURNOUT_LEVELS[0];
+  for (const l of BURNOUT_LEVELS) {
+    if (xp >= l.min) level = l;
+    else break;
+  }
+  return level;
+}
+
+// ──── Quest diária rotativa ──────────────────────────────────────────────────
+
+const DAILY_QUESTS = [
+  { emoji: "📅", task: "Sobreviva a uma reunião sem abrir o celular" },
+  { emoji: "☕", task: "Tome o 4º café antes do almoço" },
+  { emoji: "💬", task: "Responda um e-mail que está procrastinando há dias" },
+  { emoji: "🚽", task: "Gere pelo menos R$2 de Bathroom Revenue hoje" },
+  { emoji: "😐", task: "Finja estar ótimo em pelo menos 3 interações" },
+  { emoji: "📊", task: "Use a palavra 'sinergia' sem sorrir" },
+  { emoji: "🤝", task: "Participe de uma reunião que poderia ser e-mail" },
+  { emoji: "🎯", task: "Entregue algo antes de uma deadline sem avisar antes" },
+  { emoji: "💡", task: "Sugira uma ideia em reunião que não consiga explicar depois" },
+  { emoji: "🕐", task: "Chegue no horário e fique até mais tarde" },
+  { emoji: "📞", task: "Entre em call com câmera ligada sem querer" },
+  { emoji: "🔄", task: "Refaça algo que já estava aprovado pelo cliente" },
+  { emoji: "🧠", task: "Explique um problema técnico para alguém não-técnico" },
+  { emoji: "📱", task: "Não cheque o Slack por 2h consecutivas" },
+  { emoji: "🎭", task: "Demonstre entusiasmo por mais um framework novo" },
+  { emoji: "😤", task: "Registre stress abaixo de 5 no check-in de hoje" },
+  { emoji: "🏆", task: "Complete o check-in de hoje — o básico já é heroísmo" },
+  { emoji: "💼", task: "Feche um card que está 'Em progresso' há mais de 3 dias" },
+  { emoji: "🔥", task: "Não reclame do trabalho para nenhum colega hoje" },
+  { emoji: "🛋️", task: "Faça 5 minutos de absolutamente nada produtivo" },
+] as const;
+
+function getDailyQuest() {
+  const start = new Date(new Date().getFullYear(), 0, 0);
+  const dayOfYear = Math.floor((Date.now() - start.getTime()) / 86400000);
+  return DAILY_QUESTS[dayOfYear % DAILY_QUESTS.length];
+}
+
 function previewScore(data: CheckInPayload): number {
   return Math.min(100, Math.round(
     data.coffees * 2 +
@@ -794,7 +848,42 @@ export default function DashboardPage() {
         {/* Right: history */}
         <div className="space-y-6">
 
-          {/* Streak + Desabafo rápido */}
+          {/* Quest diária */}
+          {(() => {
+            const quest = getDailyQuest();
+            return (
+              <motion.div
+                className="glass-panel rounded-[32px] p-5"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <div className="flex items-start gap-4">
+                  <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-2xl ${todayDone ? "bg-emerald-500/15" : "bg-violet/15"}`}>
+                    {todayDone ? "✅" : quest.emoji}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <p className="text-[10px] uppercase tracking-[0.3em] text-muted">Quest do dia</p>
+                      {todayDone && (
+                        <span className="rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">
+                          +XP
+                        </span>
+                      )}
+                    </div>
+                    <p className={`mt-1 text-sm font-medium leading-5 ${todayDone ? "text-slate-500 line-through" : "text-white"}`}>
+                      {quest.task}
+                    </p>
+                    {!todayDone && (
+                      <p className="mt-1 text-xs text-slate-600">Complete o check-in para concluir</p>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })()}
+
+          {/* Streak + XP + Desabafo rápido */}
           <motion.div
             className="glass-panel rounded-[32px] p-6"
             initial={{ opacity: 0, x: 20 }}
@@ -822,9 +911,44 @@ export default function DashboardPage() {
               </div>
             </div>
 
+            {/* XP + Nível de sofrimento */}
+            {(() => {
+              const xp = checkins.reduce((sum, c) => sum + c.burny_score, 0);
+              const level = getBurnoutLevel(xp);
+              const nextXp = level.next;
+              const prevXp = level.min;
+              const progress = nextXp
+                ? Math.min(100, Math.round(((xp - prevXp) / (nextXp - prevXp)) * 100))
+                : 100;
+              return (
+                <div className="mb-5 rounded-[22px] border border-white/8 bg-black/25 p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl">{level.emoji}</span>
+                      <div>
+                        <p className="text-sm font-semibold text-white">{level.label}</p>
+                        <p className="text-xs text-slate-500">{xp} XP acumulados</p>
+                      </div>
+                    </div>
+                    {nextXp && (
+                      <p className="text-[10px] text-slate-600">{nextXp - xp} XP pro próximo</p>
+                    )}
+                  </div>
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/8">
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{ background: "linear-gradient(90deg, #8257ff, #f97316)" }}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${progress}%` }}
+                      transition={{ duration: 1, ease: "easeOut" }}
+                    />
+                  </div>
+                </div>
+              );
+            })()}
+
             {/* Desabafo rápido */}
-            <div className="border-t border-white/8 pt-4">
-              <div className="flex items-center gap-2 mb-3">
+            <div className="border-t border-white/8 pt-4">              <div className="flex items-center gap-2 mb-3">
                 <MessageSquare className="h-3.5 w-3.5 text-slate-400" />
                 <p className="text-xs uppercase tracking-[0.3em] text-muted">Desabafo rápido</p>
               </div>
@@ -928,6 +1052,29 @@ export default function DashboardPage() {
                     {comparativo && (
                       <div className="mt-2 rounded-[18px] border border-white/8 bg-black/20 p-4">
                         <p className="mb-3 text-xs uppercase tracking-[0.3em] text-muted">Você vs Brasil</p>
+
+                        {/* Percentil em destaque */}
+                        <div
+                          className="mb-3 rounded-[14px] p-3 text-center"
+                          style={{
+                            background: comparativo.percentile >= 75
+                              ? "rgba(239,68,68,0.08)" : comparativo.percentile >= 50
+                              ? "rgba(249,115,22,0.08)" : "rgba(16,185,129,0.08)",
+                            border: `1px solid ${comparativo.percentile >= 75 ? "rgba(239,68,68,0.25)" : comparativo.percentile >= 50 ? "rgba(249,115,22,0.25)" : "rgba(16,185,129,0.25)"}`,
+                          }}
+                        >
+                          <p className="text-2xl font-bold text-white">
+                            top {100 - comparativo.percentile}%
+                          </p>
+                          <p className="text-xs text-slate-400 mt-0.5">
+                            {comparativo.percentile >= 75
+                              ? `Você sofre mais que ${comparativo.percentile}% dos profissionais. Impressionante.`
+                              : comparativo.percentile >= 50
+                              ? `Você sofre mais que ${comparativo.percentile}% dos profissionais.`
+                              : `Você sofre menos que a maioria. Ou não está sendo honesto.`}
+                          </p>
+                        </div>
+
                         <div className="grid grid-cols-3 gap-2 text-center">
                           <div className="rounded-xl border border-white/8 bg-black/20 p-2">
                             <p className="text-lg font-bold text-white">{comparativo.usuario.avg_score}</p>

@@ -200,6 +200,7 @@ export interface MeuComparativo {
   media_area: { avg_score: number; avg_cafes: number; avg_reunioes: number };
   vs_nacional: number;
   vs_area: number;
+  percentile: number;
 }
 
 export interface BathroomTopEntry {

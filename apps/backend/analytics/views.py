@@ -148,6 +148,15 @@ class MeuComparativoView(APIView):
         nacional_score = round(nacional["avg_score"] or 0)
         area_score = round(area_agg["avg_score"] or 0)
 
+        # Percentil: % dos usuários com score médio MENOR que o do usuário atual
+        all_user_avgs = CheckIn.objects.values("profile").annotate(avg=Avg("burny_score"))
+        total_with_checkins = all_user_avgs.count()
+        if total_with_checkins > 1:
+            profiles_below = all_user_avgs.filter(avg__lt=user_score).count()
+            percentile = round(profiles_below / total_with_checkins * 100)
+        else:
+            percentile = 50
+
         return Response(
             {
                 "usuario": {
@@ -170,6 +179,7 @@ class MeuComparativoView(APIView):
                 },
                 "vs_nacional": user_score - nacional_score,
                 "vs_area": user_score - area_score,
+                "percentile": percentile,
             }
         )
 

@@ -64,7 +64,7 @@ export const statCards: MetricCard[] = [
 ];
 
 export const burnyHighlights: Highlight[] = [
-  { label: "Conexões cansadas", value: "666" },
+  { label: "Conexões cansadas", value: "500+" },
   { label: "Cafés recebidos", value: "432" },
   { label: "Burny score", value: "98%" },
 ];

@@ -721,6 +721,229 @@ const CITACOES_GUIA = [
   },
 ];
 
+// ─── Dados: Quiz Arquétipo ────────────────────────────────────────────────────
+
+const QUIZ_QUESTOES = [
+  {
+    pergunta: "Como você responde mensagens de trabalho às 22h?",
+    opcoes: [
+      { texto: "Imediatamente. Com contexto completo e um deck anexo.", tipo: "workaholic" },
+      { texto: "Não respondo. Às vezes lembro de manhã. Às vezes não.", tipo: "fantasma" },
+      { texto: "Respondo e aproveito pra contar o quanto meu dia foi injusto.", tipo: "martir" },
+      { texto: "Não tenho escolha. Só eu sei o que fazer.", tipo: "ultima" },
+    ],
+  },
+  {
+    pergunta: "O que você faz durante uma reunião entediante?",
+    opcoes: [
+      { texto: "Trabalho em 3 projetos em paralelo em outras abas.", tipo: "workaholic" },
+      { texto: "Desligo câmera, coloco em mudo. Possivelmente durmo.", tipo: "fantasma" },
+      { texto: "Ouço tudo em silêncio, acumulando sofrimento.", tipo: "martir" },
+      { texto: "Falo em todas porque são sobre projetos que só eu entendo.", tipo: "ultima" },
+    ],
+  },
+  {
+    pergunta: "Quantos projetos você está tocando ao mesmo tempo?",
+    opcoes: [
+      { texto: "Muitos. Todos urgentes. Todos meus. (não adoro isso)", tipo: "workaholic" },
+      { texto: "Um. O mesmo faz dois anos. Sem avanços visíveis.", tipo: "fantasma" },
+      { texto: "Vários. Nenhum anda. Provavelmente é culpa minha.", tipo: "martir" },
+      { texto: "Não sei contar. Mas se eu sair, tudo para.", tipo: "ultima" },
+    ],
+  },
+  {
+    pergunta: "Seu gestor pede algo impossível. Você:",
+    opcoes: [
+      { texto: "Aceita, trabalha 72h seguidas, entrega antes do prazo.", tipo: "workaholic" },
+      { texto: "Aceita. Some. Reaparece 3 dias depois pedindo clareza.", tipo: "fantasma" },
+      { texto: "Aceita e passa 40 minutos explicando o quanto foi difícil.", tipo: "martir" },
+      { texto: "Aceita porque isso é literalmente todo dia pra você.", tipo: "ultima" },
+    ],
+  },
+  {
+    pergunta: "Qual frase você mais disse (ou pensou) essa semana?",
+    opcoes: [
+      { texto: '"Não estou estressado. Só trabalho muito. É diferente."', tipo: "workaholic" },
+      { texto: '"Desculpa, não vi essa mensagem."', tipo: "fantasma" },
+      { texto: '"Não é justo o que estão fazendo comigo."', tipo: "martir" },
+      { texto: '"Se eu sair, isso aqui vai abaixo."', tipo: "ultima" },
+    ],
+  },
+];
+
+const ARQUETIPOS: Record<string, { emoji: string; nome: string; descricao: string; cor: string; borda: string; bg: string }> = {
+  workaholic: {
+    emoji: "💼",
+    nome: "O Workaholic em Negação",
+    descricao: "Você trabalha 14h por dia e garante que adora o que faz. Seu médico discorda. Seu travesseiro também — vocês mal se veem. Você não tem burnout, você tem uma relação intensa com suas entregas. Sintomas: café na veia, notificações às 3h, e a frase 'depois eu descanso' há 4 anos.",
+    cor: "text-ember",
+    borda: "border-ember/20",
+    bg: "bg-ember/5",
+  },
+  fantasma: {
+    emoji: "👻",
+    nome: "O Fantasma",
+    descricao: "Você está presente em teoria. Na prática, ninguém tem certeza se você ainda trabalha aqui. Câmera sempre apagada, status 'ativo' às 3h da manhã, responde mensagens com um emoji 3 dias depois. Você dominou a arte do desaparecimento profissional. A empresa não sabe se deve te promover ou verificar se está bem.",
+    cor: "text-slate-300",
+    borda: "border-slate-500/20",
+    bg: "bg-slate-500/5",
+  },
+  martir: {
+    emoji: "😔",
+    nome: "O Mártir da Daily",
+    descricao: "Todo standup vira sessão de terapia. Você não tem blocker — você tem um arco narrativo com início, meio e catarse. Cada tarefa carrega o peso de uma injustiça cósmica. As pessoas te ouvem, por 40 minutos demais. Você não pede ajuda. Você pede que reconheçam o quanto você sofreu.",
+    cor: "text-blue-300",
+    borda: "border-blue-400/20",
+    bg: "bg-blue-400/5",
+  },
+  ultima: {
+    emoji: "🔑",
+    nome: "A Última Pessoa Viva",
+    descricao: "Você sabe onde ficam todos os segredos da empresa. É o único que sabe configurar aquele sistema legado de 2009. Deveria ter saído há anos, mas toda vez que tenta, a empresa entra em colapso técnico. Você não tem burnout — você tem uma sentença perpétua velada. E eles sabem disso.",
+    cor: "text-violet",
+    borda: "border-violet/20",
+    bg: "bg-violet/5",
+  },
+};
+
+// ─── Dados: Previsão do Tempo Corporativo ─────────────────────────────────────
+
+const PREVISOES_DIA: Record<number, {
+  icone: string; condicao: string; temperatura: string;
+  umidade: string; vento: string; chances: string[];
+}> = {
+  0: {
+    icone: "😰", condicao: "Ansiedade Difusa de Domingo",
+    temperatura: "-2 reuniões (ainda)", umidade: "12% de vontade de amanhã",
+    vento: "NE · Pensamentos de segunda a 40km/h",
+    chances: ["97% de ver notificação e fingir que não viu", "82% de angústia às 18h em ponto", "100% de arrependimento de não ter descansado mais"],
+  },
+  1: {
+    icone: "🌧️", condicao: "Tempestade de Segunda-Feira",
+    temperatura: "5 reuniões / 8h visíveis", umidade: "23% de energia disponível",
+    vento: "SW · All-hands inesperado a 60km/h",
+    chances: ["91% de reunião sem pauta às 9h", "78% de prazo que 'precisamos conversar'", "64% de alguém enviando 'bom dia a todos' às 7h47"],
+  },
+  2: {
+    icone: "🌦️", condicao: "Parcialmente Nublado com Rajadas de Urgência",
+    temperatura: "3 reuniões / céu carregado", umidade: "41% de esperança restante",
+    vento: "NW · E-mails em cópia oculta a 35km/h",
+    chances: ["73% de task surgindo do nada como prioritária", "55% de colega pedindo ajuda no almoço", "40% de deadline antecipado em 48h"],
+  },
+  3: {
+    icone: "⛅", condicao: "Quarta: O Olho do Furacão",
+    temperatura: "2 reuniões / sensação de enganação", umidade: "50% de vontade de trabalhar (pico semanal)",
+    vento: "Variável · Calma suspeita",
+    chances: ["68% de reunião de 'alinhamento' sobre alinhamentos futuros", "44% de gestor aparecer animado com ideia nova", "30% de coisa funcionando sem motivo aparente"],
+  },
+  4: {
+    icone: "🌩️", condicao: "Frente de Pré-Sexta Instável",
+    temperatura: "4 reuniões / clima pesado", umidade: "28% de paciência residual",
+    vento: "SE · Pressão de entrega a 55km/h",
+    chances: ["85% de alguém lembrar que tem deadline na sexta", "72% de reunião para tratar do que não foi feito", "61% de 'dá pra olhar rápido antes do final do dia?'"],
+  },
+  5: {
+    icone: "🌤️", condicao: "Sexta de Alívio Ilusório",
+    temperatura: "1 reunião / leveza performática", umidade: "76% de vontade de ir embora",
+    vento: "SW · Tarefa nova às 17h48 a 90km/h",
+    chances: ["94% de mensagem urgente após as 17h30", "88% de PR aberto para revisar na segunda", "71% de 'só 15 minutos' marcado às 16h55"],
+  },
+  6: {
+    icone: "🌞", condicao: "Falsa Sensação de Liberdade",
+    temperatura: "0 reuniões / calma enganosa", umidade: "67% de culpa por não estar trabalhando",
+    vento: "NE · Notificação de Slack a 15km/h",
+    chances: ["54% de ver mensagem de trabalho e não ignorar", "43% de pensar em solução de problema que não devia", "29% de alguém ligar 'rapidinho' sobre algo urgente"],
+  },
+};
+
+// ─── Dados: Gerador de Ata ────────────────────────────────────────────────────
+
+type AtaFn = (tema: string, n: number, data: string) => string;
+
+const TEMPLATES_ATA: AtaFn[] = [
+  (tema, n, data) =>
+`ATA DE REUNIÃO
+Data: ${data} · Participantes: ${n} profissionais alinhados
+
+PAUTA: ${tema.toUpperCase()}
+
+DESENVOLVIMENTO:
+A reunião teve início conforme previamente agendado, com a presença dos participantes identificados. Após breve contextualização do cenário atual, o tema "${tema}" foi apresentado de forma estruturada e orientada a resultados. Os presentes manifestaram perspectivas diversas, todas igualmente relevantes para o ecossistema do projeto.
+
+Após extensa troca de inputs multidisciplinares, o grupo chegou ao consenso de que o assunto demanda maior maturidade antes de uma decisão definitiva. Foi levantada a necessidade de um deep dive mais aprofundado, com envolvimento de stakeholders adicionais ainda a serem mapeados.
+
+PRÓXIMOS PASSOS:
+• Agendar nova reunião para dar continuidade aos itens discutidos ← responsável: a definir
+• Levantar mais dados para embasar a decisão ← prazo: a definir
+• Circular ata para validação e alinhamento ← esta própria ata
+
+Ata aprovada por aclamação tácita.
+Nenhuma decisão foi tomada. Todos saíram confiantes.`,
+
+  (tema, n, data) =>
+`MEMORANDO DE ALINHAMENTO ESTRATÉGICO
+Referência: ATA-${Math.floor(Math.random() * 9000) + 1000}-${new Date().getFullYear()}
+Data: ${data} · Presentes: ${n} pessoas comprometidas com a causa
+
+TEMA CENTRAL: ${tema}
+
+SUMÁRIO EXECUTIVO:
+O encontro foi convocado com o objetivo de alinhar perspectivas, mapear oportunidades e fomentar o senso de pertencimento organizacional em torno do tema "${tema}". A reunião se iniciou com 12 minutos de atraso, por razões técnicas não especificadas.
+
+PRINCIPAIS PONTOS DISCUTIDOS:
+1. O contexto atual do tema é complexo e multifacetado
+2. Existem visões diferentes que precisam ser harmonizadas
+3. O timing é desafiador porém estratégico
+4. Precisamos de mais dados antes de qualquer movimento
+5. Alguém vai verificar isso e volta com um update
+
+DECISÕES TOMADAS: nenhuma formal (mas todos saíram alinhados)
+
+ENCAMINHAMENTOS:
+☐ Verificar viabilidade (resp.: time) · prazo: breve
+☐ Apresentar proposta estruturada · prazo: próxima reunião
+☐ Agendar próxima reunião · prazo: hoje mesmo
+
+Esta ata foi gerada automaticamente pelo BurnyOut™ em cumprimento
+à Política de Documentação de Encontros Improdutivos.`,
+
+  (tema, n, data) =>
+`━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ATA OFICIAL DE ALINHAMENTO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Data: ${data}
+Participantes: ${n} pessoas (${Math.ceil(n * 0.4)} com câmera apagada)
+Tema: ${tema}
+
+OBJETIVO DA REUNIÃO:
+Alinhar as perspectivas dos envolvidos sobre "${tema}" com vistas a uma tomada de decisão estruturada e orientada ao impacto no médio-longo prazo.
+
+O QUE FOI DISCUTIDO:
+Todo mundo falou. Alguns mais do que outros. Houve concordância generalizada de que o tema é importante. Houve também discordâncias pontuais que foram "anotadas para depois". Um participante tentou concluir algo. Foi interrompido. Não voltou ao ponto.
+
+CONCLUSÕES:
+Nenhuma conclusão definitiva foi alcançada nesta sessão. O grupo avaliou que o assunto requer mais alinhamento, mais dados, e possivelmente outra reunião (menor, mais focada).
+
+PRÓXIMA REUNIÃO: A ser agendada. Tema: discutir os encaminhamentos desta.
+
+Obs: Se você está lendo esta ata, parabéns. Você é a primeira pessoa a lê-la.`,
+];
+
+// ─── Dados: Grito Corporativo ─────────────────────────────────────────────────
+
+const FRASES_GRITO = [
+  "ISSO NÃO ERA URGENTE",
+  "EU AVISEI QUE NÃO IA DAR",
+  "SÓ EU TRABALHO AQUI???",
+  "MAIS UMA REUNIÃO SEM PAUTA",
+  "NÃO VOU CONSEGUIR ENTREGAR",
+  "POR QUE O PRAZO MUDOU DE NOVO",
+  "EU DISSE QUE ERA IMPOSSÍVEL",
+  "ISSO PODERIA SER UM EMAIL",
+  "POR QUE NINGUÉM ME AVISOU",
+  "EU NÃO FUI CONTRATADO PRA ISSO",
+];
+
 // ─── Componente: Consultar o Guia ─────────────────────────────────────────────
 
 function ConsultarOGuia() {
@@ -785,6 +1008,379 @@ function ConsultarOGuia() {
   );
 }
 
+// ─── Componente: Quiz Arquétipo ───────────────────────────────────────────────
+
+function QuizArquetipo() {
+  const [passo, setPasso] = useState<"inicio" | "quiz" | "resultado">("inicio");
+  const [questaoAtual, setQuestaoAtual] = useState(0);
+  const [respostas, setRespostas] = useState<string[]>([]);
+  const [copiado, setCopiado] = useState(false);
+
+  function responder(tipo: string) {
+    const novas = [...respostas, tipo];
+    if (questaoAtual < QUIZ_QUESTOES.length - 1) {
+      setRespostas(novas);
+      setQuestaoAtual((q) => q + 1);
+    } else {
+      setRespostas(novas);
+      setPasso("resultado");
+    }
+  }
+
+  function getArquetipo() {
+    const contagem: Record<string, number> = {};
+    for (const r of respostas) contagem[r] = (contagem[r] ?? 0) + 1;
+    return Object.entries(contagem).sort((a, b) => b[1] - a[1])[0][0];
+  }
+
+  function reiniciar() {
+    setPasso("inicio");
+    setQuestaoAtual(0);
+    setRespostas([]);
+    setCopiado(false);
+  }
+
+  const tipoAtual = passo === "resultado" ? getArquetipo() : null;
+  const arquetipo = tipoAtual ? ARQUETIPOS[tipoAtual] : null;
+
+  return (
+    <div className="rounded-[28px] border border-white/8 bg-black/25 p-6">
+      <div className="mb-4 flex items-center gap-3">
+        <span className="text-3xl">🧪</span>
+        <div>
+          <h2 className="text-lg font-bold text-white">Arquétipo do Sofrimento</h2>
+          <p className="text-xs text-slate-500">Descubra qual profissional sofredor você é</p>
+        </div>
+      </div>
+      <AnimatePresence mode="wait">
+        {passo === "inicio" && (
+          <motion.div key="inicio" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <div className="mb-4 rounded-[20px] border border-white/5 bg-white/3 py-8 text-center">
+              <p className="text-4xl">🤔</p>
+              <p className="mt-3 text-sm text-slate-300">5 perguntas. Um diagnóstico.</p>
+              <p className="mt-1 text-xs text-slate-500">Resultados baseados em sofrimento real™</p>
+            </div>
+            <button
+              onClick={() => setPasso("quiz")}
+              className="w-full rounded-full bg-violet py-3 text-sm font-bold text-white transition-all hover:bg-violet/80"
+            >
+              🧪 Iniciar diagnóstico
+            </button>
+          </motion.div>
+        )}
+        {passo === "quiz" && (
+          <motion.div key={`q${questaoAtual}`} initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-xs text-slate-500">Pergunta {questaoAtual + 1} de {QUIZ_QUESTOES.length}</p>
+              <div className="flex gap-1">
+                {QUIZ_QUESTOES.map((_, i) => (
+                  <div key={i} className={`h-1.5 w-6 rounded-full transition-colors ${i < questaoAtual ? "bg-violet" : i === questaoAtual ? "bg-violet/60" : "bg-white/10"}`} />
+                ))}
+              </div>
+            </div>
+            <p className="mb-4 text-sm font-semibold leading-snug text-white">
+              {QUIZ_QUESTOES[questaoAtual].pergunta}
+            </p>
+            <div className="space-y-2">
+              {QUIZ_QUESTOES[questaoAtual].opcoes.map((op) => (
+                <button
+                  key={op.tipo}
+                  onClick={() => responder(op.tipo)}
+                  className="w-full rounded-[16px] border border-white/10 bg-white/3 px-4 py-3 text-left text-xs text-slate-300 transition-all hover:border-violet/40 hover:bg-violet/10 hover:text-white"
+                >
+                  {op.texto}
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+        {passo === "resultado" && arquetipo && (
+          <motion.div key="resultado" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
+            <div className={`rounded-[20px] border ${arquetipo.borda} ${arquetipo.bg} p-5 mb-3`}>
+              <p className="text-4xl text-center">{arquetipo.emoji}</p>
+              <p className={`mt-2 text-center text-lg font-bold ${arquetipo.cor}`}>{arquetipo.nome}</p>
+              <p className="mt-3 text-xs leading-relaxed text-slate-300">{arquetipo.descricao}</p>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(`Fiz o diagnóstico no BurnyOut e meu arquétipo é: ${arquetipo.emoji} ${arquetipo.nome}\n\n${arquetipo.descricao}`).then(() => {
+                    setCopiado(true);
+                    setTimeout(() => setCopiado(false), 2000);
+                  });
+                }}
+                className="flex-1 rounded-full border border-white/10 py-2 text-xs text-slate-400 transition-colors hover:text-white"
+              >
+                {copiado ? "✅ Copiado!" : "📋 Compartilhar"}
+              </button>
+              <button
+                onClick={reiniciar}
+                className="flex-1 rounded-full bg-violet/20 py-2 text-xs text-violet transition-colors hover:bg-violet/30"
+              >
+                🔄 Refazer
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+// ─── Componente: Previsão do Tempo Corporativo ────────────────────────────────
+
+function PrevisaoTempo() {
+  const hoje = new Date();
+  const diaSemana = hoje.getDay();
+  const previsao = PREVISOES_DIA[diaSemana];
+  const nomes = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
+
+  return (
+    <div className="rounded-[28px] border border-white/8 bg-black/25 p-6">
+      <div className="mb-4 flex items-center gap-3">
+        <span className="text-3xl">🌡️</span>
+        <div>
+          <h2 className="text-lg font-bold text-white">Previsão do Tempo Corporativo™</h2>
+          <p className="text-xs text-slate-500">Boletim meteorológico do ambiente de trabalho</p>
+        </div>
+      </div>
+      <div className="rounded-[20px] border border-sky-400/15 bg-sky-400/5 p-5">
+        <div className="mb-4 flex items-start justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-sky-400/70">{nomes[diaSemana]}</p>
+            <p className="mt-1 text-sm font-bold text-white">{previsao.condicao}</p>
+          </div>
+          <span className="text-4xl">{previsao.icone}</span>
+        </div>
+        <div className="mb-4 grid grid-cols-2 gap-2">
+          <div className="rounded-[12px] bg-white/5 p-3">
+            <p className="mb-1 text-xs text-slate-500">🌡️ Temperatura</p>
+            <p className="text-xs font-medium text-white">{previsao.temperatura}</p>
+          </div>
+          <div className="rounded-[12px] bg-white/5 p-3">
+            <p className="mb-1 text-xs text-slate-500">💧 Umidade</p>
+            <p className="text-xs font-medium text-white">{previsao.umidade}</p>
+          </div>
+          <div className="col-span-2 rounded-[12px] bg-white/5 p-3">
+            <p className="mb-1 text-xs text-slate-500">💨 Vento</p>
+            <p className="text-xs font-medium text-white">{previsao.vento}</p>
+          </div>
+        </div>
+        <div className="space-y-1.5">
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Probabilidades de hoje:</p>
+          {previsao.chances.map((chance, i) => (
+            <p key={i} className="text-xs text-slate-300">• {chance}</p>
+          ))}
+        </div>
+      </div>
+      <p className="mt-3 text-center text-xs text-slate-700">
+        Atualizado às {hoje.getHours()}h{String(hoje.getMinutes()).padStart(2, "0")} · BurnyOut Meteorologia™
+      </p>
+    </div>
+  );
+}
+
+// ─── Componente: Gerador de Ata Inútil ───────────────────────────────────────
+
+function GeradorAta() {
+  const [tema, setTema] = useState("");
+  const [participantes, setParticipantes] = useState("5");
+  const [ata, setAta] = useState("");
+  const [copiado, setCopiado] = useState(false);
+
+  function gerar() {
+    if (!tema.trim()) return;
+    const data = new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long", year: "numeric" });
+    const n = parseInt(participantes);
+    const template = TEMPLATES_ATA[Math.floor(Math.random() * TEMPLATES_ATA.length)];
+    setAta(template(tema.trim(), n, data));
+  }
+
+  function copiar() {
+    navigator.clipboard.writeText(ata).then(() => {
+      setCopiado(true);
+      setTimeout(() => setCopiado(false), 2500);
+    });
+  }
+
+  return (
+    <div className="rounded-[28px] border border-white/8 bg-black/25 p-6">
+      <div className="mb-4 flex items-center gap-3">
+        <span className="text-3xl">📋</span>
+        <div>
+          <h2 className="text-lg font-bold text-white">Gerador de Ata Inútil</h2>
+          <p className="text-xs text-slate-500">Documentação profissional de reuniões inconclusivas</p>
+        </div>
+      </div>
+      <div className="space-y-3">
+        <div>
+          <label className="mb-1 block text-xs text-slate-500">Tema da reunião:</label>
+          <input
+            value={tema}
+            onChange={(e) => setTema(e.target.value)}
+            placeholder="Ex: Alinhamento do roadmap Q3, Cultura da empresa..."
+            className="w-full rounded-[16px] border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-600 outline-none focus:border-violet/40"
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-xs text-slate-500">Participantes:</label>
+          <select
+            value={participantes}
+            onChange={(e) => setParticipantes(e.target.value)}
+            className="w-full rounded-[16px] border border-white/10 bg-slate-900 px-4 py-2.5 text-sm text-white outline-none focus:border-violet/40"
+          >
+            {[2, 3, 4, 5, 6, 7, 8, 10, 12, 15, 20].map((n) => (
+              <option key={n} value={n}>{n} pessoas</option>
+            ))}
+          </select>
+        </div>
+        <button
+          onClick={gerar}
+          disabled={!tema.trim()}
+          className="w-full rounded-full bg-slate-700 py-2.5 text-sm font-bold text-white transition-all hover:bg-slate-600 disabled:opacity-40"
+        >
+          📋 Gerar ata oficial
+        </button>
+        {ata && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-[16px] border border-white/8 bg-white/3 p-4"
+          >
+            <pre className="whitespace-pre-wrap font-sans text-xs leading-relaxed text-slate-300">{ata}</pre>
+            <div className="mt-4 flex gap-3">
+              <button onClick={copiar} className="text-xs text-slate-500 underline hover:text-white">
+                {copiado ? "✅ Copiado!" : "📋 Copiar ata"}
+              </button>
+              <button onClick={gerar} className="text-xs text-slate-500 underline hover:text-white">
+                🔄 Outra versão
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── Componente: Modo Gritar Corporativo ──────────────────────────────────────
+
+function ModGritar() {
+  const [gritando, setGritando] = useState(false);
+  const [fase, setFase] = useState<"carregando" | "gritando" | "alivio">("carregando");
+  const [nivel, setNivel] = useState(0);
+  const [frase, setFrase] = useState(FRASES_GRITO[0]);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  function iniciarGrito() {
+    if (gritando) return;
+    setFrase(FRASES_GRITO[Math.floor(Math.random() * FRASES_GRITO.length)]);
+    setGritando(true);
+    setFase("carregando");
+    setNivel(0);
+
+    let n = 0;
+    intervalRef.current = setInterval(() => {
+      n += 5;
+      setNivel(n);
+      if (n >= 100) {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+        setFase("gritando");
+        setTimeout(() => {
+          setFase("alivio");
+          setTimeout(() => {
+            setGritando(false);
+            setNivel(0);
+          }, 1500);
+        }, 900);
+      }
+    }, 70);
+  }
+
+  useEffect(() => () => { if (intervalRef.current) clearInterval(intervalRef.current); }, []);
+
+  return (
+    <>
+      <AnimatePresence>
+        {gritando && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-red-950/95 backdrop-blur-sm"
+          >
+            {fase === "carregando" && (
+              <motion.div className="px-8 text-center">
+                <p className="mb-6 text-xl font-bold text-red-300">Pressão acumulando...</p>
+                <div className="mx-auto h-4 w-64 overflow-hidden rounded-full bg-red-900">
+                  <motion.div
+                    className="h-full rounded-full bg-gradient-to-r from-orange-500 to-red-500"
+                    style={{ width: `${nivel}%` }}
+                  />
+                </div>
+                <p className="mt-6 animate-bounce text-5xl">😤</p>
+              </motion.div>
+            )}
+            {fase === "gritando" && (
+              <motion.div
+                initial={{ scale: 0.5 }}
+                animate={{ scale: [1, 1.1, 0.95, 1.05, 1] }}
+                transition={{ duration: 0.5 }}
+                className="px-8 text-center"
+              >
+                <motion.p
+                  animate={{ rotate: [-2, 2, -2, 2, 0] }}
+                  transition={{ repeat: Infinity, duration: 0.1 }}
+                  className="text-7xl"
+                >
+                  😱
+                </motion.p>
+                <p className="mt-4 text-3xl font-black tracking-widest text-white">GRITO INTERNO™</p>
+                <p className="mt-3 text-lg font-bold text-red-300">{frase}</p>
+              </motion.div>
+            )}
+            {fase === "alivio" && (
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="px-8 text-center"
+              >
+                <p className="text-6xl">😮‍💨</p>
+                <p className="mt-4 text-xl font-bold text-green-300">Pressão liberada.</p>
+                <p className="mt-2 text-sm text-slate-400">Voltando ao modo profissional.</p>
+              </motion.div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="rounded-[28px] border border-red-900/30 bg-black/25 p-6">
+        <div className="mb-4 flex items-center gap-3">
+          <span className="text-3xl">🔴</span>
+          <div>
+            <h2 className="text-lg font-bold text-white">Modo Gritar Corporativo</h2>
+            <p className="text-xs text-slate-500">Liberação emocional silenciosa e profissional</p>
+          </div>
+        </div>
+        <div className="mb-4 rounded-[20px] border border-red-900/20 bg-red-950/20 py-8 text-center">
+          <p className="text-5xl">😤</p>
+          <p className="mt-2 text-xs text-slate-600">Pressão acumulada ao longo da semana</p>
+        </div>
+        <button
+          onClick={iniciarGrito}
+          disabled={gritando}
+          className="w-full rounded-full bg-red-600 py-4 text-sm font-black uppercase tracking-widest text-white transition-all hover:bg-red-500 disabled:opacity-50"
+        >
+          {gritando ? "😱 Gritando internamente..." : "😤 GRITAR INTERNAMENTE™"}
+        </button>
+        <p className="mt-2 text-center text-xs text-slate-700">
+          Seguro, silencioso e 100% profissional.
+        </p>
+      </div>
+    </>
+  );
+}
+
 // ─── Página ───────────────────────────────────────────────────────────────────
 
 export default function FerramentasPage() {
@@ -823,6 +1419,18 @@ export default function FerramentasPage() {
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }}>
           <ConsultarOGuia />
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+          <QuizArquetipo />
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+          <PrevisaoTempo />
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+          <GeradorAta />
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.45 }}>
+          <ModGritar />
         </motion.div>
       </div>
 

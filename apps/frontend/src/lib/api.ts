@@ -33,6 +33,8 @@ export interface BurnoutStats {
   bathroom_revenue_reais: number;
   burny_score_avg: number;
   burny_score_max: number;
+  xp_total: number;
+  streak: number;
 }
 
 export interface ProfileDetail extends Profile {

@@ -316,17 +316,85 @@ export default function PerfilPage() {
               )}
             </div>
 
-            {/* Stats */}
-            <div className="mt-6 grid grid-cols-2 gap-3">
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
-                <p className="text-2xl font-bold text-white">{followersCount}</p>
-                <p className="mt-1 text-xs text-slate-400">Sofredores</p>
+            {/* Nível + XP + Streak */}
+            {profile.burnout_stats && profile.burnout_stats.xp_total > 0 && (() => {
+              const BURNOUT_LEVELS = [
+                { min: 0,    label: "Estagiário do Sofrimento", emoji: "😶", next: 100  },
+                { min: 100,  label: "Júnior do Burnout",        emoji: "😅", next: 300  },
+                { min: 300,  label: "Pleno do Caos",            emoji: "😰", next: 600  },
+                { min: 600,  label: "Sênior do Desespero",      emoji: "😩", next: 1000 },
+                { min: 1000, label: "Lead de Burnout",          emoji: "🤯", next: 1500 },
+                { min: 1500, label: "Gerente do Colapso",       emoji: "💀", next: 2500 },
+                { min: 2500, label: "Diretor do Trauma",        emoji: "🔥", next: 4000 },
+                { min: 4000, label: "VP de Sofrimento",         emoji: "☠️", next: 6000 },
+                { min: 6000, label: "CTO do Trauma",            emoji: "👹", next: null },
+              ] as const;
+              const xp = profile.burnout_stats.xp_total;
+              const streak = profile.burnout_stats.streak;
+              let level = BURNOUT_LEVELS[0] as (typeof BURNOUT_LEVELS)[number];
+              for (const l of BURNOUT_LEVELS) { if (xp >= l.min) level = l; else break; }
+              const progress = level.next
+                ? Math.min(100, Math.round(((xp - level.min) / (level.next - level.min)) * 100))
+                : 100;
+              return (
+                <div className="mt-5 space-y-3">
+                  {/* Nível */}
+                  <div className="rounded-[18px] border border-white/8 bg-black/25 p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xl">{level.emoji}</span>
+                        <div>
+                          <p className="text-sm font-semibold text-white">{level.label}</p>
+                          <p className="text-xs text-slate-500">{xp} XP acumulados</p>
+                        </div>
+                      </div>
+                      {level.next && (
+                        <p className="text-[10px] text-slate-600">{level.next - xp} XP pro próximo</p>
+                      )}
+                    </div>
+                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/8">
+                      <div
+                        className="h-full rounded-full transition-all duration-700"
+                        style={{ width: `${progress}%`, background: "linear-gradient(90deg, #8257ff, #f97316)" }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Stats: streak + followers */}
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className={`rounded-2xl border p-4 text-center ${
+                      streak >= 7 ? "border-ember/30 bg-ember/8" : streak >= 3 ? "border-yellow-500/30 bg-yellow-500/8" : "border-white/10 bg-white/5"
+                    }`}>
+                      <p className="text-2xl">{streak >= 7 ? "🔥" : streak >= 3 ? "⚡" : streak >= 1 ? "✨" : "💤"}</p>
+                      <p className="mt-1 text-xl font-bold text-white">{streak}</p>
+                      <p className="text-[10px] text-slate-400">dias seguidos</p>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
+                      <p className="text-2xl font-bold text-white">{followersCount}</p>
+                      <p className="mt-1 text-xs text-slate-400">Sofredores</p>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
+                      <p className="text-2xl font-bold text-white">{profile.following_count}</p>
+                      <p className="mt-1 text-xs text-slate-400">Sofre com</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Stats (fallback sem checkins) */}
+            {(!profile.burnout_stats || profile.burnout_stats.xp_total === 0) && (
+              <div className="mt-6 grid grid-cols-2 gap-3">
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
+                  <p className="text-2xl font-bold text-white">{followersCount}</p>
+                  <p className="mt-1 text-xs text-slate-400">Sofredores</p>
+                </div>
+                <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
+                  <p className="text-2xl font-bold text-white">{profile.following_count}</p>
+                  <p className="mt-1 text-xs text-slate-400">Sofre com</p>
+                </div>
               </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
-                <p className="text-2xl font-bold text-white">{profile.following_count}</p>
-                <p className="mt-1 text-xs text-slate-400">Sofre com</p>
-              </div>
-            </div>
+            )}
 
             {/* Botão da riqueza */}
             <div className="mt-4 flex flex-col items-center gap-2">

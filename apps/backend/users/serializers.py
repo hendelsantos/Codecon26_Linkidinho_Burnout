@@ -65,20 +65,38 @@ class ProfileDetailSerializer(ProfilePublicSerializer):
         return Follow.objects.filter(follower=request.user, following=obj).exists()
 
     def get_burnout_stats(self, obj):
+        from datetime import date, timedelta
+
         from django.db.models import Avg, Max, Sum
         from metrics.models import CheckIn
+
         qs = CheckIn.objects.filter(profile=obj)
         total = qs.count()
         if total == 0:
-            return {"checkins_total": 0, "coffees_total": 0, "meetings_total": 0,
-                    "bathroom_revenue_reais": 0, "burny_score_avg": 0, "burny_score_max": 0}
+            return {
+                "checkins_total": 0, "coffees_total": 0, "meetings_total": 0,
+                "bathroom_revenue_reais": 0, "burny_score_avg": 0,
+                "burny_score_max": 0, "xp_total": 0, "streak": 0,
+            }
         agg = qs.aggregate(
             coffees=Sum("coffees"),
             meetings=Sum("useless_meetings"),
             bathroom=Sum("bathroom_revenue_cents"),
             avg_score=Avg("burny_score"),
             max_score=Max("burny_score"),
+            xp=Sum("burny_score"),
         )
+
+        # Streak: dias consecutivos de check-in até hoje
+        dates = sorted(qs.values_list("date", flat=True), reverse=True)
+        streak = 0
+        today = date.today()
+        for i, d in enumerate(dates):
+            if d == today - timedelta(days=i):
+                streak += 1
+            else:
+                break
+
         return {
             "checkins_total": total,
             "coffees_total": agg["coffees"] or 0,
@@ -86,6 +104,8 @@ class ProfileDetailSerializer(ProfilePublicSerializer):
             "bathroom_revenue_reais": round((agg["bathroom"] or 0) / 100, 2),
             "burny_score_avg": round(agg["avg_score"] or 0, 1),
             "burny_score_max": agg["max_score"] or 0,
+            "xp_total": agg["xp"] or 0,
+            "streak": streak,
         }
 
 

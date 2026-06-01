@@ -499,52 +499,77 @@ function GeradorLinkedIn() {
   }
 
   return (
-    <div className="rounded-[28px] border border-white/8 bg-black/25 p-6">
-      <div className="mb-4 flex items-center gap-3">
-        <span className="text-3xl">💼</span>
-        <div>
-          <h2 className="text-lg font-bold text-white">Gerador de Título LinkedIn</h2>
-          <p className="text-xs text-slate-500">Seu cargo real, elevado ao nível da disrupção</p>
+    <div className="rounded-[28px] border border-violet/30 bg-gradient-to-br from-violet/10 via-black/30 to-black/25 p-6">
+      {/* Badge destaque */}
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <span className="text-3xl">💼</span>
+          <div>
+            <h2 className="text-lg font-bold text-white">Gerador de Título LinkedIn</h2>
+            <p className="text-xs text-slate-500">Seu cargo real, elevado ao nível da disrupção</p>
+          </div>
         </div>
+        <span className="rounded-full bg-ember/20 px-3 py-1 text-xs font-bold text-ember">🔥 Mais usado</span>
       </div>
 
-      <div className="space-y-3">
-        <div>
-          <label className="mb-1 block text-xs text-slate-500">Seu cargo atual (de verdade):</label>
-          <input
-            value={cargo}
-            onChange={(e) => setCargo(e.target.value)}
-            placeholder="Ex: Desenvolvedor, Analista, Estagiário..."
-            className="w-full rounded-[16px] border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-slate-600 outline-none focus:border-violet/40"
-          />
+      <div className="grid gap-4 md:grid-cols-2">
+        {/* Coluna de input */}
+        <div className="space-y-3">
+          <div>
+            <label className="mb-1 block text-xs text-slate-500">Seu cargo atual (de verdade):</label>
+            <input
+              value={cargo}
+              onChange={(e) => setCargo(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && gerar()}
+              placeholder="Ex: Desenvolvedor, Analista, Estagiário..."
+              className="w-full rounded-[16px] border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-slate-600 outline-none focus:border-violet/40"
+            />
+          </div>
+          <button
+            onClick={gerar}
+            disabled={!cargo.trim()}
+            className="w-full rounded-full bg-violet py-3 text-sm font-bold text-white transition-all hover:bg-violet/80 disabled:opacity-40"
+          >
+            💼 Gerar título profissional
+          </button>
+          {titulo && (
+            <button onClick={gerar} className="w-full rounded-full border border-white/10 py-2 text-xs text-slate-400 transition-colors hover:text-white">
+              🔄 Gerar outro
+            </button>
+          )}
         </div>
 
-        <button
-          onClick={gerar}
-          disabled={!cargo.trim()}
-          className="w-full rounded-full bg-violet py-2.5 text-sm font-bold text-white transition-all hover:bg-violet/80 disabled:opacity-40"
-        >
-          💼 Gerar título profissional
-        </button>
-
-        {titulo && (
-          <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="rounded-[16px] border border-violet/20 bg-violet/8 p-4"
-          >
-            <p className="mb-2 text-xs text-violet opacity-70">Cole isso no seu LinkedIn agora:</p>
-            <p className="text-sm font-semibold leading-relaxed text-white">{titulo}</p>
-            <div className="mt-3 flex gap-3">
-              <button onClick={copiar} className="text-xs text-slate-500 underline hover:text-white">
-                {copiado ? "✅ Copiado!" : "📋 Copiar"}
+        {/* Coluna de resultado */}
+        <AnimatePresence mode="wait">
+          {titulo ? (
+            <motion.div
+              key={titulo}
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0 }}
+              className="flex flex-col justify-between rounded-[20px] border border-violet/25 bg-violet/8 p-5"
+            >
+              <div>
+                <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-violet opacity-70">Cole isso no seu LinkedIn agora:</p>
+                <p className="text-sm font-semibold leading-relaxed text-white">{titulo}</p>
+              </div>
+              <button
+                onClick={copiar}
+                className="mt-4 w-full rounded-full bg-violet/30 py-2 text-xs font-bold text-white transition-all hover:bg-violet/50"
+              >
+                {copiado ? "✅ Copiado!" : "📋 Copiar título"}
               </button>
-              <button onClick={gerar} className="text-xs text-slate-500 underline hover:text-white">
-                🔄 Gerar outro
-              </button>
-            </div>
-          </motion.div>
-        )}
+            </motion.div>
+          ) : (
+            <motion.div
+              key="idle"
+              className="flex flex-col items-center justify-center rounded-[20px] border border-white/5 bg-white/3 py-8"
+            >
+              <p className="text-4xl">🚀</p>
+              <p className="mt-3 text-xs text-slate-500 text-center">Seu próximo título disruptivo<br/>está a um clique de distância</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
@@ -1405,14 +1430,15 @@ export default function FerramentasPage() {
 
       {/* Grid de ferramentas */}
       <div className="grid gap-6 md:grid-cols-2">
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-          <RoletaDaSexta />
+        {/* ⭐ Destaque: ocupa largura total */}
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} className="md:col-span-2">
+          <GeradorLinkedIn />
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-          <TradutorCorporativo />
+          <RoletaDaSexta />
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-          <GeradorLinkedIn />
+          <TradutorCorporativo />
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <CartaDemissao />

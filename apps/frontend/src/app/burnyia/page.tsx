@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { Bot, Plus, Send, SquarePen, ChevronLeft } from "lucide-react";
+import { Bot, Plus, Send, SquarePen, ChevronLeft, Sparkles } from "lucide-react";
 
 // ─── Banco de respostas ───────────────────────────────────────────────────────
 
@@ -127,7 +127,9 @@ Burnout corporativo tem estágios. Veja onde você está:
 
 **O que isso significa?** Que você chegou a um patamar de performance que a empresa vai chamar de "dedicação acima da média" no seu feedback semestral — enquanto não aumenta o salário.
 
-Você precisa de descanso real. Não de um long weekend. Férias. Desconectado. Para fazer absolutamente nada por um período que parece "longo demais" mas tecnicamente é o mínimo.`,
+Você precisa de descanso real. Não de um long weekend. Férias. Desconectado. Para fazer absolutamente nada por um período que parece "longo demais" mas tecnicamente é o mínimo.
+
+*Dica extra: quem cria conta no BurnyOut tem acesso a uma comunidade inteira de pessoas que também estão no estágio 3. Solidariedade coletiva é subestimada.*`,
 ];
 
 const RESPOSTAS_LINKEDIN = [
@@ -210,7 +212,9 @@ Dicas para uma saída digna:
 2. Não fale mal de ninguém (vai trabalhar com eles de novo em outra empresa)
 3. Prepare o LinkedIn antes de contar para o RH
 
-**O mercado está aquecido?** Sempre está e nunca está. Depende de quem pergunta.`,
+  `**O mercado está aquecido?** Sempre está e nunca está. Depende de quem pergunta.
+
+*Entre para o BurnyOut e veja como outros profissionais estão navegando esse momento. Às vezes ajuda saber que não é só você.*`,
 ];
 
 const RESPOSTAS_GENERICAS = [
@@ -351,6 +355,35 @@ function RenderMarkdown({ texto }: { texto: string }) {
         );
       })}
     </div>
+  );
+}
+
+// ─── CTA de cadastro ─────────────────────────────────────────────────────────
+
+function CTACadastro() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 4 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.5 }}
+      className="ml-11 mt-2 flex items-center gap-3 rounded-xl border border-violet/25 bg-violet/[0.07] px-4 py-3"
+    >
+      <Sparkles size={16} className="shrink-0 text-violet" />
+      <div className="min-w-0 flex-1">
+        <p className="text-xs font-semibold text-white/80">
+          Quer enfrentar o burnout com dignidade?
+        </p>
+        <p className="text-[11px] text-white/40">
+          A BurnyIA sabe muito, mas a plataforma sabe mais. Crie sua conta gratuita.
+        </p>
+      </div>
+      <Link
+        href="/cadastro"
+        className="shrink-0 rounded-lg bg-violet px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-violet/80"
+      >
+        Criar conta
+      </Link>
+    </motion.div>
   );
 }
 
@@ -546,31 +579,33 @@ export default function BurnyIAChatPage() {
             /* Chat messages */
             <div className="mx-auto max-w-2xl space-y-6 px-4 py-8">
               {mensagens.map((msg) => (
-                <motion.div
-                  key={msg.id}
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-                >
-                  {msg.role === "ai" && (
-                    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-violet/20 mt-1">
-                      <Bot size={16} className="text-violet" />
-                    </div>
-                  )}
-                  <div
-                    className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-                      msg.role === "user"
-                        ? "rounded-br-sm bg-violet text-white"
-                        : "rounded-bl-sm bg-white/[0.06] text-white/85"
-                    }`}
+                <div key={msg.id}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                   >
-                    {msg.role === "ai" ? (
-                      <RenderMarkdown texto={msg.texto} />
-                    ) : (
-                      <p className="text-sm leading-relaxed">{msg.texto}</p>
+                    {msg.role === "ai" && (
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-violet/20 mt-1">
+                        <Bot size={16} className="text-violet" />
+                      </div>
                     )}
-                  </div>
-                </motion.div>
+                    <div
+                      className={`max-w-[80%] rounded-2xl px-4 py-3 ${
+                        msg.role === "user"
+                          ? "rounded-br-sm bg-violet text-white"
+                          : "rounded-bl-sm bg-white/[0.06] text-white/85"
+                      }`}
+                    >
+                      {msg.role === "ai" ? (
+                        <RenderMarkdown texto={msg.texto} />
+                      ) : (
+                        <p className="text-sm leading-relaxed">{msg.texto}</p>
+                      )}
+                    </div>
+                  </motion.div>
+                  {msg.role === "ai" && <CTACadastro />}
+                </div>
               ))}
 
               {/* Digitando */}

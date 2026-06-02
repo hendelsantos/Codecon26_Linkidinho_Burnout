@@ -8,11 +8,13 @@ import {
   Flame,
   Gauge,
   Loader2,
+  Menu,
   MessageSquare,
   Rocket,
   Send,
   Sparkles,
   Users,
+  X,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import Link from "next/link";
@@ -40,6 +42,7 @@ export function BurnoutLanding() {
   const [rankings, setRankings] = useState<RankingEntry[]>([]);
   const [feedLoading, setFeedLoading] = useState(true);
   const [rankLoading, setRankLoading] = useState(true);
+  const [menuAberto, setMenuAberto] = useState(false);
 
   useEffect(() => {
     api
@@ -90,6 +93,14 @@ export function BurnoutLanding() {
           </nav>
 
           <div className="flex shrink-0 items-center gap-2">
+            {/* Botão hamburger — só abaixo de lg */}
+            <button
+              onClick={() => setMenuAberto((v) => !v)}
+              aria-label="Menu"
+              className="flex items-center justify-center rounded-full border border-white/10 bg-white/5 p-2 text-slate-300 transition-colors hover:bg-white/10 hover:text-white lg:hidden"
+            >
+              {menuAberto ? <X size={18} /> : <Menu size={18} />}
+            </button>
             <Link
               href="/entrar"
               className="rounded-full border border-white/15 bg-white/5 px-3 py-2 text-sm font-medium text-slate-300 transition-all hover:bg-white/10 hover:text-white sm:px-4"
@@ -104,6 +115,48 @@ export function BurnoutLanding() {
             </Link>
           </div>
         </motion.header>
+
+        {/* ── Menu mobile ── */}
+        {menuAberto && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            className="glass-panel mb-4 rounded-2xl p-4 lg:hidden"
+          >
+            <nav className="flex flex-col gap-1 text-sm text-slate-300">
+              {[
+                { href: "/dashboard", label: "Dashboard" },
+                { href: "/feed",      label: "Feed" },
+                { href: "/sobre",     label: "Sobre" },
+                { href: "#roadmap",   label: "Roadmap" },
+              ].map(({ href, label }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setMenuAberto(false)}
+                  className="rounded-xl px-4 py-2.5 transition-colors hover:bg-white/5 hover:text-white"
+                >
+                  {label}
+                </Link>
+              ))}
+              <Link
+                href="/ferramentas"
+                onClick={() => setMenuAberto(false)}
+                className="mt-1 flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 transition-colors hover:bg-white/10 hover:text-white"
+              >
+                🛠️ Ferramentas
+              </Link>
+              <Link
+                href="/burnyia"
+                onClick={() => setMenuAberto(false)}
+                className="flex items-center gap-2 rounded-xl border border-violet/30 bg-violet/10 px-4 py-2.5 text-violet transition-colors hover:bg-violet/20"
+              >
+                🤖 BurnyIA
+              </Link>
+            </nav>
+          </motion.div>
+        )}
 
         <DicasTicker />
 

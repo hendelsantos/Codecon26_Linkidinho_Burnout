@@ -23,3 +23,8 @@ coverage/
 .DS_Store
 .idea/
 .vscode/
+
+# Arquivos sensíveis
+CREDENCIAIS.md
+credentials.md
+secrets.md

@@ -89,7 +89,7 @@ export default function SobrePage() {
         >
           <div className="flex flex-wrap items-center gap-3 text-xs uppercase tracking-[0.3em] text-muted mb-6">
             <span className="rounded-full border border-white/10 px-3 py-1">Codecon 2026</span>
-            <span className="rounded-full border border-violet/30 bg-violet/10 px-3 py-1 text-violet">Hackathon de 72h</span>
+            <span className="rounded-full border border-violet/30 bg-violet/10 px-3 py-1 text-violet">Hackathon de 42h</span>
             <span className="rounded-full border border-ember/30 bg-ember/10 px-3 py-1 text-ember-soft">Projeto real</span>
           </div>
 
@@ -281,7 +281,7 @@ export default function SobrePage() {
           <p className="text-xs uppercase tracking-[0.4em] text-muted mb-2">Construído em</p>
           <h2 className="text-3xl font-bold text-white">Codecon 2026</h2>
           <p className="mt-3 max-w-xl mx-auto text-sm leading-7 text-slate-400">
-            Hackathon de 72 horas onde duas pessoas decidiram que o mercado precisava de uma rede social
+            Hackathon de 42 horas onde duas pessoas decidiram que o mercado precisava de uma rede social
             honesta sobre trabalho. O resultado foi o BurnyOut. O burnout dos criadores durante o processo
             serviu como inspiração direta para os dados de exemplo.
           </p>

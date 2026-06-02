@@ -445,7 +445,7 @@ export function BurnoutLanding() {
               <p className="text-xs uppercase tracking-[0.3em] text-muted">Arquitetura pronta para demo</p>
               <h2 className="mt-2 text-3xl font-semibold text-white">Monorepo com cara de produto sério e senso de humor perigoso.</h2>
               <p className="mt-4 max-w-2xl text-base leading-8 text-slate-300">
-                Construído em 72 horas de Codecon com cafeína excessiva, commits às 3h da manhã e a firme convicção de que sofrimento corporativo merecia representação digna. O código é real, o deploy é real, o burnout dos criadores também.
+                Construído em 42 horas de Codecon com cafeína excessiva, commits às 3h da manhã e a firme convicção de que sofrimento corporativo merecia representação digna. O código é real, o deploy é real, o burnout dos criadores também.
               </p>
             </div>
 

@@ -34,6 +34,16 @@ if _railway_domain:
 # Aceita qualquer subdomínio .up.railway.app em produção
 ALLOWED_HOSTS += [".up.railway.app", ".railway.app"]
 
+# CSRF — necessário para o admin Django funcionar em produção
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.up.railway.app",
+    "https://*.railway.app",
+    "http://localhost:9000",
+    "http://localhost:8000",
+]
+if _railway_domain:
+    CSRF_TRUSTED_ORIGINS.append(f"https://{_railway_domain}")
+
 
 # Application definition
 
@@ -155,8 +165,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
@@ -196,10 +207,6 @@ SPECTACULAR_SETTINGS = {
 }
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # ---------------------------------------------------------------------------
 # Moderação de conteúdo

@@ -86,6 +86,7 @@ export function BurnoutLanding() {
             <Link href="/sobre">Sobre</Link>
             <a href="#roadmap">Roadmap</a>
             <Link href="/ferramentas" className="flex items-center gap-1 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs transition-colors hover:text-white">🛠️ Ferramentas</Link>
+            <Link href="/burnyia" className="flex items-center gap-1 rounded-full border border-violet/40 bg-violet/10 px-3 py-1 text-xs text-violet transition-colors hover:bg-violet/20">🤖 BurnyIA</Link>
           </nav>
 
           <div className="flex shrink-0 items-center gap-2">

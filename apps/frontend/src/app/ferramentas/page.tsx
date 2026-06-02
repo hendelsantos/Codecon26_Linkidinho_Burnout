@@ -1531,6 +1531,24 @@ export default function FerramentasPage() {
         </p>
       </div>
 
+      {/* Banner BurnyIA */}
+      <Link
+        href="/burnyia"
+        className="mb-8 flex items-center justify-between gap-4 rounded-2xl border border-violet/30 bg-violet/10 px-6 py-4 transition-colors hover:border-violet/50 hover:bg-violet/15"
+      >
+        <div className="flex items-center gap-3">
+          <span className="text-2xl">🤖</span>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-white">BurnyIA</span>
+              <span className="rounded-full bg-violet/30 px-2 py-0.5 text-[10px] font-semibold text-violet">NOVO</span>
+            </div>
+            <p className="text-xs text-white/40">A IA que entende seu sofrimento. Gerador de desculpas, chat corporativo e muito mais.</p>
+          </div>
+        </div>
+        <span className="shrink-0 text-sm text-violet">Acessar →</span>
+      </Link>
+
       {/* Grid de ferramentas */}
       <div className="grid gap-6 md:grid-cols-2">
         {/* ⭐ Destaque: ocupa largura total */}

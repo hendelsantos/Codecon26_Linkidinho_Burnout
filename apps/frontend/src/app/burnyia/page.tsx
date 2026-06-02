@@ -793,6 +793,16 @@ export default function BurnyIAPage() {
             ))}
           </div>
 
+          {/* CTA Chat */}
+          <Link
+            href="/burnyia/chat"
+            className="mb-8 inline-flex items-center gap-3 rounded-2xl bg-violet px-8 py-4 text-base font-semibold text-white shadow-lg shadow-violet/30 transition-all hover:bg-violet/90 hover:shadow-violet/50 hover:scale-[1.02]"
+          >
+            <span className="text-xl">💬</span>
+            Conversar com BurnyIA
+            <span className="text-violet/60">→</span>
+          </Link>
+
           {/* Terminal fake */}
           <div className="mx-auto max-w-lg rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-left font-mono text-xs">
             <div className="mb-2 flex gap-1.5">

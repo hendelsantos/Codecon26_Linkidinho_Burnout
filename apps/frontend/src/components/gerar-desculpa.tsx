@@ -225,7 +225,7 @@ export function GerarDesculpa() {
       <button
         onClick={abrirModal}
         title="Gerar desculpa corporativa"
-        className="fixed bottom-6 left-4 z-[9998] flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-white shadow-[0_4px_24px_rgba(130,87,255,0.5)] transition-all hover:scale-105 hover:shadow-[0_4px_32px_rgba(255,107,44,0.55)] active:scale-95 sm:left-6"
+        className="fixed bottom-4 left-4 z-[9998] flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold text-white shadow-[0_4px_24px_rgba(130,87,255,0.5)] transition-all hover:scale-105 hover:shadow-[0_4px_32px_rgba(255,107,44,0.55)] active:scale-95 sm:bottom-6 sm:left-6"
         style={{ background: "linear-gradient(135deg,#ff6b2c,#8257ff)" }}
       >
         🎭 <span>Gerar desculpa</span>

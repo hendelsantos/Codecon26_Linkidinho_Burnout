@@ -41,41 +41,8 @@ export function BottomNav() {
 
   return (
     <>
-      {/* Espaçador para o conteúdo não ficar atrás da barra */}
-      <div className="h-20 sm:hidden" aria-hidden />
-
-      {/* Barra fixa — só mobile */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 sm:hidden">
-        {/* Blur/glass de fundo */}
-        <div className="mx-3 mb-3 rounded-[22px] border border-white/10 bg-[#0a0b14]/80 backdrop-blur-xl shadow-2xl">
-          <div className="flex items-center justify-around px-2 py-2">
-            {allItems.map(({ href, icon: Icon, label }) => {
-              const isActive =
-                href === "/"
-                  ? pathname === "/"
-                  : pathname.startsWith(href.split("?")[0]);
-
-              return (
-                <Link
-                  key={label}
-                  href={href}
-                  className={`flex flex-col items-center gap-1 rounded-[14px] px-3 py-2 transition-all ${
-                    isActive
-                      ? "bg-violet/15 text-violet"
-                      : "text-slate-500 hover:text-slate-300"
-                  }`}
-                >
-                  <Icon
-                    className={`h-5 w-5 transition-all ${isActive ? "scale-110" : ""}`}
-                    strokeWidth={isActive ? 2.5 : 1.8}
-                  />
-                  <span className="text-[10px] font-medium leading-none">{label}</span>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </nav>
+      {/* Espaçador para os botões flutuantes não cobrirem conteúdo no mobile */}
+      <div className="h-24 sm:hidden" aria-hidden />
     </>
   );
 }

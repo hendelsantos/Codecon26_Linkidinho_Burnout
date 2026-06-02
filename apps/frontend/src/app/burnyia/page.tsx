@@ -212,7 +212,7 @@ Dicas para uma saída digna:
 2. Não fale mal de ninguém (vai trabalhar com eles de novo em outra empresa)
 3. Prepare o LinkedIn antes de contar para o RH
 
-  `**O mercado está aquecido?** Sempre está e nunca está. Depende de quem pergunta.
+**O mercado está aquecido?** Sempre está e nunca está. Depende de quem pergunta.
 
 *Entre para o BurnyOut e veja como outros profissionais estão navegando esse momento. Às vezes ajuda saber que não é só você.*`,
 ];

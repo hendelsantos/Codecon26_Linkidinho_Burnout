@@ -1,6 +1,6 @@
 "use client";
 
-import { Flame, LayoutDashboard, MessageSquare, Trophy, User } from "lucide-react";
+import { Bot, Flame, LayoutDashboard, MessageSquare, Trophy, User } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
   { href: "/feed",      icon: MessageSquare,   label: "Feed"      },
   { href: "/ranking",   icon: Trophy,          label: "Ranking"   },
+  { href: "/burnyia",   icon: Bot,             label: "BurnyIA"   },
 ];
 
 // Páginas onde a nav não deve aparecer (onboarding, entrar, landing sem auth)

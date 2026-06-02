@@ -230,3 +230,80 @@ class BathroomRankingView(APIView):
                 for p in top
             ],
         })
+
+
+# ─── Page View Tracking ───────────────────────────────────────────────────────
+
+import hashlib
+
+from .models import PageVisit
+
+
+class PageViewPingView(APIView):
+    """
+    Recebe pings de visita do frontend.
+    Público — sem autenticação.
+    Armazena IP hasheado (SHA-256), nunca o IP bruto.
+    """
+    permission_classes = []
+    authentication_classes = []
+
+    def post(self, request):
+        path = request.data.get("path", "")[:512]
+        referer = request.data.get("referer", "")[:512]
+
+        if not path:
+            return Response({"ok": False}, status=400)
+
+        # Bots e health checks — ignora
+        ua = request.META.get("HTTP_USER_AGENT", "")[:512]
+        bots = ("bot", "crawler", "spider", "python-requests", "curl", "wget", "health")
+        if any(b in ua.lower() for b in bots):
+            return Response({"ok": True})
+
+        # Hash do IP (sem armazenar o IP real)
+        forwarded = request.META.get("HTTP_X_FORWARDED_FOR", "")
+        raw_ip = forwarded.split(",")[0].strip() if forwarded else request.META.get("REMOTE_ADDR", "")
+        ip_hash = hashlib.sha256(raw_ip.encode()).hexdigest() if raw_ip else ""
+
+        PageVisit.objects.create(
+            path=path,
+            referer=referer,
+            user_agent=ua,
+            ip_hash=ip_hash,
+        )
+        return Response({"ok": True}, status=201)
+
+
+class PageViewSummaryView(APIView):
+    """
+    Resumo de visitas — requer autenticação de staff/admin.
+    Acesse: GET /api/pageviews/summary/
+    """
+    permission_classes = [permissions.IsAdminUser]
+
+    def get(self, request):
+        from django.db.models import Count
+        from django.utils import timezone
+
+        qs = PageVisit.objects.all()
+        hoje = timezone.localdate()
+        ontem = hoje - timedelta(days=1)
+        ultimos_7 = hoje - timedelta(days=6)
+        ultimos_30 = hoje - timedelta(days=29)
+
+        top_paginas = (
+            qs.values("path")
+            .annotate(total=Count("id"))
+            .order_by("-total")[:20]
+        )
+
+        return Response({
+            "total": qs.count(),
+            "hoje": qs.filter(created_at__date=hoje).count(),
+            "ontem": qs.filter(created_at__date=ontem).count(),
+            "ultimos_7_dias": qs.filter(created_at__date__gte=ultimos_7).count(),
+            "ultimos_30_dias": qs.filter(created_at__date__gte=ultimos_30).count(),
+            "top_paginas": list(top_paginas),
+        })
+
